@@ -43,18 +43,26 @@ grand.pair_pretty .= grand.f1_pretty .* " & " .* grand.f2_pretty
 # add JW's estimates and conclusions
 #
 # This takes some ingenuity, as we need to represent feature pairs as sets
-# (i.e. unordered pairs).
+# (i.e. unordered pairs). We translate strings such as "VO" into integers,
+# then take the sum to represent the pair (of course, inside Julia, we could
+# just use Sets, but we want to be able to merge dataframes by a unique
+# identifier which refers to the feature pair also in other environments,
+# such as in R).
+#
+# On the string-to-number translation, consult
+# https://stackoverflow.com/questions/49415718/representing-a-non-numeric-string-as-in-integer-in-julia
 
 JW = CSV.read("../aux/JW.csv", DataFrame)
 
-function stringtoset(s)
-	Set(split(s, " & "))
+function stringtonumber(s)
+	#Set(split(s, " & "))
+	@pipe split(s, " & ") |> parse.(BigInt, _, base=62) |> sum
 end
 
-transform!(JW, :pair_pretty => (p -> stringtoset.(p)) => :pair_set)
-transform!(grand, :pair_pretty => (p -> stringtoset.(p)) => :pair_set)
+transform!(JW, :pair_pretty => (p -> stringtonumber.(p)) => :pair_ID)
+transform!(grand, :pair_pretty => (p -> stringtonumber.(p)) => :pair_ID)
 
-grand = leftjoin(grand, JW, on=:pair_set, makeunique=true)
+grand = leftjoin(grand, JW, on=:pair_ID, makeunique=true)
 
 grand.okay .= string.(grand.okay_JW)
 grand.okay .= ifelse.(grand.okay .== "missing", "unknown", grand.okay)
