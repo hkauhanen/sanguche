@@ -38,14 +38,14 @@ make clean
 The data analysis is broken down into four major phases. All source code is contained in the `jl/` directory; the relationships between the various phases can be examined in the `Makefile`.
 
 1. **Data preparation.** Data (either WALS or Grambank) are first downloaded from the internet, then wrangled into a format suitable for our analysis.
-1. **Dictionary preparation.** We next obtain the subset of the data for every feature--feature pair of interest. These subsets are stored in a dictionary for later use. We also prepare a second dictionary which contains the nearest geographical neighbours table for each language, for each feature--feature pair. The latter are obtained from great-circle distance data which are downloaded from FIXME and FIXME.
+1. **Dictionary preparation.** We next obtain the subset of the data for every feature–feature pair of interest. These subsets are stored in a dictionary for later use. We also prepare a second dictionary which contains the nearest geographical neighbours table for each language, for each feature–feature pair. The latter are obtained from great-circle distance data which are downloaded from <https://github.com/hkauhanen/wals-distances> and <https://github.com/hkauhanen/grambank-distances>.
 1. **Neighbourhood entropy computation.** We then cycle through the dictionaries created in the previous step, calculating neighbourhood entropies in each case.
 1. **Pretty printing.** Finally, the resulting dataframes are pretty-printed. At this stage, for instance, we merge our results with those of Jäger & Wahle (`aux/JW.csv`).
 
 
 ## Acknowledgements
 
-The file `aux/JW.csv` contains part of the results of Jäger and Wahle's paper <FIXME DOI>. These data are reproduced here under the FIXME licence.
+The file `aux/JW.csv` contains part of the results of Jäger and Wahle's paper "Phylogenetic typology", <https://doi.org/10.3389/fpsyg.2021.682132>. These data are reproduced here under the MIT licence.
 
 This project has received funding from the European Research Council (ERC) under the European Union's Horizon 2020 research and innovation programme (grant agreement n° 851423).
 
