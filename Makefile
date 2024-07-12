@@ -1,11 +1,13 @@
-J=julia
+JULIA=julia
+JOPTS=--project=.
+J=$(JULIA) $(JOPTS)
 PROCS=4
 DEGREE=10
 
 
-.PHONY : all data dicts sand pretty clean cleanall
+.PHONY : all deps data dicts sand pretty clean cleanall
 
-all : data dicts sand pretty
+all : deps data dicts sand pretty
 
 clean :
 	rm -rf tmp
@@ -14,13 +16,16 @@ cleanall :
 	rm -rf tmp
 	rm -rf results
 
-data : tmp/$(DATASET)/data.jls
+deps : jl/deps.jl
+	cd jl; $J deps.jl
 
-dicts : tmp/$(DATASET)/grid.jls tmp/$(DATASET)/Ddata.jls tmp/$(DATASET)/Ddists.jls
+data : deps tmp/$(DATASET)/data.jls
 
-sand : tmp/$(DATASET)/sand_results.jls
+dicts : deps tmp/$(DATASET)/grid.jls tmp/$(DATASET)/Ddata.jls tmp/$(DATASET)/Ddists.jls
 
-pretty : results/$(DATASET)/results.jls results/$(DATASET)/results.csv
+sand : deps tmp/$(DATASET)/sand_results.jls
+
+pretty : deps results/$(DATASET)/results.jls results/$(DATASET)/results.csv
 
 tmp/$(DATASET)/data.jls : jl/make_data_$(DATASET).jl jl/features_$(DATASET).jl
 	cd jl; $J make_data_$(DATASET).jl
