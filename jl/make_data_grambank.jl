@@ -131,6 +131,7 @@ end
 
 transform!(data, [:GB131, :GB133] => ((a,b) -> feature_filter.(a,b)) => :VO)
 transform!(data, [:GB327, :GB328] => ((a,b) -> feature_filter.(a,b)) => :NRc)
+transform!(data, [:GB074, :GB075] => ((a,b) -> feature_filter.(a,b)) => :PN)
 
 
 ##

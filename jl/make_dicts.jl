@@ -3,8 +3,6 @@
 # one unique combination of features. Additionally adds summary statistics
 # such as (plain) phi coefficients and type frequencies.
 #
-# Name of constructed variable is 'grid'.
-#
 
 
 using CodecZlib

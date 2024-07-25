@@ -41,6 +41,35 @@ using Distributed
 end
 
 
+# compute isogloss density for type 'type'
+@everywhere function isogloss_density(type, data, dists)
+  # languages of this type
+  datat = subset(data, :type => (t -> t .== type))
+
+  # their neighbours
+  neighbours = subset(dists, :language_ID => a -> a .∈ [datat.Language_ID]).neighbour_ID
+
+  if length(neighbours) == 0
+    println("WARNING: empty neighbourhood (this shouldn't happen)")
+  end
+
+  # those neighbours' data
+  datan = subset(data, :Language_ID => a -> a .∈ [neighbours])
+
+  # counts of different types among those neighbours
+  cnts = levelcounter(["11", "12", "21", "22"], datan.type)
+
+  # total number of neighbours
+  total = sum(values(cnts))
+
+  # number of disagreeing neighbours (i.e. of differing types)
+  isog = sum([cnts[k] for k in setdiff(keys(cnts), Set([type]))])
+
+  # isogloss density
+  return isog/total
+end
+
+
 # compute neighbourhood entropy for types in 'typeset'
 @everywhere function NE(typeset, data, dists)
   # cycle through types
@@ -100,6 +129,12 @@ end
   out.N .= nrow(datah)
   out.mean_distance .= mean(distsh.distance)
 
+  # mean isogloss densities for preferred and dispreferred types
+  mid_pref = [isogloss_density(t, datah, distsh) for t in pref_types]
+  out.mean_sigma_pref .= mean(mid_pref)
+  mid_dispref = [isogloss_density(t, datah, distsh) for t in dispref_types]
+  out.mean_sigma_dispref .= mean(mid_dispref)
+
   return out
 end
 
@@ -135,35 +170,12 @@ types = ["11", "12", "21", "22"]
 merged = innerjoin(results, sand, on=:pair, makeunique=true)
 
 
-#=
-for df in [merged]
-# "vintage" Xi measure, weighted by number of type types. Hacky solution, but I can't
-# quickly think of a cleaner way of doing this...
-df.Delta_pref .= 0.0
-df.Delta_dispref .= 0.0
-for r in 1:nrow(df)
-NEs_pref = []
-NEs_dispref = []
-for type in types
-if df[r, "pref"*type] == 0
-push!(NEs_dispref, df[r, "H"] - df[r, "H"*type])
-else
-push!(NEs_pref, df[r, "H"] - df[r, "H"*type])
-end
-end
-df[r,:].Delta_pref = sum(NEs_pref)/length(NEs_pref)
-df[r,:].Delta_dispref = sum(NEs_dispref)/length(NEs_dispref)
-end
-end
-=#
-
 
 select!(merged, Not(:f1_1, :f2_1, :class_1, :rep, :permuted))
 
 # serialize results to file
 
 serialize("../tmp/$dataset/sand_results.jls", merged)
-#serialize("../tmp/grand.jls", merged)
 
 
 
