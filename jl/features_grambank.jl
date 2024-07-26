@@ -1,7 +1,8 @@
 # Grambank features we are interested in
 
-wo_features = ["GB130", "GB065", "GB193", "GB025", "GB024", "VO", "NRc", "PN"]
-control_features = ["GB030", "GB302"]
+wo_features = ["GB130", "GB065", "GB193", "GB025", "GB024"]#, "VO", "NRc", "PN"]
+#control_features = ["GB030", "GB302"]
+control_features = ["GB336", "GB415"]
 features = vcat(wo_features, control_features)
 
 # the features VO and NRc need to be "constructed" from the pairs of features GB131 & GB133

@@ -1,7 +1,7 @@
 JULIA=julia
 JOPTS=--project=.
 J=$(JULIA) $(JOPTS)
-PROCS=4
+PROCS=2
 DEGREE=10
 
 
