@@ -2,7 +2,7 @@
 
 Data analysis code for the paper:
 
-> Deepthi Gopal, Henri Kauhanen, Christopher Kitching, Tobias Galla & Ricardo Bermúdez-Otero (in prep.) Paper title.
+> Deepthi Gopal, Henri Kauhanen, Christopher Kitching, Tobias Galla & Ricardo Bermúdez-Otero (in prep.) Contact helps dispreferred combinations of typological features to survive: geospatial evidence. Manuscript, Universities of Uppsala, Konstanz and Manchester.
 
 Requirements:
 
@@ -31,6 +31,20 @@ Temporary files are saved in `tmp/`. If you wish to delete these, type:
 ```
 make clean
 ```
+
+If you also wish to delete results, type:
+
+```
+make purge
+```
+
+To produce the plots:
+
+```
+make plots
+```
+
+These will appear in `results/plots/`.
 
 
 ## Brief description of code logic

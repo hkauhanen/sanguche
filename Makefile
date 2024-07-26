@@ -5,14 +5,14 @@ PROCS=4
 DEGREE=10
 
 
-.PHONY : all deps data dicts sand pretty clean cleanall
+.PHONY : analysis deps data dicts sand pretty plots clean purge
 
-all : deps data dicts sand pretty
+analysis : deps data dicts sand pretty
 
 clean :
 	rm -rf tmp
 
-cleanall :
+purge :
 	rm -rf tmp
 	rm -rf results
 
@@ -26,6 +26,9 @@ dicts : deps tmp/$(DATASET)/grid.jls tmp/$(DATASET)/Ddata.jls tmp/$(DATASET)/Ddi
 sand : deps tmp/$(DATASET)/sand_results.jls
 
 pretty : deps results/$(DATASET)/results.jls results/$(DATASET)/results.csv
+
+plots : deps results/wals/results.jls results/grambank/results.jls jl/plots.jl
+	cd jl; $J plots.jl
 
 tmp/$(DATASET)/data.jls : jl/make_data_$(DATASET).jl jl/features_$(DATASET).jl
 	cd jl; $J make_data_$(DATASET).jl

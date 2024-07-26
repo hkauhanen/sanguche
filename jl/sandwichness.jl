@@ -128,6 +128,7 @@ end
   out.H_dispref .= NE(dispref_types, datah, distsh)
   out.N .= nrow(datah)
   out.mean_distance .= mean(distsh.distance)
+  out.sd_distance .= std(distsh.distance)
 
   # mean isogloss densities for preferred and dispreferred types
   mid_pref = [isogloss_density(t, datah, distsh) for t in pref_types]
