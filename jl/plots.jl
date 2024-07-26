@@ -63,3 +63,22 @@ catch e
 end
 
 savefig("../results/plots/boxplot.png")
+
+
+p1 = @df wals density(:mean_distance, label="WALS")
+@df grambank density!(:mean_distance, label="Grambank")
+title!("(A) Mean distance to neighbour")
+p2 = @df wals density(:sd_distance, label="WALS")
+@df grambank density!(:sd_distance, label="Grambank")
+title!("(B) Standard deviation of distance to neighbour")
+
+plot(p1, p2,
+     layout=(2,1),
+     titlefontsize=11,
+     titlelocation=:left,
+     top_margin=[0mm 0mm],
+     size=(700,500),
+     dpi=200)
+xlabel!("kilometers")
+
+savefig("../results/plots/distances.png")
