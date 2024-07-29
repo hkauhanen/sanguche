@@ -131,10 +131,10 @@ end
   out.sd_distance .= std(distsh.distance)
 
   # mean isogloss densities for preferred and dispreferred types
-  mid_pref = [isogloss_density(t, datah, distsh) for t in pref_types]
-  out.mean_sigma_pref .= mean(mid_pref)
-  mid_dispref = [isogloss_density(t, datah, distsh) for t in dispref_types]
-  out.mean_sigma_dispref .= mean(mid_dispref)
+  #mid_pref = [isogloss_density(t, datah, distsh) for t in pref_types]
+  #out.mean_sigma_pref .= mean(mid_pref)
+  #mid_dispref = [isogloss_density(t, datah, distsh) for t in dispref_types]
+  #out.mean_sigma_dispref .= mean(mid_dispref)
 
   return out
 end

@@ -66,12 +66,12 @@ grand = leftjoin(grand, JW, on=:pair_ID, makeunique=true)
 
 grand.okay .= string.(grand.okay_JW)
 #grand.okay .= ifelse.(grand.okay .== "missing", "unknown", grand.okay)
-grand.okay .= ifelse.(grand.okay .== "missing", "control", grand.okay)
-grand.okay .= ifelse.(grand.okay .== "0", "not credible", grand.okay)
-grand.okay .= ifelse.(grand.okay .== "1", "credible", grand.okay)
+grand.okay .= ifelse.(grand.okay .== "missing", "non-interacting", grand.okay)
+grand.okay .= ifelse.(grand.okay .== "0", "unknown", grand.okay)
+grand.okay .= ifelse.(grand.okay .== "1", "interacting", grand.okay)
 
-tmp_assumption = ifelse.(ismissing.(grand.okay_JW), 0, grand.okay_JW)
-grand.okay_assumption .= ifelse.(tmp_assumption .== 0, "not credible", "credible")
+#tmp_assumption = ifelse.(ismissing.(grand.okay_JW), 0, grand.okay_JW)
+#grand.okay_assumption .= ifelse.(tmp_assumption .== 0, "not credible", "credible")
 
 
 try
