@@ -6,7 +6,7 @@ NA,"Order of noun and adjective",87A,GB193
 ND,"Order of noun and determiner",88A,GB025
 NNum,"Order of noun and numeral",89A,GB024
 NRc,"Order of noun and relative clause",90A,"GB327 & GB328"
-HaAr,"Hand and arm identical?",129A,–
+HaAr,"Hand and arm identical",129A,–
 Nas,"Vowel nasalization",10A,–
-Gen,"Gender distinction in independent 3rd person pronouns",–,GB030
-Pas,"Phonologically free passive marker",–,GB302
+Bod,"Body-part tallying system",–,GB336
+Pol,"Politeness distinction in 2nd person",–,GB415
