@@ -39,7 +39,6 @@ p4 = @df grambank boxplot(:okay, :H_dispref .- :H, group=:okay, fillalpha=0.3, a
 title!("(D) Underrepresented types, Grambank")
 #ylims!(extrema(vcat(data.H_pref .- data.H, data.H_dispref .- data.H)))
 ylims!(-0.3, 0.4)
-ylims!(-0.3, 0.5)
 #ylabel!("normalized neighbourhood entropy")
 
 
@@ -49,10 +48,10 @@ plot(p1, p2, p3, p4,
      right_margin=[0mm 0mm], 
      bottom_margin=[5mm 5mm], 
      top_margin=[2mm 2mm], 
-     aspect_ratio=5.0,
+     aspect_ratio=6.0,
      titlefontsize=11,
      titlelocation=:left,
-     size=(900,900),
+     size=(900,1000),
      dpi=200)
 
 #xlabel!("Feature pair class")
