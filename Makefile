@@ -1,9 +1,9 @@
 JULIA=julia
 JOPTS=--project=.
 J=$(JULIA) $(JOPTS)
-PROCS=3
-MINDEGREE=101
-MAXDEGREE=110
+PROCS=6
+MINDEGREE=1
+MAXDEGREE=200
 
 
 .PHONY : analysis deps data dicts sand pretty plots clean purge
