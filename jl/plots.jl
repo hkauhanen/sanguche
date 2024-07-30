@@ -4,6 +4,8 @@ using CategoricalArrays, DataFrames, Measures, Serialization, StatsPlots
 wals = deserialize("../results/wals/results.jls")
 grambank = deserialize("../results/grambank/results.jls")
 
+subset!(wals, :degree => d -> d .== 10)
+subset!(grambank, :degree => d -> d .== 10)
 
 wals.okay = categorical(wals.okay, ordered=true)
 levels!(wals.okay, ["interacting", "unknown", "non-interacting"])

@@ -7,6 +7,7 @@ Data analysis code for the paper:
 Requirements:
 
 - Julia (version 1.10.2 or newer)
+- R (version 4.2.2 or newer)
 - GNU make
 - an internet connection (to download the WALS and Grambank datasets and great-circle distances)
 
@@ -44,7 +45,7 @@ To produce the plots:
 make plots
 ```
 
-These will appear in `results/plots/`.
+These will appear in `results/plots/`. Plotting is handled by R; the following packages must be installed: _tidyverse_, _ggsci_, _gridExtra_, _reshape2_.
 
 
 ## Brief description of code logic

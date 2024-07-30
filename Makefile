@@ -1,6 +1,7 @@
 JULIA=julia
 JOPTS=--project=.
 J=$(JULIA) $(JOPTS)
+R=Rscript
 PROCS=6
 MINDEGREE=1
 MAXDEGREE=200
@@ -28,8 +29,8 @@ sand : deps tmp/$(DATASET)/sand_results.jls
 
 pretty : deps results/$(DATASET)/results.jls results/$(DATASET)/results.csv
 
-plots : deps results/wals/results.jls results/grambank/results.jls jl/plots.jl
-	cd jl; $J plots.jl
+plots : results/wals/results.csv results/grambank/results.csv R/plots.R
+	cd R; $R plots.R
 
 tmp/$(DATASET)/data.jls : jl/make_data_$(DATASET).jl jl/features_$(DATASET).jl
 	cd jl; $J make_data_$(DATASET).jl
