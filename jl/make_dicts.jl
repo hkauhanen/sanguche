@@ -36,9 +36,6 @@ f2s = [f in control_features for f in results[:, :f2]]
 results.class = ifelse.(f1s .+ f2s .> 0, "control", "target")
 
 
-# We are not interested in pair 129A & 130A (the two lexical features).
-results = results[(results.f1 .!= "129A") .| (results.f2 .!= "130A"), :]
-
 
 data = deserialize("../tmp/$dataset/data.jls")
 
