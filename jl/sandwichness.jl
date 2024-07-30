@@ -6,7 +6,6 @@ using Distributed
 # https://discourse.julialang.org/t/how-to-pass-args-to-multiple-processes/80075/3
 @everywhere myargfunc(x) = x
 @everywhere dataset = myargfunc($ARGS)[1]
-@everywhere degree = parse(Int, myargfunc($ARGS)[2])
 
 
 # all processors need access to the following
@@ -20,6 +19,7 @@ using Distributed
 @everywhere results = deserialize("../tmp/$dataset/grid.jls")
 @everywhere Ddata = deserialize("../tmp/$dataset/Ddata.jls")
 @everywhere Ddists = deserialize("../tmp/$dataset/Ddists.jls")
+
 
 
 # count number of times each element of 'x' occurs in 'y'
@@ -110,6 +110,8 @@ end
   resultsh = subset(results, :pair => (p -> p .== r.pair))
   datah = Ddata[r.pair]
   distsh = Ddists[r.pair]
+  
+  degree = r.degree
 
   distsh = subset(distsh, :eachindex => i -> i .<= degree)
 
@@ -158,6 +160,7 @@ sand = @distributed (vcat) for r in eachrow(gridMC)
   out = DataFrame(r)
   out = out[:, Between(:pair, :class)]
   out.rep .= r.rep
+  out.degree .= r.degree
 
   out.permuted .= false
 
@@ -171,7 +174,7 @@ end
 
 types = ["11", "12", "21", "22"]
 
-merged = innerjoin(results, sand, on=:pair, makeunique=true)
+merged = innerjoin(results, sand, on=[:pair, :degree], makeunique=true)
 
 
 

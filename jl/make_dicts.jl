@@ -17,7 +17,8 @@ using StatsBase
 
 
 dataset = ARGS[1]
-max_degree = parse(Int, ARGS[2])
+min_degree = parse(Int, ARGS[2])
+max_degree = parse(Int, ARGS[3])
 
 include("features_$dataset.jl")
 
@@ -118,7 +119,19 @@ for r in eachrow(results)
 end
 
 
-serialize("../tmp/$dataset/grid.jls", results)
+# expand grid ('results') so that each data point has a row for each
+# degree between 'min_degree' and 'max_degree'
+grid = DataFrame()
+for degree in min_degree:max_degree
+	local here = results
+	here.degree .= degree
+	global grid = [grid; here]
+end
+
+
+
+
+serialize("../tmp/$dataset/grid.jls", grid)
 serialize("../tmp/$dataset/Ddata.jls", Ddata)
 serialize("../tmp/$dataset/Ddists.jls", Ddists)
 
