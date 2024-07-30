@@ -6,7 +6,7 @@ using Distributed
 # https://discourse.julialang.org/t/how-to-pass-args-to-multiple-processes/80075/3
 @everywhere myargfunc(x) = x
 @everywhere dataset = myargfunc($ARGS)[1]
-@everywhere degree = myargfunc($ARGS)[2]
+@everywhere degree = parse(Int, myargfunc($ARGS)[2])
 
 
 # all processors need access to the following
