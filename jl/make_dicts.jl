@@ -17,7 +17,7 @@ using StatsBase
 
 
 dataset = ARGS[1]
-degree = parse(Int, ARGS[2])
+max_degree = parse(Int, ARGS[2])
 
 include("features_$dataset.jl")
 
@@ -114,7 +114,7 @@ for r in eachrow(results)
   tmp = subset(tmp, :Language_ID => (a -> a .∈ [tmp2.language_ID]))
 
   tmp2 = combine(groupby(tmp2, :language_ID), :neighbour_ID, :distance, eachindex)
-  tmp2 = subset(tmp2, :eachindex => i -> i .<= degree)
+  tmp2 = subset(tmp2, :eachindex => i -> i .<= max_degree)
 
   Ddata[r.pair] = tmp
   Ddists[r.pair] = tmp2

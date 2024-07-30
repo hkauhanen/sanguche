@@ -6,6 +6,7 @@ using Distributed
 # https://discourse.julialang.org/t/how-to-pass-args-to-multiple-processes/80075/3
 @everywhere myargfunc(x) = x
 @everywhere dataset = myargfunc($ARGS)[1]
+@everywhere degree = myargfunc($ARGS)[2]
 
 
 # all processors need access to the following
@@ -109,6 +110,8 @@ end
   resultsh = subset(results, :pair => (p -> p .== r.pair))
   datah = Ddata[r.pair]
   distsh = Ddists[r.pair]
+
+  distsh = subset(distsh, :eachindex => i -> i .<= degree)
 
   out = DataFrame(pair=r.pair)
 
