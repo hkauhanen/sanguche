@@ -85,14 +85,14 @@ levels(data10$variable) <- c("Mean distance to neighbour", "S.D. of distance to 
 
 g <- ggplot(data10, aes(x=value, fill=Dataset, color=Dataset))
 g <- g + facet_wrap(variable~., nrow=2)
-g <- g + geom_density(lwd=1.0, adjust=1.0, position="identity", alpha=0.3)
-g <- g + scale_fill_jco() + scale_color_jco()
+g <- g + geom_density(lwd=0.6, adjust=1.0, position="identity", alpha=0.3)
+g <- g + scale_fill_nejm() + scale_color_nejm()
 g <- g + theme_bw()
 g <- g + theme(axis.text=element_text(color="black"))
 g <- g + theme(strip.text=element_text(size=12), strip.background=element_blank())
 g <- g + xlab("km") + ylab("")
 g <- g + xlim(0, 2500)
 
-png("../results/plots/distances.png", res=300, width=2000, height=1500)
+png("../results/plots/distances.png", res=300, width=2000, height=1600)
 print(g)
 dev.off()
