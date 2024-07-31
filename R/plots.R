@@ -8,7 +8,7 @@ deftheme <- function() {
   g <- theme_bw()
   g <- g + theme(panel.grid.major=element_blank(), panel.grid.minor=element_blank())
   g <- g + theme(axis.text=element_text(color="black"))
-  g <- g + theme(strip.text=element_text(size=12), strip.background=element_blank())
+  g <- g + theme(strip.text=element_text(size=12, hjust=0), strip.background=element_blank())
   g
 }
 
@@ -29,17 +29,17 @@ data_d <- data %>% group_by(Dataset, Typology, degree) %>% summarize(median=medi
 
 
 g <- ggplot(data_d, aes(x=degree, color=Typology, group=Typology))
-g <- g + facet_wrap(.~Dataset, nrow=1)
+g <- g + facet_wrap(.~Dataset, nrow=2)
 g <- g + geom_ribbon(aes(fill=Typology, ymin=q, ymax=Q), alpha=0.15, color=NA)
 g <- g + geom_line(aes(y=median, lty=Typology), lwd=1.0)
 g <- g + scale_x_log10()
-g <- g + annotation_logticks(sides="bt")
+g <- g + annotation_logticks(sides="b")
 g <- g + scale_fill_jco() + scale_color_jco()
 g <- g + deftheme()
 g <- g + xlab("Neighbourhood size") + ylab(expression("Neighbourhood entropy differential"~Delta))
-g <- g + theme(legend.position=c(0.61, 0.22))
+g <- g + theme(legend.position=c(0.85, 0.90))
 
-png("../results/plots/neighbourhood_dispref.png", res=300, width=2500, height=1300)
+png("../results/plots/neighbourhood_dispref.png", res=300, width=1800, height=2500)
 print(g)
 dev.off()
 
