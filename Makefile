@@ -2,7 +2,7 @@ JULIA=julia
 JOPTS=--project=.
 J=$(JULIA) $(JOPTS)
 R=Rscript
-PROCS=2
+PROCS=6
 
 
 .PHONY : analysis deps data dicts sand pretty plots clean purge
