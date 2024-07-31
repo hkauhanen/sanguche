@@ -4,6 +4,15 @@ library(gridExtra)
 library(reshape2)
 
 
+deftheme <- function() {
+  g <- theme_bw()
+  g <- g + theme(panel.grid.major=element_blank(), panel.grid.minor=element_blank())
+  g <- g + theme(axis.text=element_text(color="black"))
+  g <- g + theme(strip.text=element_text(size=12), strip.background=element_blank())
+  g
+}
+
+
 wals <- read.csv("../results/wals/results.csv")
 grambank <- read.csv("../results/grambank/results.csv")
 
@@ -25,7 +34,7 @@ g <- g + geom_line(aes(y=median, lty=Typology), lwd=1.0)
 g <- g + scale_x_log10()
 g <- g + annotation_logticks(sides="bt")
 g <- g + scale_fill_jco() + scale_color_jco()
-g <- g + theme_bw() + theme(panel.grid.minor=element_blank(), axis.text=element_text(color="black"))
+g <- g + deftheme()
 g <- g + xlab("Neighbourhood size") + ylab(expression("Neighbourhood entropy differential"~Delta))
 g <- g + ggtitle("(A) Underrepresented types, WALS")
 
@@ -37,7 +46,7 @@ g <- g + geom_line(aes(y=median, lty=Typology), lwd=1.0)
 g <- g + scale_x_log10()
 g <- g + annotation_logticks(sides="bt")
 g <- g + scale_fill_jco() + scale_color_jco()
-g <- g + theme_bw() + theme(panel.grid.minor=element_blank(), axis.text=element_text(color="black"))
+g <- g + deftheme()
 g <- g + xlab("Neighbourhood size") + ylab(expression("Neighbourhood entropy differential"~Delta))
 g <- g + ggtitle("(B) Underrepresented types, Grambank")
 
@@ -61,9 +70,7 @@ g <- ggplot(data10, aes(x=Typology, fill=Typology, y=value))
 g <- g + facet_grid(Dataset~variable) 
 g <- g + geom_boxplot(alpha=0.35)
 g <- g + scale_fill_jco()
-g <- g + theme_bw()
-g <- g + theme(axis.text=element_text(color="black"))
-g <- g + theme(strip.text=element_text(size=12), strip.background=element_blank())
+g <- g + deftheme()
 g <- g + xlab("")
 g <- g + ylab(expression("Neighbourhood entropy differential"~Delta))
 
@@ -87,9 +94,7 @@ g <- ggplot(data10, aes(x=value, fill=Dataset, color=Dataset))
 g <- g + facet_wrap(variable~., nrow=2)
 g <- g + geom_density(lwd=0.6, adjust=1.0, position="identity", alpha=0.3)
 g <- g + scale_fill_nejm() + scale_color_nejm()
-g <- g + theme_bw()
-g <- g + theme(axis.text=element_text(color="black"))
-g <- g + theme(strip.text=element_text(size=12), strip.background=element_blank())
+g <- g + deftheme()
 g <- g + xlab("km") + ylab("")
 g <- g + xlim(0, 2500)
 
