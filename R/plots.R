@@ -14,21 +14,22 @@ deftheme <- function() {
 
 
 wals <- read.csv("../results/wals/results.csv")
+wals$Dataset <- "WALS"
 grambank <- read.csv("../results/grambank/results.csv")
+grambank$Dataset <- "Grambank"
 
-wals$Typology <- factor(wals$okay, levels=c("interacting", "unknown", "non-interacting"))
-wals$Delta_pref <- wals$H_pref - wals$H
-wals$Delta_dispref <- wals$H_dispref - wals$H
+data <- rbind(wals, grambank)
 
-grambank$Typology <- factor(grambank$okay, levels=c("interacting", "unknown", "non-interacting"))
-grambank$Delta_pref <- grambank$H_pref - grambank$H
-grambank$Delta_dispref <- grambank$H_dispref - grambank$H
+data$Typology <- factor(data$okay, levels=c("interacting", "unknown", "non-interacting"))
+data$Dataset <- factor(data$Dataset, levels=c("WALS", "Grambank"))
+data$Delta_pref <- data$H_pref - data$H
+data$Delta_dispref <- data$H_dispref - data$H
 
-wals_d <- wals %>% group_by(Typology, degree) %>% summarize(median=median(Delta_dispref), q=quantile(Delta_dispref)[2], Q=quantile(Delta_dispref)[4])
-grambank_d <- grambank %>% group_by(Typology, degree) %>% summarize(median=median(Delta_dispref), q=quantile(Delta_dispref)[2], Q=quantile(Delta_dispref)[4])
+data_d <- data %>% group_by(Dataset, Typology, degree) %>% summarize(median=median(Delta_dispref), q=quantile(Delta_dispref)[2], Q=quantile(Delta_dispref)[4])
 
 
-g <- ggplot(wals_d, aes(x=degree, color=Typology, group=Typology))
+g <- ggplot(data_d, aes(x=degree, color=Typology, group=Typology))
+g <- g + facet_wrap(.~Dataset, nrow=1)
 g <- g + geom_ribbon(aes(fill=Typology, ymin=q, ymax=Q), alpha=0.15, color=NA)
 g <- g + geom_line(aes(y=median, lty=Typology), lwd=1.0)
 g <- g + scale_x_log10()
@@ -36,34 +37,16 @@ g <- g + annotation_logticks(sides="bt")
 g <- g + scale_fill_jco() + scale_color_jco()
 g <- g + deftheme()
 g <- g + xlab("Neighbourhood size") + ylab(expression("Neighbourhood entropy differential"~Delta))
-g <- g + ggtitle("(A) Underrepresented types, WALS")
+g <- g + theme(legend.position=c(0.61, 0.22))
 
-h <- g
-
-g <- ggplot(grambank_d, aes(x=degree, color=Typology, group=Typology))
-g <- g + geom_ribbon(aes(fill=Typology, ymin=q, ymax=Q), alpha=0.15, color=NA)
-g <- g + geom_line(aes(y=median, lty=Typology), lwd=1.0)
-g <- g + scale_x_log10()
-g <- g + annotation_logticks(sides="bt")
-g <- g + scale_fill_jco() + scale_color_jco()
-g <- g + deftheme()
-g <- g + xlab("Neighbourhood size") + ylab(expression("Neighbourhood entropy differential"~Delta))
-g <- g + ggtitle("(B) Underrepresented types, Grambank")
-
-png("../results/plots/neighbourhood_dispref.png", res=300, width=2000, height=3000)
-print(grid.arrange(h, g, ncol=1))
+png("../results/plots/neighbourhood_dispref.png", res=300, width=2500, height=1300)
+print(g)
 dev.off()
 
 
 
-wals10 <- melt(wals[wals$degree == 10, ], measure.vars=c("Delta_pref", "Delta_dispref"))
-wals10$Dataset <- "WALS"
-grambank10 <- melt(grambank[grambank$degree == 10, ], measure.vars=c("Delta_pref", "Delta_dispref"))
-grambank10$Dataset <- "Grambank"
-data10 <- rbind(wals10, grambank10)
-
-data10$Dataset <- factor(data10$Dataset, levels=c("WALS", "Grambank"))
-data10$Typology <- factor(data10$Typology, levels=c("interacting", "unknown", "non-interacting"))
+data10 <- data[data$degree == 10, ]
+data10 <- data10 %>% group_by(Dataset) %>% melt(measure.vars=c("Delta_pref", "Delta_dispref"))
 levels(data10$variable) <- c("Overrepresented types", "Underrepresented types")
 
 g <- ggplot(data10, aes(x=Typology, fill=Typology, y=value)) 
@@ -73,21 +56,15 @@ g <- g + scale_fill_jco()
 g <- g + deftheme()
 g <- g + xlab("")
 g <- g + ylab(expression("Neighbourhood entropy differential"~Delta))
+g <- g + theme(legend.position=c(0.15, 0.89))
 
-png("../results/plots/boxplot.png", res=300, width=2000, height=2000)
+png("../results/plots/boxplot.png", res=300, width=1800, height=2000)
 print(g)
 dev.off()
 
 
-
-wals10 <- melt(wals[wals$degree == 10, ], measure.vars=c("mean_distance", "sd_distance"))
-wals10$Dataset <- "WALS"
-grambank10 <- melt(grambank[grambank$degree == 10, ], measure.vars=c("mean_distance", "sd_distance"))
-grambank10$Dataset <- "Grambank"
-data10 <- rbind(wals10, grambank10)
-
-data10$Dataset <- factor(data10$Dataset, levels=c("WALS", "Grambank"))
-data10$Typology <- factor(data10$Typology, levels=c("interacting", "unknown", "non-interacting"))
+data10 <- data[data$degree == 10, ]
+data10 <- melt(data10, measure.vars=c("mean_distance", "sd_distance"))
 levels(data10$variable) <- c("Mean distance to neighbour", "S.D. of distance to neighbour")
 
 g <- ggplot(data10, aes(x=value, fill=Dataset, color=Dataset))
@@ -97,6 +74,7 @@ g <- g + scale_fill_nejm() + scale_color_nejm()
 g <- g + deftheme()
 g <- g + xlab("km") + ylab("")
 g <- g + xlim(0, 2500)
+g <- g + theme(legend.position=c(0.89, 0.88))
 
 png("../results/plots/distances.png", res=300, width=2000, height=1600)
 print(g)
