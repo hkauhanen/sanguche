@@ -3,8 +3,6 @@ JOPTS=--project=.
 J=$(JULIA) $(JOPTS)
 R=Rscript
 PROCS=6
-MINDEGREE=1
-MAXDEGREE=200
 
 
 .PHONY : analysis deps data dicts sand pretty plots clean purge
@@ -36,7 +34,7 @@ tmp/$(DATASET)/data.jls : jl/make_data_$(DATASET).jl jl/features_$(DATASET).jl
 	cd jl; $J make_data_$(DATASET).jl
 
 tmp/$(DATASET)/grid.jls tmp/$(DATASET)/Ddata.jls tmp/$(DATASET)/Ddists.jls &: jl/make_dicts.jl jl/features_$(DATASET).jl tmp/$(DATASET)/data.jls
-	cd jl; $J make_dicts.jl $(DATASET) $(MINDEGREE) $(MAXDEGREE)
+	cd jl; $J make_dicts.jl $(DATASET)
 
 tmp/$(DATASET)/sand_results.jls : jl/sandwichness.jl tmp/$(DATASET)/grid.jls tmp/$(DATASET)/Ddata.jls tmp/$(DATASET)/Ddists.jls
 	cd jl; $J -p $(PROCS) sandwichness.jl $(DATASET)

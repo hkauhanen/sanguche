@@ -17,8 +17,8 @@ using StatsBase
 
 
 dataset = ARGS[1]
-min_degree = parse(Int, ARGS[2])
-max_degree = parse(Int, ARGS[3])
+
+include("params.jl")
 
 include("features_$dataset.jl")
 
@@ -112,17 +112,16 @@ for r in eachrow(results)
   tmp = subset(tmp, :Language_ID => (a -> a .∈ [tmp2.language_ID]))
 
   tmp2 = combine(groupby(tmp2, :language_ID), :neighbour_ID, :distance, eachindex)
-  tmp2 = subset(tmp2, :eachindex => i -> i .<= max_degree)
+  tmp2 = subset(tmp2, :eachindex => i -> i .<= maximum(degrees))
 
   Ddata[r.pair] = tmp
   Ddists[r.pair] = tmp2
 end
 
 
-# expand grid ('results') so that each data point has a row for each
-# degree between 'min_degree' and 'max_degree'
+# expand grid ('results') so that each data point has a row for each degree
 grid = DataFrame()
-for degree in min_degree:max_degree
+for degree in degrees
 	local here = results
 	here.degree .= degree
 	global grid = [grid; here]
