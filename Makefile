@@ -30,10 +30,11 @@ pretty : deps results/$(DATASET)/results.jls results/$(DATASET)/results.csv
 plots : results/wals/results.csv results/grambank/results.csv R/plots.R
 	cd R; $R plots.R
 
-tmp/$(DATASET)/data.jls : jl/make_data_$(DATASET).jl jl/features_$(DATASET).jl
+tmp/$(DATASET)/data.jls : jl/make_data_$(DATASET).jl jl/extend_$(DATASET).jl jl/params.jl
+	cd jl; $J extend_$(DATASET).jl
 	cd jl; $J make_data_$(DATASET).jl
 
-tmp/$(DATASET)/grid.jls tmp/$(DATASET)/Ddata.jls tmp/$(DATASET)/Ddists.jls &: jl/make_dicts.jl jl/features_$(DATASET).jl tmp/$(DATASET)/data.jls
+tmp/$(DATASET)/grid.jls tmp/$(DATASET)/Ddata.jls tmp/$(DATASET)/Ddists.jls &: jl/make_dicts.jl jl/params.jl tmp/$(DATASET)/data.jls
 	cd jl; $J make_dicts.jl $(DATASET)
 
 tmp/$(DATASET)/sand_results.jls : jl/sandwichness.jl tmp/$(DATASET)/grid.jls tmp/$(DATASET)/Ddata.jls tmp/$(DATASET)/Ddists.jls

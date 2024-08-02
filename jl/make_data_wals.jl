@@ -12,7 +12,9 @@ using Pipe
 using Serialization
 
 
-include("features_wals.jl")
+include("params.jl")
+
+features = features_wals
 
 
 try

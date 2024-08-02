@@ -20,7 +20,11 @@ dataset = ARGS[1]
 
 include("params.jl")
 
-include("features_$dataset.jl")
+if dataset == "wals"
+  features = features_wals
+else
+  features = features_grambank
+end
 
 
 pairs = combinations(features, 2)
@@ -122,9 +126,9 @@ end
 # expand grid ('results') so that each data point has a row for each degree
 grid = DataFrame()
 for degree in degrees
-	local here = results
-	here.degree .= degree
-	global grid = [grid; here]
+  local here = results
+  here.degree .= degree
+  global grid = [grid; here]
 end
 
 

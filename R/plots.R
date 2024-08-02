@@ -1,7 +1,5 @@
-library(tidyverse)
-library(ggsci)
-library(gridExtra)
-library(reshape2)
+if (!require(pacman)) install.packages("pacman")
+pacman::p_load(tidyverse, ggsci, gridExtra, reshape)
 
 
 deftheme <- function() {
