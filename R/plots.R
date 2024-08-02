@@ -46,7 +46,6 @@ dev.off()
 
 
 data10 <- data[data$degree == 10, ]
-data10 <- data[data$degree %in% c(9,10), ]
 data10 <- data10 %>% group_by(Dataset) %>% melt(measure.vars=c("Delta_pref", "Delta_dispref"))
 levels(data10$variable) <- c("Overrepresented types", "Underrepresented types")
 
@@ -65,7 +64,6 @@ dev.off()
 
 
 data10 <- data[data$degree == 10, ]
-data10 <- data[data$degree %in% c(9,10), ]
 data10 <- melt(data10, measure.vars=c("mean_distance", "sd_distance"))
 levels(data10$variable) <- c("Mean distance to neighbour", "S.D. of distance to neighbour")
 
