@@ -6,7 +6,7 @@ Data analysis code for the paper:
 
 Requirements:
 
-- Julia (version 1.10.2 or newer)
+- Julia (version 1.10.4)
 - R (version 4.2.2 or newer)
 - GNU make
 - an internet connection (to download the WALS and Grambank datasets and great-circle distances)
