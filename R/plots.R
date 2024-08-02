@@ -1,6 +1,7 @@
 if (!require(pacman)) install.packages("pacman")
 pacman::p_load(tidyverse, ggsci, gridExtra, reshape)
 
+try(dir.create("../results/plots", recursive=TRUE))
 
 deftheme <- function() {
   g <- theme_bw()
@@ -9,7 +10,6 @@ deftheme <- function() {
   g <- g + theme(strip.text=element_text(size=12, hjust=0), strip.background=element_blank())
   g
 }
-
 
 wals <- read.csv("../results/wals/results.csv")
 wals$Dataset <- "WALS"
@@ -42,9 +42,9 @@ print(g)
 dev.off()
 
 
-
 data10 <- data[data$degree == 10, ]
-data10 <- data10 %>% group_by(Dataset) %>% melt(measure.vars=c("Delta_pref", "Delta_dispref"))
+#data10 <- data10 %>% group_by(Dataset) %>% melt(measure.vars=c("Delta_pref", "Delta_dispref"))
+data10 <- data10 %>% melt(measure.vars=c("Delta_pref", "Delta_dispref"))
 levels(data10$variable) <- c("Overrepresented types", "Underrepresented types")
 
 g <- ggplot(data10, aes(x=Typology, fill=Typology, y=value)) 
@@ -59,6 +59,7 @@ g <- g + theme(legend.position=c(0.15, 0.89))
 png("../results/plots/boxplot.png", res=300, width=1800, height=2000)
 print(g)
 dev.off()
+
 
 
 data10 <- data[data$degree == 10, ]
