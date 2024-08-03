@@ -1,6 +1,6 @@
 # neighbourhood size
 degrees = vcat(1:9, 10:10:100, 200)
-degrees = [10]   ### uncomment for debugging purposes
+#degrees = [10]   ### uncomment for debugging purposes
 
 # WALS features we are interested in
 wo_features = ["87A", "86A", "85A", "88A", "89A", "83A", "90A", "82A"]
