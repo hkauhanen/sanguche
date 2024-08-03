@@ -1,6 +1,6 @@
 dataset = "wals"
 
-include("../../jl/params.jl")
+include("../../../jl/params.jl")
 
 
 cd(@__DIR__)
@@ -33,21 +33,16 @@ ete3 = pyimport("ete3")
 ##
 
 try
-    mkdir("../$dataset")
-catch e
-end
-
-try
-    mkdir("../$dataset/data")
+    mkdir("../data")
 catch e
 end
 
 
 
-languagesF = "../../tmp/$dataset/languages.csv"
-valsF = "../../tmp/$dataset/values.csv"
-paramsF = "../../tmp/$dataset/parameters.csv"
-codesF = "../../tmp/$dataset/codes.csv"
+languagesF = "../../../tmp/$dataset/languages.csv"
+valsF = "../../../tmp/$dataset/values.csv"
+paramsF = "../../../tmp/$dataset/parameters.csv"
+codesF = "../../../tmp/$dataset/codes.csv"
 
 
 ##
@@ -120,13 +115,13 @@ filter!(x -> x.nValues >= 6, data)
 
 
 try
-    mkdir("../$dataset/data/asjp")
+    mkdir("../data/asjp")
 catch e
 end
 
 
 
-languagesF = "../$dataset/data/asjp/languages.csv"
+languagesF = "../data/asjp/languages.csv"
 
 !isfile(languagesF) && begin
     try
@@ -142,7 +137,7 @@ languagesF = "../$dataset/data/asjp/languages.csv"
     cp("tmp/lexibank-asjp-fb8987f/cldf/languages.csv", languagesF, force = true)
     rm("tmp", recursive = true)
 end
-asjp = CSV.read("../$dataset/data/asjp/languages.csv", DataFrame)
+asjp = CSV.read("../data/asjp/languages.csv", DataFrame)
 
 ##
 
@@ -162,7 +157,7 @@ data = innerjoin(
 
 asjp18ClusteredF = download(
     "https://osf.io/tdma5/download",
-    "../$dataset/data/asjp18Clustered.csv",
+    "../data/asjp18Clustered.csv",
 )
 
 asjp18Clustered = CSV.read(asjp18ClusteredF, DataFrame)
@@ -209,7 +204,15 @@ rename!(data, fDict)
 
 select!(data, [:longname, :glot_fam, :VS, :VO, :PN, :NG, :NA, :ND, :NNum, :NRc, :Nas, :HaAr])
 
-CSV.write("../$dataset/data/charMtx.csv", data)
+
+
+##### for testing/debugging purposes, reduce data to a random
+##### sample of 10 languages:
+#####data = data[shuffle(1:nrow(data))[1:10], :]
+
+
+
+CSV.write("../data/charMtx.csv", data)
 
 ##
 
@@ -220,7 +223,7 @@ fPairs = [
     (j, f2) in enumerate(features) if i < j
 ]
 
-open("../$dataset/data/fpairs.txt", "w") do file
+open("../data/fpairs.txt", "w") do file
     for fp in fPairs
         write(file, fp)
         write(file, "\n")
@@ -232,7 +235,7 @@ end
 famFreqs = sort(combine(groupby(data, :glot_fam), nrow), :nrow, rev=true)
 
 
-open("../$dataset/data/families.csv", "w") do file
+open("../data/families.csv", "w") do file
     write(file, join(famFreqs.glot_fam, "\n"))
     write(file, "\n")
 end
@@ -249,7 +252,7 @@ isolates = filter(x -> x.nrow == 1, famFreqs).glot_fam
 #
 
 
-CSV.write("../$dataset/data/famFrequencies.csv", famFreqs)
+CSV.write("../data/famFrequencies.csv", famFreqs)
 
 
 ##
@@ -277,19 +280,19 @@ for fp in fPairs
     )
 end
 
-CSV.write("../$dataset/data/fpairMtx.csv", pairMtx)
+CSV.write("../data/fpairMtx.csv", pairMtx)
 
 ##
 
 try
-    mkdir("../$dataset/data/posteriorTrees")
+    mkdir("../data/posteriorTrees")
 catch e
 end
 
 for fm in isolates
     l = first(filter(x -> x.glot_fam == fm, data).longname)
     nex = "($l:.01, dummy:.01);"
-    open("../$dataset/data/posteriorTrees/" * fm * ".posterior.tree", "w") do file
+    open("../data/posteriorTrees/" * fm * ".posterior.tree", "w") do file
         write(file, nex)
     end
 end
@@ -298,7 +301,7 @@ end
 
 ##
 
-worldGlotF = download("https://osf.io/jyvgt/download", "../$dataset/data/world_fullGlot.tre")
+worldGlotF = download("https://osf.io/jyvgt/download", "../data/world_fullGlot.tre")
 
 glot = ete3.Tree(worldGlotF)
 
@@ -333,19 +336,19 @@ end
 asjpCC = filter(x -> x.longname ∈ taxa, asjp18Clustered)
 
 try
-    mkdir("../$dataset/data/asjpNex/")
+    mkdir("../data/asjpNex/")
 catch e
 end
 
 try
-    mkdir("../$dataset/data/asjpNex/output")
+    mkdir("../data/asjpNex/output")
 catch e
 end
 
 
 glot3 = filter(x->x.nrow>2, famFreqs).glot_fam
 
-open("../$dataset/data/glot3.txt", "w") do file
+open("../data/glot3.txt", "w") do file
     write(file, join(glot3, "\n")*"\n")
 end
 
@@ -429,14 +432,14 @@ MATRIX
 
 END;
 """
-    open("../$dataset/data/asjpNex/"*fm*".nex", "w") do file
+    open("../data/asjpNex/"*fm*".nex", "w") do file
         write(file, nex)
     end
 end
 ##
 
 try
-    mkdir("../$dataset/data/revbayes")
+    mkdir("revbayes")
 catch e
 end
 
@@ -471,14 +474,14 @@ MATRIX
 END;
 """
 
-    open("../$dataset/data/asjpNex/"*fm*".nex", "w") do file
+    open("../data/asjpNex/"*fm*".nex", "w") do file
         write(file, nex)
     end
 rb = """
 family = "$fm"
 source("../phylogeny.Rev")
 """
-    open("../$dataset/data/revbayes/$(fm).Rev", "w") do file
+    open("revbayes/$(fm).Rev", "w") do file
         write(file, rb)
     end
 end
@@ -492,4 +495,4 @@ geoData = innerjoin(
     on=:longname
 )
 
-CSV.write("../$dataset/data/geoData.csv", geoData)
+CSV.write("../data/geoData.csv", geoData)

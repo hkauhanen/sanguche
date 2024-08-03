@@ -1,5 +1,31 @@
 J=julia +1.5.3
 
-$(DATASET)/* : code/createData_$(DATASET).jl
-	cd code; $J createData_$(DATASET).jl
+
+.PHONY : all prep data mrbayes revbayes posterior pps purge
+
+all : prep data mrbayes revbayes posterior pps
+
+prep :
+	mkdir $(DATASET)
+	cp -R src/code $(DATASET)/code
+
+data : 
+	cd $(DATASET)/code; $J createData_$(DATASET).jl
+
+mrbayes : 
+	cd $(DATASET)/code; $J runMrBayes.jl
+
+revbayes :
+	cd $(DATASET)/code/; sh rb.sh
+
+posterior :
+	cd $(DATASET)/code; Rscript createPosterior.r
+
+pps :
+	cd $(DATASET)/code; $J priorPredictiveSampling.jl
+
+purge :
+	rm -rf wals
+	rm -rf grambank
+
 
