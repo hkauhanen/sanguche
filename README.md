@@ -14,18 +14,23 @@ Requirements:
 
 ## Instructions
 
-To reproduce the analysis from scratch, type the following on the command line:
+First, install Juliaup by following the instructions at <https://github.com/JuliaLang/juliaup>.
+
+Then, to reproduce the analysis from scratch, type the following on the command line:
 
 ```
+juliaup add 1.10.4
 make DATASET=wals
 make DATASET=grambank
 ```
 
 Note the capitalization!
 
+Carrying out the analysis for one dataset takes a few minutes depending on available processing power. The very first run will be slower as Julia needs to install all required dependencies.
+
 Results are saved in the `results/wals/` and `results/grambank/` directories, respectively. The `results.csv` files are in ordinary comma-separated values format; the `results.jls` files are serializations of Julia dataframes which can be loaded into a Julia session by `using Serialization, DataFrames; results = serialize("results.jls")`.
 
-To speed up processing, parts of the analysis are parallelized over processor cores. To control the number of worker processes, modify the `PROCS` variable in the `Makefile` (it is generally best to set this equal to the number of physical cores in your processor). The variable `JULIA` can be used to set the path to the Julia executable, and the variable `DEGREE` controls how many nearest neighbours are employed at a maximum in the calculation of neighbourhood entropies.
+To speed up processing, parts of the analysis are parallelized over processor cores. To control the number of worker processes, modify the `NPROC` variable in the `Makefile` (it is generally best to set this equal to the number of physical cores in your processor). The variable `JULIA` can be used to set the path to the Julia executable, and the variable `DEGREE` controls how many nearest neighbours are employed at a maximum in the calculation of neighbourhood entropies.
 
 Temporary files are saved in `tmp/`. If you wish to delete these, type:
 

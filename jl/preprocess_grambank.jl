@@ -1,5 +1,6 @@
-# This script adds features VO, PN and NRc, which are absent as single
-# features in Grambank but can be reconstructed from pairs of features
+# This script downloads Grambank and adds features VO, PN and NRc, 
+# which are absent as single features in Grambank but can be reconstructed 
+# from pairs of features
 #
 # Parts of the script adapted from:
 # https://github.com/gerhardJaeger/phylogeneticTypology/blob/main/code/createData.jl
@@ -143,10 +144,10 @@ push!(codes, ["PN-0", "PN", 0, "postpositions"])
 push!(codes, ["PN-1", "PN", 1, "prepositions"])
 
 
-# saveout
+# writeout
 #
-CSV.write("../tmp/grambank/values-ext.csv", vals)
-CSV.write("../tmp/grambank/codes-ext.csv", codes)
+CSV.write("../tmp/grambank/values.csv", vals)
+CSV.write("../tmp/grambank/codes.csv", codes)
 
 
 
