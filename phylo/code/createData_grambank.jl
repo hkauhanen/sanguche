@@ -2,7 +2,6 @@ dataset = "grambank"
 
 include("../../jl/params.jl")
 
-using Missings
 
 
 cd(@__DIR__)
@@ -17,6 +16,7 @@ using Pipe
 using DataStructures
 using StatsBase
 using ProgressMeter
+using Missings
 using Random
 Random.seed!(2002261988307380348)
 
