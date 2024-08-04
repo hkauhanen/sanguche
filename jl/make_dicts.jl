@@ -1,8 +1,10 @@
-
 # Makes the dataframe that collects all our results, each row representing
 # one unique combination of features. Additionally adds summary statistics
 # such as (plain) phi coefficients and type frequencies.
 #
+
+
+include("deps.jl")
 
 
 using CodecZlib

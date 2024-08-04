@@ -6,6 +6,9 @@
 # MIT License
 
 
+include("deps.jl")
+
+
 using CSV
 using DataFrames
 using Pipe

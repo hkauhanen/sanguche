@@ -21,15 +21,15 @@ purge :
 deps : jl/deps.jl
 	cd jl; $J deps.jl
 
-preprocess : deps tmp/$(DATASET)/codes.csv tmp/$(DATASET)/languages.csv tmp/$(DATASET)/parameters.csv tmp/$(DATASET)/values.csv
+preprocess : tmp/$(DATASET)/codes.csv tmp/$(DATASET)/languages.csv tmp/$(DATASET)/parameters.csv tmp/$(DATASET)/values.csv
 
-data : deps tmp/$(DATASET)/data.jls
+data : tmp/$(DATASET)/data.jls
 
-dicts : deps tmp/$(DATASET)/grid.jls tmp/$(DATASET)/Ddata.jls tmp/$(DATASET)/Ddists.jls
+dicts : tmp/$(DATASET)/grid.jls tmp/$(DATASET)/Ddata.jls tmp/$(DATASET)/Ddists.jls
 
-sand : deps tmp/$(DATASET)/sand_results.jls
+sand : tmp/$(DATASET)/sand_results.jls
 
-pretty : deps results/$(DATASET)/results.jls results/$(DATASET)/results.csv
+pretty : results/$(DATASET)/results.jls results/$(DATASET)/results.csv
 
 Rdeps : R/Rdeps.R
 	cd R; $R Rdeps.R
