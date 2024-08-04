@@ -1,4 +1,4 @@
-"contrast","estimate","SE","df","t.ratio","p.value"
-"interacting - unknown",0.00449746791822289,0.0198547905785207,42,0.226518023468267,0.972129089822094
-"interacting - (non-interacting)",-0.0214090565472261,0.0193049237750183,42,-1.10899461695522,0.513943998755422
-"unknown - (non-interacting)",-0.025906524465449,0.0185613046772673,42,-1.39572755880558,0.352265686857035
+"contrast","estimate","std.error","df","statistic","adj.p.value"
+"interacting vs. non-interacting","0.0045","0.01985","42","0.22652","0.97213"
+"interacting vs. unknown","-0.02141","0.0193","42","-1.10899","0.51394"
+"unknown vs. non-interacting","-0.02591","0.01856","42","-1.39573","0.35227"
