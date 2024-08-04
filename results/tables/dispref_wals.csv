@@ -1,4 +1,4 @@
 "contrast","estimate","std.error","df","statistic","adj.p.value"
-"interacting vs. non-interacting","0.05872","0.02735","42","2.14703","0.09259"
-"interacting vs. unknown","0.11323","0.02659","42","4.2581","0.00033"
-"unknown vs. non-interacting","0.05451","0.02557","42","2.13204","0.09551"
+"interacting - unknown","0.05872","0.02735","42","2.14703","0.09259"
+"interacting - (non-interacting)","0.11323","0.02659","42","4.2581","0.00033"
+"unknown - (non-interacting)","0.05451","0.02557","42","2.13204","0.09551"

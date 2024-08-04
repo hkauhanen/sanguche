@@ -16,7 +16,7 @@ try(dir.create("../results/tables", recursive=TRUE))
 mod <- glm(Delta_pref~Typology, data10[data10$Dataset == "WALS", ], family=gaussian)
 emm <- emmeans(mod, "Typology")
 pem <- pairs(emm)
-out <- pem %>% tidy %>% select(-term) %>% select(-null.value) %>% dust %>% sprinkle(cols=c("estimate", "std.error", "statistic", "adj.p.value"), round=5) %>% sprinkle(cols="contrast", replace=c("interacting vs. non-interacting", "interacting vs. unknown", "unknown vs. non-interacting"))
+out <- pem %>% tidy %>% select(-term) %>% select(-null.value) %>% dust %>% sprinkle(cols=c("estimate", "std.error", "statistic", "adj.p.value"), round=5)
 write.csv(out, file="../results/tables/pref_wals.csv", row.names=FALSE)
 
 
@@ -24,7 +24,7 @@ write.csv(out, file="../results/tables/pref_wals.csv", row.names=FALSE)
 mod <- glm(Delta_dispref~Typology, data10[data10$Dataset == "WALS", ], family=gaussian)
 emm <- emmeans(mod, "Typology")
 pem <- pairs(emm)
-out <- pem %>% tidy %>% select(-term) %>% select(-null.value) %>% dust %>% sprinkle(cols=c("estimate", "std.error", "statistic", "adj.p.value"), round=5) %>% sprinkle(cols="contrast", replace=c("interacting vs. non-interacting", "interacting vs. unknown", "unknown vs. non-interacting"))
+out <- pem %>% tidy %>% select(-term) %>% select(-null.value) %>% dust %>% sprinkle(cols=c("estimate", "std.error", "statistic", "adj.p.value"), round=5)
 write.csv(out, file="../results/tables/dispref_wals.csv", row.names=FALSE)
 
 
@@ -33,7 +33,7 @@ write.csv(out, file="../results/tables/dispref_wals.csv", row.names=FALSE)
 mod <- glm(Delta_pref~Typology, data10[data10$Dataset == "Grambank", ], family=gaussian)
 emm <- emmeans(mod, "Typology")
 pem <- pairs(emm)
-out <- pem %>% tidy %>% select(-term) %>% select(-null.value) %>% dust %>% sprinkle(cols=c("estimate", "std.error", "statistic", "adj.p.value"), round=5) %>% sprinkle(cols="contrast", replace=c("interacting vs. non-interacting", "interacting vs. unknown", "unknown vs. non-interacting"))
+out <- pem %>% tidy %>% select(-term) %>% select(-null.value) %>% dust %>% sprinkle(cols=c("estimate", "std.error", "statistic", "adj.p.value"), round=5)
 write.csv(out, file="../results/tables/pref_grambank.csv", row.names=FALSE)
 
 
@@ -41,7 +41,7 @@ write.csv(out, file="../results/tables/pref_grambank.csv", row.names=FALSE)
 mod <- glm(Delta_dispref~Typology, data10[data10$Dataset == "Grambank", ], family=gaussian)
 emm <- emmeans(mod, "Typology")
 pem <- pairs(emm)
-out <- pem %>% tidy %>% select(-term) %>% select(-null.value) %>% dust %>% sprinkle(cols=c("estimate", "std.error", "statistic", "adj.p.value"), round=5) %>% sprinkle(cols="contrast", replace=c("interacting vs. non-interacting", "interacting vs. unknown", "unknown vs. non-interacting"))
+out <- pem %>% tidy %>% select(-term) %>% select(-null.value) %>% dust %>% sprinkle(cols=c("estimate", "std.error", "statistic", "adj.p.value"), round=5)
 write.csv(out, file="../results/tables/dispref_grambank.csv", row.names=FALSE)
 
 
