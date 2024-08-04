@@ -1,5 +1,5 @@
 # neighbourhood size (a quasilogarithmic sequence of integers from 1 to 200)
-degrees = unique(round.(exp.(range(log(1), stop=log(200), length=22))))
+degrees = Int.(unique(round.(exp.(range(log(1), stop=log(200), length=22)))))
 #degrees = [10]   ### uncomment for debugging purposes
 
 # WALS features we are interested in
