@@ -24,8 +24,10 @@ include("params.jl")
 
 if dataset == "wals"
   features = features_wals
+  control_features = control_features_wals
 else
   features = features_grambank
+  control_features = control_features_grambank
 end
 
 
