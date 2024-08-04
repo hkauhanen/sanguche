@@ -1,5 +1,5 @@
-# neighbourhood size
-degrees = vcat(1:9, 10:10:100, 200)
+# neighbourhood size (a quasilogarithmic sequence of integers from 1 to 200)
+degrees = unique(round.(exp.(range(log(1), stop=log(200), length=22))))
 #degrees = [10]   ### uncomment for debugging purposes
 
 # WALS features we are interested in
