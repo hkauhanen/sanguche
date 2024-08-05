@@ -58,13 +58,8 @@ params = CSV.read(paramsF, DataFrame)
 codes = CSV.read(codesF, DataFrame)
 ##
 
-#woFeatures = ["87A", "86A", "85A", "88A", "89A", "83A", "90A", "82A"]
 
-if dataset == "wals"
-	woFeatures = features_wals
-else
-	woFeatures = features_grambank
-end
+woFeatures = features_grambank
 
 
 data = unstack(
@@ -250,13 +245,10 @@ data = filter(x -> x.longname ∈ taxa, data)
 
 fDict = Dict(
     "GB130" => "VS",
-    #"83A" => "VO",
-    #"85A" => "PN",
     "GB065" => "NG",
     "GB193" => "NA",
     "GB025" => "ND",
     "GB024" => "NNum",
-    #"90A" => "NRc",
     "GB030" => "Gen",
     "GB302" => "Pas"
 )
@@ -267,11 +259,6 @@ rename!(data, fDict)
 select!(data, [:longname, :glot_fam, :VS, :VO, :PN, :NG, :NA, :ND, :NNum, :NRc, :Gen, :Pas])
 
 
-
-
-##### for testing/debugging purposes, reduce data to a random
-##### sample of 10 languages:
-#####data = data[shuffle(1:nrow(data))[1:10], :]
 
 
 

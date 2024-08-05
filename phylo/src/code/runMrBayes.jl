@@ -99,13 +99,15 @@ end
 
 ##
 ##### DEBUG: restrict to one family
-families = ["Ndu"]
+#####families = ["Ndu"]
 for fm in families
     mbFile = "mrbayes/$(fm).mb.nex"
     nrun = 1000000
     open(mbFile, "w") do file
         write(file, mbScript(fm, nrun, "no"))
     end
+    ##### I've been unable to make things work in parallel. MPI process exits with errors
+    ##### for some reason. Hence, we do this slowly but surely, in series...
     #####command = `mpirun -np 8 mb $mbFile`
     command = `mpirun -np 1 mb $mbFile`
     run(command)

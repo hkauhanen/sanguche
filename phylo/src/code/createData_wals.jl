@@ -56,16 +56,8 @@ params = CSV.read(paramsF, DataFrame)
 codes = CSV.read(codesF, DataFrame)
 ##
 
-#woFeatures = ["87A", "86A", "85A", "88A", "89A", "83A", "90A", "82A"]
 
-if dataset == "wals"
-	woFeatures = features_wals
-
-  # DEBUG
-  #woFeatures = control_features_wals
-else
-	woFeatures = features_grambank
-end
+woFeatures = features_wals
 
 
 data = unstack(
@@ -97,7 +89,6 @@ end
 ##
 nValues = vec(length(woFeatures) .- mapslices(x -> sum(ismissing.(x)), Array(data), dims=2))
 insertcols!(data, 10, :nValues => nValues)
-#insertcols!(data, 2, :nValues => nValues)
 
 sort!(data, :nValues, rev=true)
 
@@ -204,22 +195,11 @@ fDict = Dict(
 )
 
 
-# DEBUG
-#fDict = Dict(
-#    "10A" => "Nas",
-#    "129A" => "HaAr"
-#)
-
-
 
 rename!(data, fDict)
 
 select!(data, [:longname, :glot_fam, :VS, :VO, :PN, :NG, :NA, :ND, :NNum, :NRc, :Nas, :HaAr])
 
-
-
-##### DEBUG: for testing/debugging purposes, do just the two features with the smallest samples:
-#select!(data, [:longname, :glot_fam, :Nas, :HaAr])
 
 
 
