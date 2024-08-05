@@ -5,9 +5,11 @@ J=julia +1.5.3
 
 all : data mrbayes revbayes posterior pps
 
-data : 
+prep :
 	mkdir $(DATASET)
 	cp -R src/code $(DATASET)/code
+
+data : 
 	cd $(DATASET)/code; $J createData_$(DATASET).jl
 
 mrbayes : 
