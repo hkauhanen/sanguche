@@ -98,6 +98,7 @@ end
 
 
 ##
+##### DEBUG: restrict to one family
 families = ["Ndu"]
 for fm in families
     mbFile = "mrbayes/$(fm).mb.nex"

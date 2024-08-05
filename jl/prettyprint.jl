@@ -1,3 +1,6 @@
+include("deps.jl")
+
+
 using Serialization
 using CSV
 using DataFrames

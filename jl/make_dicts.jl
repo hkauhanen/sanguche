@@ -1,8 +1,10 @@
-
 # Makes the dataframe that collects all our results, each row representing
 # one unique combination of features. Additionally adds summary statistics
 # such as (plain) phi coefficients and type frequencies.
 #
+
+
+include("deps.jl")
 
 
 using CodecZlib
@@ -22,8 +24,10 @@ include("params.jl")
 
 if dataset == "wals"
   features = features_wals
+  control_features = control_features_wals
 else
   features = features_grambank
+  control_features = control_features_grambank
 end
 
 

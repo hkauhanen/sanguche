@@ -1,0 +1,49 @@
+require(tidyverse)
+require(broom)
+require(pixiedust)
+require(emmeans)
+
+
+load("../results/combined.RData")
+
+data10 = data[data$degree == 10, ]
+
+
+try(dir.create("../results/tables", recursive=TRUE))
+
+
+# preferred types, WALS
+mod <- glm(Delta_pref~Typology, data10[data10$Dataset == "WALS", ], family=gaussian)
+emm <- emmeans(mod, "Typology")
+pem <- pairs(emm)
+out <- pem %>% tidy %>% select(-term) %>% select(-null.value) %>% dust %>% sprinkle(cols=c("estimate", "std.error", "statistic", "adj.p.value"), round=5)
+write.csv(out, file="../results/tables/pref_wals.csv", row.names=FALSE)
+
+
+# dispreferred types, WALS
+mod <- glm(Delta_dispref~Typology, data10[data10$Dataset == "WALS", ], family=gaussian)
+emm <- emmeans(mod, "Typology")
+pem <- pairs(emm)
+out <- pem %>% tidy %>% select(-term) %>% select(-null.value) %>% dust %>% sprinkle(cols=c("estimate", "std.error", "statistic", "adj.p.value"), round=5)
+write.csv(out, file="../results/tables/dispref_wals.csv", row.names=FALSE)
+
+
+
+# preferred types, Grambank
+mod <- glm(Delta_pref~Typology, data10[data10$Dataset == "Grambank", ], family=gaussian)
+emm <- emmeans(mod, "Typology")
+pem <- pairs(emm)
+out <- pem %>% tidy %>% select(-term) %>% select(-null.value) %>% dust %>% sprinkle(cols=c("estimate", "std.error", "statistic", "adj.p.value"), round=5)
+write.csv(out, file="../results/tables/pref_grambank.csv", row.names=FALSE)
+
+
+# dispreferred types, Grambank
+mod <- glm(Delta_dispref~Typology, data10[data10$Dataset == "Grambank", ], family=gaussian)
+emm <- emmeans(mod, "Typology")
+pem <- pairs(emm)
+out <- pem %>% tidy %>% select(-term) %>% select(-null.value) %>% dust %>% sprinkle(cols=c("estimate", "std.error", "statistic", "adj.p.value"), round=5)
+write.csv(out, file="../results/tables/dispref_grambank.csv", row.names=FALSE)
+
+
+
+

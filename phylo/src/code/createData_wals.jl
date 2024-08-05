@@ -60,6 +60,9 @@ codes = CSV.read(codesF, DataFrame)
 
 if dataset == "wals"
 	woFeatures = features_wals
+
+  # DEBUG
+  woFeatures = control_features_wals
 else
 	woFeatures = features_grambank
 end
@@ -206,9 +209,8 @@ select!(data, [:longname, :glot_fam, :VS, :VO, :PN, :NG, :NA, :ND, :NNum, :NRc, 
 
 
 
-##### for testing/debugging purposes, reduce data to a random
-##### sample of 10 languages:
-#####data = data[shuffle(1:nrow(data))[1:10], :]
+##### DEBUG: for testing/debugging purposes, do just the two features with the smallest samples:
+select!(data, [:longname, :glot_fam, :Nas, :HaAr])
 
 
 
