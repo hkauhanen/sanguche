@@ -62,7 +62,7 @@ if dataset == "wals"
 	woFeatures = features_wals
 
   # DEBUG
-  woFeatures = control_features_wals
+  #woFeatures = control_features_wals
 else
 	woFeatures = features_grambank
 end
@@ -97,6 +97,7 @@ end
 ##
 nValues = vec(length(woFeatures) .- mapslices(x -> sum(ismissing.(x)), Array(data), dims=2))
 insertcols!(data, 10, :nValues => nValues)
+#insertcols!(data, 2, :nValues => nValues)
 
 sort!(data, :nValues, rev=true)
 
@@ -203,6 +204,14 @@ fDict = Dict(
 )
 
 
+# DEBUG
+#fDict = Dict(
+#    "10A" => "Nas",
+#    "129A" => "HaAr"
+#)
+
+
+
 rename!(data, fDict)
 
 select!(data, [:longname, :glot_fam, :VS, :VO, :PN, :NG, :NA, :ND, :NNum, :NRc, :Nas, :HaAr])
@@ -210,7 +219,7 @@ select!(data, [:longname, :glot_fam, :VS, :VO, :PN, :NG, :NA, :ND, :NNum, :NRc, 
 
 
 ##### DEBUG: for testing/debugging purposes, do just the two features with the smallest samples:
-select!(data, [:longname, :glot_fam, :Nas, :HaAr])
+#select!(data, [:longname, :glot_fam, :Nas, :HaAr])
 
 
 
