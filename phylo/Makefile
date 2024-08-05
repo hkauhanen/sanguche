@@ -9,6 +9,7 @@ prep :
 	mkdir $(DATASET)
 
 data : 
+	rm -rf $(DATASET)/data
 	cp -R src/code $(DATASET)/code
 	cd $(DATASET)/code; $J createData_$(DATASET).jl
 
