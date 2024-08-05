@@ -12,6 +12,7 @@ data <- rbind(wals, grambank)
 # change order of factor levels
 data$Typology <- factor(data$okay, levels=c("interacting", "unknown", "non-interacting"))
 data$Dataset <- factor(data$Dataset, levels=c("WALS", "Grambank"))
+data$Pair <- factor(data$class, levels=c("target", "control"))
 
 # add Delta_* columns for convenience
 data$Delta_pref <- data$H_pref - data$H

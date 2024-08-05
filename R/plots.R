@@ -5,7 +5,6 @@ require(gridExtra)
 require(reshape2)
 require(ggplot2)
 
-
 # create directory to save plots in
 try(dir.create("../results/plots", recursive=TRUE))
 
@@ -98,14 +97,16 @@ data10 <- data[data$degree == 10, ]
 data10 <- melt(data10, measure.vars=c("mean_distance", "sd_distance"))
 levels(data10$variable) <- c("Mean distance to neighbour", "S.D. of distance to neighbour")
 
-g <- ggplot(data10, aes(x=value, fill=Dataset, color=Dataset))
-g <- g + facet_wrap(variable~., nrow=2)
-g <- g + geom_density(lwd=0.6, adjust=1.0, position="identity", alpha=0.3)
-g <- g + scale_fill_nejm() + scale_color_nejm()
+g <- ggplot(data10, aes(x=value, group=Pair, lty=Pair, fill=Pair, color=Pair))
+#g <- g + facet_wrap(variable~., nrow=2)
+g <- g + facet_grid(Dataset~variable)
+g <- g + geom_density(position="identity", alpha=0.3)
+g <- g + scale_fill_aaas() + scale_color_aaas()
 g <- g + deftheme()
 g <- g + xlab("km") + ylab("")
 g <- g + xlim(0, 2500)
 g <- g + theme(legend.position=c(0.89, 0.88))
+
 
 png("../results/plots/distances.png", res=300, width=2000, height=1600)
 print(g)
