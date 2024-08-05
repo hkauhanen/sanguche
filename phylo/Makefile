@@ -7,9 +7,9 @@ all : data mrbayes revbayes posterior pps
 
 prep :
 	mkdir $(DATASET)
-	cp -R src/code $(DATASET)/code
 
 data : 
+	cp -R src/code $(DATASET)/code
 	cd $(DATASET)/code; $J createData_$(DATASET).jl
 
 mrbayes : 
