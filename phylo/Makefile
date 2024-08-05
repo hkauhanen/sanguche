@@ -1,15 +1,13 @@
 J=julia +1.5.3
 
 
-.PHONY : all prep data mrbayes revbayes posterior pps purge
+.PHONY : all data mrbayes revbayes posterior pps purge
 
 all : data mrbayes revbayes posterior pps
 
-prep :
-	mkdir $(DATASET)
-
 data : 
-	rm -rf $(DATASET)/data
+	rm -rf $(DATASET)
+	mkdir $(DATASET)
 	cp -R src/code $(DATASET)/code
 	cd $(DATASET)/code; $J createData_$(DATASET).jl
 
