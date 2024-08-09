@@ -9,6 +9,9 @@ mbfiles <- files[grepl(".mb.nex$", files)]
 
 families <- sub(".mb.nex*", "", mbfiles)
 
+##### Chibchan would not converge (at least not in reasonable time), so exclude it
+families <- families[families != "Chibchan"]
+
 dir.create("../data/posteriorTrees", showWarnings = F, recursive = FALSE, mode = "0777")
 
 for (fm in families) {

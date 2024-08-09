@@ -3,9 +3,9 @@ NPROC_MRBAYES=8
 NPROC_REVBAYES=16
 
 
-.PHONY : all data mrbayes revbayes posterior pps purge
+.PHONY : all data mrbayes revbayes posterior model purge
 
-all : data mrbayes revbayes posterior pps
+all : data mrbayes revbayes posterior model
 
 data : 
 	rm -rf $(DATASET)
@@ -22,8 +22,8 @@ revbayes :
 posterior :
 	cd $(DATASET)/code; Rscript createPosterior.r
 
-pps :
-	cd $(DATASET)/code; $J priorPredictiveSampling.jl
+model :
+	cd $(DATASET)/code/modelFitting; $J --project=.. -p 2 fitmodel.jl
 
 purge :
 	rm -rf wals
