@@ -5,7 +5,7 @@ no_feature_pairs = 1
 cd(@__DIR__)
 
 using Pkg
-Pkg.activate(".")
+Pkg.activate("corr")
 Pkg.instantiate()
 ##
 

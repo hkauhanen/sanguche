@@ -1,11 +1,12 @@
 J=julia +1.5.3
+JNEW=julia +1.10.4
 NPROC_MRBAYES=8
 NPROC_REVBAYES=16
 
 
-.PHONY : all data mrbayes revbayes posterior model purge
+.PHONY : all data mrbayes revbayes posterior model correlations
 
-all : data mrbayes revbayes posterior model
+all : data mrbayes revbayes posterior model correlations
 
 data : 
 	rm -rf $(DATASET)
@@ -25,8 +26,6 @@ posterior :
 model :
 	cd $(DATASET); bash fitmodel.sh
 
-purge :
-	rm -rf wals
-	rm -rf grambank
-
+correlations :
+	cd $(DATASET)/code; $(JNEW) correlations.jl
 
