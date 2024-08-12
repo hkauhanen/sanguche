@@ -23,7 +23,7 @@ posterior :
 	cd $(DATASET)/code; Rscript createPosterior.r
 
 model :
-	cd $(DATASET)/code/modelFitting; $J --project=.. -p 2 fitmodel.jl
+	cd $(DATASET); bash fitmodel.sh
 
 purge :
 	rm -rf wals
