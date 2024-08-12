@@ -27,5 +27,5 @@ model :
 	cd $(DATASET); bash fitmodel.sh
 
 correlations :
-	cd $(DATASET)/code; $(JNEW) correlations.jl
+	cd $(DATASET)/code; $J correlations.jl $(DATASET)
 

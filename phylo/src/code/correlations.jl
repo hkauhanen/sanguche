@@ -1,11 +1,22 @@
-no_feature_pairs = 28
+dataset = ARGS[1]
 no_feature_pairs = 45
-no_feature_pairs = 1
 
 cd(@__DIR__)
 
+
+try
+  mkdir("../../results")
+catch e
+end
+
+try
+  mkdir("../../results/$dataset")
+catch e
+end
+
+
 using Pkg
-Pkg.activate("corr")
+Pkg.activate(".")
 Pkg.instantiate()
 ##
 
@@ -16,7 +27,7 @@ using StatsPlots
 using Plots.PlotMeasures
 using MCPhylo
 using LinearAlgebra
-using RCall
+#using RCall
 using Formatting
 using ProgressMeter
 using Statistics
@@ -126,6 +137,12 @@ sl_palette = PlotThemes._themes[:solarized_light].defaults[:palette]
 
 ##
 
+##### Commenting out the linear regression bit, we don't need this
+#
+
+#=
+
+
 linreg_ = []
 
 for (g,charNum) in enumerate(indexin(cors.fpair, fpairs))
@@ -193,7 +210,8 @@ for (g,charNum) in enumerate(indexin(cors.fpair, fpairs))
             end
       push!(linreg_, p)
 end
-plot(linreg_...,layout=grid(7,4, heights=repeat([1/7], no_feature_pairs)))
+#plot(linreg_...,layout=grid(7,4, heights=repeat([1/7], no_feature_pairs)))
+plot(linreg_...,layout=grid(9,5, heights=repeat([1/9], no_feature_pairs)))
 
 try
       mkdir("../img/")
@@ -202,7 +220,14 @@ end
 
 
 savefig("../img/linearRegression.pdf")
+savefig("../../results/$dataset/linearRegression.pdf")
 ##
+#
+#
+#
+=#
+
+
 
 sort!(cors, :median)
 p = plot(legend = false, left_margin = upscale*10mm)
@@ -236,7 +261,8 @@ xlabel!("correlation (posterior distribution)")
 
 display(p)
 
-savefig("../img/correlations.pdf")
+#savefig("../img/correlations.pdf")
+savefig("../../results/$dataset/correlations.pdf")
 
 ##
 
@@ -258,6 +284,7 @@ catch e
 end
 
 CSV.write("../data/tables/correlations.tex", output, newline="\\\\\n", delim="&")
+CSV.write("../../results/$dataset/correlations.csv", output, delim=",")
 
 
 ##
@@ -282,11 +309,28 @@ for charNum = 1:no_feature_pairs
             posteriorEq = posteriorEq[:, [2, 1, 4, 3]]
       end
       posteriorCor = mapslices(cor4, posteriorEq, dims = 2)[:, 1]
+
+      # We could not make RCall work in Julia 1.5.3. Hence using this jerry-rigged solution:
+      try
+        mkdir("tmp")
+      catch e
+      end
+      CSV.write("tmp/corr_prior.csv", DataFrame(priorCor=priorCor))
+      CSV.write("tmp/corr_posterior.csv", DataFrame(posteriorCor=posteriorCor))
+      run(`Rscript savage_dickey.R`)
+      bfc = CSV.read("tmp/result.csv", DataFrame).result[1]
+
+      #=
+      bfc = convert(Float64, read(run(`Rscript savage_dickey.R`)))
+      println(bfc)
+      
       bfc = convert(
             Float64,
             R"library('LRO.utilities')
             log(savage_dickey($posteriorCor, $priorCor, Q=0, plot=F)$BF01)",
       )
+      =#
+
       push!(bf_, bfc)
 end
 ##
@@ -308,6 +352,7 @@ output = DataFrame(
 )
 
 CSV.write("../data/tables/bfCorr.tex", output, delim="&", newline="\\\\\n")
+CSV.write("../../results/$dataset/bfCorr.csv", output, delim=",")
 
 ##
 upscale = 2
@@ -322,4 +367,5 @@ scatter(bf.bf, 1:no_feature_pairs,
     markersize=upscale*3,
     )
 
-savefig("../img/bayesfactorCorr.pdf")
+#savefig("../img/bayesfactorCorr.pdf")
+savefig("../../results/$dataset/bayesfactorCorr.pdf")
