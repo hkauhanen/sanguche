@@ -15,7 +15,7 @@ data :
 	cd $(DATASET)/code; $J createData_$(DATASET).jl
 
 mrbayes : 
-	cd $(DATASET)/code; $J --project=. -p $(NPROC_MRBAYES) runMrBayes.jl
+	cd $(DATASET)/code; $J -p $(NPROC_MRBAYES) runMrBayes.jl
 
 revbayes :
 	cd $(DATASET)/code/; $J --project=. -p $(NPROC_REVBAYES) runrevbayes.jl

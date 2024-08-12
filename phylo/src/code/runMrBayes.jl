@@ -3,7 +3,7 @@ using Distributed
 @everywhere cd(@__DIR__)
 
 @everywhere using Pkg
-@everywhere Pkg.activate(".")
+@everywhere Pkg.activate("mrbayes_project")
 @everywhere Pkg.instantiate()
 
 ##
