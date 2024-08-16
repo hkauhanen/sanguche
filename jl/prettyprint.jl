@@ -58,8 +58,8 @@ grand.pair_pretty .= grand.f1_pretty .* " & " .* grand.f2_pretty
 JW = CSV.read("../aux/JW.csv", DataFrame)
 
 function stringtonumber(s)
-	#Set(split(s, " & "))
-	@pipe split(s, " & ") |> parse.(BigInt, _, base=62) |> sum
+	Set(split(s, " & "))
+	#@pipe split(s, " & ") |> parse.(BigInt, _, base=62) |> sum
 end
 
 transform!(JW, :pair_pretty => (p -> stringtonumber.(p)) => :pair_ID)
