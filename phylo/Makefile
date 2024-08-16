@@ -24,7 +24,7 @@ posterior :
 	cd $(DATASET)/code; Rscript createPosterior.r
 
 model :
-	cd $(DATASET); bash fitmodel.sh
+	cd $(DATASET)/code; bash fitmodel.sh
 
 correlations :
 	cd $(DATASET)/code; $J correlations.jl $(DATASET)

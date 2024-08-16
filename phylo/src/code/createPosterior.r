@@ -1,16 +1,22 @@
 library(ape)
 library(geiger)
 
+# set seed so set of trees is reproducible
+set.seed(1230853492)
+
 bi <- 0.5
 
-files <- list.files("mrbayes/")
 
-mbfiles <- files[grepl(".mb.nex$", files)]
+##### we read the family names from the output of, rather than input to, MrBayes;
+##### this way, no problems arise with non-converging families
+#files <- list.files("mrbayes/")
+#mbfiles <- files[grepl(".mb.nex$", files)]
+#families <- sub(".mb.nex*", "", mbfiles)
 
-families <- sub(".mb.nex*", "", mbfiles)
+asjpNexFiles <- list.files("", ".ckp$")
+asjpNexFiles <- sub(".ckp", "", asjpNexFiles)
+families <- unique(asjpNexFiles)
 
-##### Chibchan would not converge (at least not in reasonable time), so exclude it
-families <- families[families != "Chibchan"]
 
 dir.create("../data/posteriorTrees", showWarnings = F, recursive = FALSE, mode = "0777")
 

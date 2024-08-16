@@ -1,3 +1,8 @@
+if (!require(LRO.utilities)) {
+  install.packages("devtools")
+  devtools::install_github("LudvigOlsen/LRO.utilities")  
+}
+
 library(LRO.utilities, quietly=TRUE)
 
 pr = read.csv("tmp/corr_prior.csv")

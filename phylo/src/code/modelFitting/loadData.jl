@@ -11,6 +11,7 @@ using DataFrames
 using Pipe
 using ProgressMeter
 using Random
+using Glob
 
 
 ##
@@ -30,13 +31,11 @@ families = filter(x -> x.nrow>1, famFreqs).glot_fam
 isolates = filter(x -> x.nrow==1, famFreqs).glot_fam
 
 
-##### Chibhan did not converge, remove it
-families = families[families .!= "Chibchan"]
 
-
-##### Also a problem with Nuclear-Macro-Je, no idea why
-families = families[families .!= "Nuclear-Macro-Je"]
-
+##### Restrict analysis to those families only for which posterior trees actually exist
+postfam = glob("*.posterior.tree", "../../data/posteriorTrees")
+postfam = [split(fam)[1] for fam in postfam]
+families = families[families .∈ [postfam]]
 
 
 isoDict = @pipe wals |>

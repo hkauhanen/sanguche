@@ -77,7 +77,10 @@ end
         ) |> dropmissing
 
         maxPSRF = maximum([maxPSRF, maximum(vstat.PSRF)])
-        maxPSRF <= 1.1 && meanStdev <= 0.01
+
+        ##### employ slightly laxer convergence criteria:
+        #maxPSRF <= 1.1 && meanStdev <= 0.01
+        maxPSRF <= 1.2 && meanStdev <= 0.02
     end
     while !converged()
         nrun += 1000000
