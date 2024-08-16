@@ -1,3 +1,4 @@
 tmp/
-phylo/wals
-phylo/grambank
+phylo/wals/
+phylo/grambank/
+phylo/grambank_BAK/
