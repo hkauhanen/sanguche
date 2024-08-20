@@ -11,6 +11,8 @@ dataset = ARGS[1]
 
 
 fDict = Dict(
+             "GB030" => "Gen",
+             "GB302" => "Pas",
              "GB130" => "VS",
              #"VO" => "VO",
              "GB065" => "NG",

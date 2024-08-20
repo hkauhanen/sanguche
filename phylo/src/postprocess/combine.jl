@@ -1,4 +1,5 @@
-dataset = "wals"
+dataset = ARGS[1]
+
 
 using CSV
 using DataFrames
@@ -86,3 +87,19 @@ rename!(tabletoprint, [:feature_pair, :sample_size, :status, :LBF, :CPP, :phi, :
 
 
 CSV.write("../../../results/$dataset/featuretable.csv", tabletoprint)
+
+transform!(allresults, [:H, :H_pref] => ((a,b) -> b - a) => :Delta_over)
+transform!(allresults, [:H, :H_dispref] => ((a,b) -> b - a) => :Delta_under)
+
+allresults.dataset .= ""
+if dataset == "wals"
+    allresults.dataset .= "WALS"
+else
+    allresults.dataset .= "Grambank"
+end
+
+results_towrite = select(allresults, [:pair_pretty, :logBayes, :cpp, :interacting, :control, :status, :phi, :corrected_phi, :hpd, :degree, :H, :H_pref, :H_dispref, :Delta_over, :Delta_under, :N, :mean_distance, :sd_distance, :dataset])
+
+rename!(results_towrite, [:pair, :LBF, :CPP, :interacting, :control, :status, :phi, :corrected_phi, :HPD, :k, :H, :H_over, :H_under, :Delta_over, :Delta_under, :N, :mean_distance, :sd_distance, :dataset])
+
+CSV.write("../../../results/$dataset/results_combined.csv", results_towrite)

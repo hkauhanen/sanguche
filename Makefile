@@ -12,7 +12,7 @@ analysis : deps preprocess data dicts sand pretty
 posthoc : Rdeps tidyup plots stats
 
 clean :
-	rm -rf tmp
+	rm -rf tmp/$(DATASET)
 
 purge :
 	rm -rf tmp
