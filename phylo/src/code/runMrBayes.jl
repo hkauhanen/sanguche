@@ -1,3 +1,5 @@
+dataset = ARGS[1]
+
 using Distributed
 
 @everywhere cd(@__DIR__)
@@ -22,9 +24,17 @@ end
 
 
 
-##
+## this prepares, among other things, the 'families' variable
 @everywhere include("prepMrBayes.jl")
 
+
+##### Chibchan will not converge for WALS, hence remove it
+if dataset == "wals"
+    families = families[families .!= "Chibchan"]
+end
+
+##### DEBUG
+println(length(families))
 
 
 ##
