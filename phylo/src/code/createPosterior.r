@@ -7,15 +7,9 @@ set.seed(1230853492)
 bi <- 0.5
 
 
-##### we read the family names from the output of, rather than input to, MrBayes;
-##### this way, no problems arise with non-converging families
-#files <- list.files("mrbayes/")
-#mbfiles <- files[grepl(".mb.nex$", files)]
-#families <- sub(".mb.nex*", "", mbfiles)
-
-asjpNexFiles <- list.files("", ".ckp$")
-asjpNexFiles <- sub(".ckp", "", asjpNexFiles)
-families <- unique(asjpNexFiles)
+files <- list.files("mrbayes/")
+mbfiles <- files[grepl(".mb.nex$", files)]
+families <- sub(".mb.nex*", "", mbfiles)
 
 
 dir.create("../data/posteriorTrees", showWarnings = F, recursive = FALSE, mode = "0777")
