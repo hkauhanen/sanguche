@@ -2,14 +2,14 @@ JULIA=julia +1.10.4
 JOPTS=--project=.
 J=$(JULIA) $(JOPTS)
 R=Rscript
-NPROC=2
+NPROC=4
 
 
-.PHONY : analysis posthoc deps preprocess data dicts sand pretty Rdeps tidyup stats plots clean purge
+.PHONY : analysis posthoc deps preprocess data dicts sand pretty Rdeps merge stats plots clean purge
 
 analysis : deps preprocess data dicts sand pretty
 
-posthoc : Rdeps tidyup plots stats
+posthoc : Rdeps merge plots stats
 
 clean :
 	rm -rf tmp/$(DATASET)
@@ -34,14 +34,15 @@ pretty : results/$(DATASET)/results.jls results/$(DATASET)/results.csv
 Rdeps : R/Rdeps.R
 	cd R; $R Rdeps.R
 
-tidyup : results/combined.RData
+merge : results/combined.RData
 	
-results/combined.RData &: R/tidyup.R results/wals/results.csv results/grambank/results.csv
-	cd R; $R tidyup.R
+results/combined.RData &: phylo/src/postprocess/combine.jl R/merge.R results/wals/results.jls results/grambank/results.jls
+	cd phylo/src/postprocess; $(JULIA) combine.jl wals; $(JULIA) combine.jl grambank
+	cd R; $R merge.R
 
-plots : results/plots/boxplot.png results/plots/distances.png results/plots/neighbourhood_dispref.png
+plots : results/plots/boxplot.png results/plots/distances.png results/plots/neighbourhood_dispref.png results/plots/kdiff.png
 	
-results/plots/boxplot.png results/plots/distances.png results/plots/neighbourhood_dispref.png &: results/combined.RData R/plots.R
+results/plots/boxplot.png results/plots/distances.png results/plots/neighbourhood_dispref.png results/plots/kdiff.png &: results/combined.RData R/plots.R R/kvsk.R
 	cd R; $R plots.R
 
 stats : results/tables/pref_wals.csv results/tables/dispref_wals.csv
