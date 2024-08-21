@@ -4,14 +4,26 @@ require(pixiedust)
 require(emmeans)
 
 
+# This loads a dataframe named "combined", which contains all our data
 load("../results/combined.RData")
-
-data10 = data[data$degree == 10, ]
-
+data <- combined
 
 try(dir.create("../results/tables", recursive=TRUE))
 
 
+wals <- data[data$dataset == "WALS" & data$k == 36, ]
+gram <- data[data$dataset == "Grambank" & data$k == 23, ]
+
+
+mod_w <- glm(Delta_under ~ status+phi, data=wals, family=gaussian)
+mod_g <- glm(Delta_under ~ status+phi, data=gram, family=gaussian)
+
+
+print(summary(mod_w))
+print(summary(mod_g))
+
+
+if (1==0) {
 # preferred types, WALS
 mod <- glm(Delta_pref~Typology, data10[data10$Dataset == "WALS", ], family=gaussian)
 emm <- emmeans(mod, "Typology")
@@ -44,6 +56,6 @@ pem <- pairs(emm)
 out <- pem %>% tidy %>% select(-term) %>% select(-null.value) %>% dust %>% sprinkle(cols=c("estimate", "std.error", "statistic", "adj.p.value"), round=5)
 write.csv(out, file="../results/tables/dispref_grambank.csv", row.names=FALSE)
 
-
+}
 
 
