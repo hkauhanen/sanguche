@@ -80,8 +80,8 @@ print(g)
 dev.off()
 
 
-wals <- data[data$dataset == "WALS" & data$k == 36, ]
-gram <- data[data$dataset == "Grambank" & data$k == 23, ]
+wals <- data[data$dataset == "WALS" & data$k == 8, ]
+gram <- data[data$dataset == "Grambank" & data$k == 8, ]
 data_onek <- rbind(wals, gram)
 
 data_onek_long <- melt(data_onek, measure.vars=c("Delta_over", "Delta_under"))

@@ -11,16 +11,25 @@ data <- combined
 try(dir.create("../results/tables", recursive=TRUE))
 
 
-wals <- data[data$dataset == "WALS" & data$k == 36, ]
-gram <- data[data$dataset == "Grambank" & data$k == 23, ]
+wals <- data[data$dataset == "WALS" & data$k == 8, ]
+gram <- data[data$dataset == "Grambank" & data$k == 8, ]
 
 
-mod_w <- glm(Delta_under ~ status+phi, data=wals, family=gaussian)
-mod_g <- glm(Delta_under ~ status+phi, data=gram, family=gaussian)
+mod_w <- glm(Delta_under ~ status+abs(phi), data=wals, family=gaussian)
+mod_g <- glm(Delta_under ~ status+abs(phi), data=gram, family=gaussian)
 
 
 print(summary(mod_w))
 print(summary(mod_g))
+
+
+mod_w <- glm(Delta_over ~ status+abs(phi), data=wals, family=gaussian)
+mod_g <- glm(Delta_over ~ status+abs(phi), data=gram, family=gaussian)
+
+
+print(summary(mod_w))
+print(summary(mod_g))
+
 
 
 if (1==0) {

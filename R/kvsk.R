@@ -62,12 +62,43 @@ kvsk3 <- function(data, dataset) {
   out <- data.frame(k=k, dataset=dataset)
 
   for (i in 1:(length(k) - 1)) {
-    df1 <- data[data$k == k[i], ] %>% arrange(Delta_under)
-    df2 <- data[data$k == k[i + 1], ] %>% arrange(Delta_under)
+    df1 <- data[data$k == k[i], ] %>% arrange(Delta_over + Delta_under)
+    df2 <- data[data$k == k[i + 1], ] %>% arrange(Delta_over + Delta_under)
     out[out$k == k[i], "diff"] <- nrow(df1) - sum(df1$pair == df2$pair)
   }
 
   out
 }
+
+
+inflection_point <- function(data, dataset) {
+  data <- data[data$dataset == dataset, ]
+
+  out <- data.frame(dataset=dataset, pair=unique(data[data$dataset == dataset, ]$pair), inflpoint=NA)
+
+  for (pair in unique(data$pair)) {
+    dp <- data[data$pair == pair, ]
+
+    k_current <- NA
+    for (k in length(unique(data$k)):2) {
+      k_current <- k
+      D <- dp[dp$k <= k, ]$Delta_under
+
+      # check if Delta vector is monotonic; if not, break from for loop
+      if (!(all(D == cummin(D)) || !all(D == cummax(D)))) {
+        break
+      }
+    }
+
+    out[out$pair == pair, ]$inflpoint <- k_current - 1
+  }
+
+  out
+}
+
+
+
+
+
 
 
