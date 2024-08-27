@@ -14,12 +14,10 @@ fDict = Dict(
              "GB030" => "Gen",
              "GB302" => "Pas",
              "GB130" => "VS",
-             #"VO" => "VO",
              "GB065" => "NG",
              "GB193" => "NA",
              "GB025" => "ND",
              "GB024" => "NNum",
-             #"NRc" => "NRc",
              "82A" => "VS",
              "83A" => "VO",
              "85A" => "PN",
@@ -29,7 +27,9 @@ fDict = Dict(
              "89A" => "NNum",
              "90A" => "NRc",
              "10A" => "Nas",
-	     "129A" => "HaAr"
+	     "129A" => "HaAr",
+       "116A" => "PolQ",
+       "112A" => "NegM"
 	     )
  
 grand = deserialize("../tmp/$dataset/sand_results.jls")

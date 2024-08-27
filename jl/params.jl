@@ -5,7 +5,8 @@ degrees = 1:200
 
 # WALS features we are interested in
 wo_features = ["87A", "86A", "85A", "88A", "89A", "83A", "90A", "82A"]
-control_features_wals = ["10A", "129A"]
+#control_features_wals = ["10A", "129A"]
+control_features_wals = ["112A", "116A"]
 features_wals = vcat(wo_features, control_features_wals)
 
 # Grambank features we are interested in
