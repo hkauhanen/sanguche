@@ -1,4 +1,11 @@
-##
+using Pkg
+Pkg.activate("mrbayes_project")
+Pkg.instantiate()
+
+
+using CSV
+using DataFrames
+
 
 using Conda
 Conda.pip_interop(true)
