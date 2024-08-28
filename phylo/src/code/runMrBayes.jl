@@ -88,9 +88,12 @@ println(length(families))
 
         maxPSRF = maximum([maxPSRF, maximum(vstat.PSRF)])
 
-        ##### employ slightly laxer convergence criteria:
-        #maxPSRF <= 1.1 && meanStdev <= 0.01
-        maxPSRF <= 1.2 && meanStdev <= 0.02
+        ##### employ slightly laxer convergence criteria for Austronesian for Grambank:
+        if dataset == "grambank" && fm == "Austronesian"
+          return maxPSRF <= 1.2 && meanStdev <= 0.02
+        else
+          return maxPSRF <= 1.1 && meanStdev <= 0.01
+        end
     end
     while !converged()
         nrun += 1000000

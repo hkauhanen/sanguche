@@ -7,7 +7,7 @@ NPROC_REVBAYES=16
 
 .PHONY : all data mrbayes revbayes posterior model correlations
 
-all : data mrbayes revbayes posterior model correlations
+all : data revbayes mrbayes posterior model correlations
 
 data : 
 	rm -rf $(DATASET)
