@@ -1,17 +1,10 @@
 using Distributed
 
-# This was formerly used to set a cutoff point so that small and large families were
-# run in separate batches. There is no longer any need for this separation, hence
-# we simply set the limit to a number larger than the filesize of the largest
-# nexus file.
-@everywhere nex_filesize_limit = 50_000_000   # 50 MB
-
 
 # Workaround to pass command-line arguments to all worker processes; see
 # https://discourse.julialang.org/t/how-to-pass-args-to-multiple-processes/80075/3
 @everywhere myfunc(funcARGS) = funcARGS
 @everywhere dataset = myfunc($ARGS)[1]
-@everywhere famsize = myfunc($ARGS)[2]
 
 
 @everywhere cd(@__DIR__)
@@ -79,29 +72,6 @@ end
 #  @everywhere families = rm_family(families, "Chibchan")
 #end
 
-
-##### Remove either small or large families (i.e. we process the two groups
-##### in different batches)
-@everywhere function rm_families_due_to_size(fams, limit, direction)
-  newfams = []
-
-  for fm in fams
-    fs = filesize("../data/asjpNex/$fm.nex")
-    if direction == "large"
-      if fs > limit
-        push!(newfams, fm)
-      end
-    elseif direction == "small"
-      if fs <= limit
-        push!(newfams, fm)
-      end
-    end
-  end
-
-  return newfams
-end
-
-@everywhere families = rm_families_due_to_size(families, nex_filesize_limit, famsize)
 
 
 
