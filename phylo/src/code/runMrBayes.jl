@@ -88,6 +88,8 @@ end
   return fams[fams .∉ [fams_to_remove]]
 end
 
+@everywhere families = rm_families_converged(families)
+
 
 ##### DEBUG
 #####println(length(families))
