@@ -1,6 +1,10 @@
 using Distributed
 
-@everywhere nex_filesize_limit = 500_000   # 500 KB
+# This was formerly used to set a cutoff point so that small and large families were
+# run in separate batches. There is no longer any need for this separation, hence
+# we simply set the limit to a number larger than the filesize of the largest
+# nexus file.
+@everywhere nex_filesize_limit = 50_000_000   # 50 MB
 
 
 # Workaround to pass command-line arguments to all worker processes; see
@@ -71,9 +75,9 @@ end
 ##### Chibchan will not converge for WALS, hence remove it
 @everywhere rm_family(fams, to_remove) = fams[fams .!= to_remove]
 
-@everywhere if dataset == "wals"
-  @everywhere families = rm_family(families, "Chibchan")
-end
+#@everywhere if dataset == "wals"
+#  @everywhere families = rm_family(families, "Chibchan")
+#end
 
 
 ##### Remove either small or large families (i.e. we process the two groups
@@ -98,6 +102,21 @@ end
 end
 
 @everywhere families = rm_families_due_to_size(families, nex_filesize_limit, famsize)
+
+
+
+##### Remove families which have already converged.
+@everywhere function rm_families_converged(fams)
+  fams_to_remove = []
+
+  for fm in fams
+    if isfile("mrbayes/converged/$fm.txt")
+      push!(fams_to_remove, fm)
+    end
+  end
+
+  return fams[fams .∉ [fams_to_remove]]
+end
 
 
 ##### DEBUG
