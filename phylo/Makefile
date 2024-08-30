@@ -1,10 +1,10 @@
 J=julia +1.5.3
 JNEW=julia +1.10.4
-NPROCS=8
+NPROCS=16
 #NPROCS_MODEL=16
 
 
-.PHONY : purge data mrbayes revbayes posterior model correlations
+.PHONY : purge data mrbayes_wals mrbayes_grambank revbayes posterior model correlations
 
 purge :
 	rm -rf $(DATASET)
@@ -14,8 +14,11 @@ data :
 	cp -R src/code $(DATASET)/code
 	cd $(DATASET)/code; $J createData_$(DATASET).jl
 
-mrbayes : 
-	cd $(DATASET)/code; $J -p $(NPROCS) runMrBayes.jl $(DATASET)
+mrbayes_wals : 
+	cd $(DATASET)/code; $J -p 15 runMrBayes.jl $(DATASET)
+
+mrbayes_grambank : 
+	cd $(DATASET)/code; $J -p 1 runMrBayes.jl $(DATASET)
 
 revbayes :
 	cd $(DATASET)/code/; $J --project=. -p $(NPROCS) runrevbayes.jl
