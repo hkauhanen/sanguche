@@ -17,6 +17,7 @@ using Distributed
 @everywhere using ProgressMeter
 @everywhere using CSV
 @everywhere using DataFrames
+@everywhere using Glob
 @everywhere using Statistics
 @everywhere using Distributions
 @everywhere using Pipe
@@ -107,7 +108,7 @@ end
 
 ##
 
-@everywhere function mbScript(fm, ngen, append)
+@everywhere function mbScript_cpu(fm, ngen, append)
     fmTaxa = filter(x -> x.glot_fam == fm, data).longname
     nex = """
 #Nexus
@@ -143,7 +144,57 @@ end
 \t\tprset clockvarpr = igr;
 \t\tprset treeagepr=Gamma(0.05, 0.005);
 \t\tprset shapepr=Exponential(10);
-\t\tset beagleprecision=double;
+\t\tset usebeagle=yes beagledevice=cpu;
+\t\tset beagleprecision=double beaglescaling=dynamic beaglesse=yes;
+\t\tmcmcp Burninfrac=0.5 stoprule=no stopval=0.01;
+\t\tmcmcp filename=../data/asjpNex/output/$fm;
+\t\tmcmcp samplefreq=1000 printfreq=5000 append=$append;
+\t\tmcmc ngen=$ngen nchains=4 nruns=2;
+\t\tsump;
+\t\tsumt;
+\tend;
+"""
+    nex
+end
+
+@everywhere function mbScript_gpu(fm, ngen, append)
+    fmTaxa = filter(x -> x.glot_fam == fm, data).longname
+    nex = """
+#Nexus
+\tBegin MrBayes;
+\t\tset seed=6789580436154794230;
+\t\tset swapseed = 614090213;
+\t\texecute ../data/asjpNex/$fm.nex;
+\t\tlset rates=gamma coding=all;
+"""
+
+fmGlot = glot.copy()
+fmGlot.prune(fmTaxa)
+constraints = []
+if length(fmTaxa) > 5
+    for nd in fmGlot.get_descendants()
+        if !nd.is_leaf()
+            push!(constraints, nd.get_leaf_names())
+        end
+    end
+end
+
+    if length(constraints) > 0
+        for (i, cn) in enumerate(constraints)
+            nex *= "\t\tconstraint c$i = " * join(cn, " ") * ";\n"
+        end
+
+        nex *= "\t\tprset topologypr = constraints("
+        nex *= join(["c$i" for i in 1:length(constraints)], ",") * ");\n"
+    end
+
+    nex *= """
+\t\tprset brlenspr = clock:uniform;
+\t\tprset clockvarpr = igr;
+\t\tprset treeagepr=Gamma(0.05, 0.005);
+\t\tprset shapepr=Exponential(10);
+\t\tset usebeagle=yes beagledevice=gpu;
+\t\tset beagleprecision=single beaglescaling=dynamic;
 \t\tmcmcp Burninfrac=0.5 stoprule=no stopval=0.01;
 \t\tmcmcp filename=../data/asjpNex/output/$fm;
 \t\tmcmcp samplefreq=1000 printfreq=5000 append=$append;
@@ -156,6 +207,16 @@ end
 end
 
 
+if dataset == "wals"
+  @everywhere mbScript(x, y, z) = mbScript_cpu(x, y, z)
+elseif dataset == "grambank"
+  @everywhere mbScript(x, y, z) = mbScript_gpu(z, y, z)
+end
+
+
+
+@everywhere max_iterations = 100_000_000
+
 
 
 ##
@@ -163,6 +224,11 @@ end
 #####@everywhere families = ["Ndu", "Tuu"]
 @sync @distributed for fm in families
   println("Executing $fm")
+
+  for old_output_file in glob("../data/asjpNex/output/$fm.*")
+    rm(old_output_file)
+  end
+
     mbFile = "mrbayes/$(fm).mb.nex"
     convFile = "mrbayes/converged/$(fm).txt"
     nrun = 1000000
@@ -217,7 +283,7 @@ end
           return maxPSRF <= 1.1 && meanStdev <= 0.01
         end
     end
-    while !converged()
+    while !converged() && nrun < max_iterations
         nrun += 1000000
         open(mbFile, "w") do file
             write(file, mbScript(fm, nrun, "yes"))
@@ -225,8 +291,10 @@ end
         run(command)
     end
 
-    open(convFile, "w") do file
-      write(file, "Converged!")
+    if converged()
+      open(convFile, "w") do file
+        write(file, "Converged!")
+      end
     end
 end
 
