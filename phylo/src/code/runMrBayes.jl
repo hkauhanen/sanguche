@@ -267,7 +267,7 @@ max_iterations = 100_000_000
 
 ##
 ##### DEBUG: restrict to a couple of families
-families_to_run = ["Ndu", "Tuu", "Uralic"]
+#####families_to_run = ["Ndu", "Tuu", "Uralic"]
 for fm in families_to_run
   ##### We try-catch this; in case a single family (or some families) exit with
   ##### an error for any reason, we don't want to be thrown out of the loop.
