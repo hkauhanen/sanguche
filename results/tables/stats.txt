@@ -1,0 +1,204 @@
+
+Call:
+glm(formula = Delta_under ~ status + abs(phi), family = gaussian, 
+    data = wals)
+
+Deviance Residuals: 
+     Min        1Q    Median        3Q       Max  
+-0.20638  -0.07256  -0.02143   0.05454   0.29111  
+
+Coefficients:
+                      Estimate Std. Error t value Pr(>|t|)   
+(Intercept)            0.19642    0.06739   2.914  0.00575 **
+statusunknown         -0.06049    0.05451  -1.110  0.27357   
+statusnon-interacting -0.09998    0.05897  -1.695  0.09760 . 
+abs(phi)               0.01843    0.09717   0.190  0.85053   
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for gaussian family taken to be 0.01437739)
+
+    Null deviance: 0.65639  on 44  degrees of freedom
+Residual deviance: 0.58947  on 41  degrees of freedom
+AIC: -57.379
+
+Number of Fisher Scoring iterations: 2
+
+
+Call:
+glm(formula = Delta_under ~ status + abs(phi), family = gaussian, 
+    data = gram)
+
+Deviance Residuals: 
+     Min        1Q    Median        3Q       Max  
+-0.32298  -0.04712  -0.00797   0.07393   0.18663  
+
+Coefficients:
+                      Estimate Std. Error t value Pr(>|t|)    
+(Intercept)            0.28295    0.06318   4.478 5.89e-05 ***
+statusunknown         -0.05145    0.05555  -0.926    0.360    
+statusnon-interacting -0.10627    0.06529  -1.628    0.111    
+abs(phi)              -0.10210    0.10098  -1.011    0.318    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for gaussian family taken to be 0.01249208)
+
+    Null deviance: 0.55022  on 44  degrees of freedom
+Residual deviance: 0.51218  on 41  degrees of freedom
+AIC: -63.704
+
+Number of Fisher Scoring iterations: 2
+
+
+Call:
+glm(formula = Delta_over ~ status + abs(phi), family = gaussian, 
+    data = wals)
+
+Deviance Residuals: 
+     Min        1Q    Median        3Q       Max  
+-0.18781  -0.03521   0.02695   0.04417   0.11938  
+
+Coefficients:
+                      Estimate Std. Error t value Pr(>|t|)   
+(Intercept)           -0.02193    0.04184  -0.524  0.60301   
+statusunknown         -0.09294    0.03384  -2.746  0.00891 **
+statusnon-interacting -0.02776    0.03661  -0.758  0.45262   
+abs(phi)              -0.02899    0.06033  -0.481  0.63342   
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for gaussian family taken to be 0.00554175)
+
+    Null deviance: 0.28998  on 44  degrees of freedom
+Residual deviance: 0.22721  on 41  degrees of freedom
+AIC: -100.28
+
+Number of Fisher Scoring iterations: 2
+
+
+Call:
+glm(formula = Delta_over ~ status + abs(phi), family = gaussian, 
+    data = gram)
+
+Deviance Residuals: 
+     Min        1Q    Median        3Q       Max  
+-0.17554  -0.02836   0.01342   0.04331   0.10533  
+
+Coefficients:
+                      Estimate Std. Error t value Pr(>|t|)  
+(Intercept)           -0.02784    0.03639  -0.765   0.4486  
+statusunknown         -0.05444    0.03200  -1.702   0.0964 .
+statusnon-interacting -0.02371    0.03760  -0.631   0.5319  
+abs(phi)              -0.06871    0.05816  -1.181   0.2442  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for gaussian family taken to be 0.004143536)
+
+    Null deviance: 0.19230  on 44  degrees of freedom
+Residual deviance: 0.16988  on 41  degrees of freedom
+AIC: -113.36
+
+Number of Fisher Scoring iterations: 2
+
+
+Call:
+glm(formula = Delta_under ~ abs(corrected_phi) + abs(phi), family = gaussian, 
+    data = wals)
+
+Deviance Residuals: 
+     Min        1Q    Median        3Q       Max  
+-0.19703  -0.08088  -0.02829   0.07446   0.27075  
+
+Coefficients:
+                   Estimate Std. Error t value Pr(>|t|)   
+(Intercept)         0.09491    0.03313   2.864   0.0065 **
+abs(corrected_phi)  0.15708    0.13566   1.158   0.2534   
+abs(phi)            0.02275    0.10916   0.208   0.8359   
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for gaussian family taken to be 0.01457206)
+
+    Null deviance: 0.65639  on 44  degrees of freedom
+Residual deviance: 0.61203  on 42  degrees of freedom
+AIC: -57.689
+
+Number of Fisher Scoring iterations: 2
+
+
+Call:
+glm(formula = Delta_under ~ abs(corrected_phi) + abs(phi), family = gaussian, 
+    data = gram)
+
+Deviance Residuals: 
+     Min        1Q    Median        3Q       Max  
+-0.27642  -0.07850  -0.01166   0.08382   0.18769  
+
+Coefficients:
+                   Estimate Std. Error t value Pr(>|t|)    
+(Intercept)         0.15995    0.02729   5.861  6.3e-07 ***
+abs(corrected_phi)  0.31230    0.13944   2.240   0.0305 *  
+abs(phi)           -0.14650    0.10003  -1.465   0.1505    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for gaussian family taken to be 0.01169817)
+
+    Null deviance: 0.55022  on 44  degrees of freedom
+Residual deviance: 0.49132  on 42  degrees of freedom
+AIC: -67.575
+
+Number of Fisher Scoring iterations: 2
+
+
+Call:
+glm(formula = Delta_over ~ abs(corrected_phi) + abs(phi), family = gaussian, 
+    data = wals)
+
+Deviance Residuals: 
+     Min        1Q    Median        3Q       Max  
+-0.16309  -0.06892   0.01307   0.06285   0.10953  
+
+Coefficients:
+                   Estimate Std. Error t value Pr(>|t|)    
+(Intercept)        -0.09378    0.02205  -4.253 0.000115 ***
+abs(corrected_phi)  0.15332    0.09029   1.698 0.096895 .  
+abs(phi)           -0.07135    0.07266  -0.982 0.331696    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for gaussian family taken to be 0.006455479)
+
+    Null deviance: 0.28998  on 44  degrees of freedom
+Residual deviance: 0.27113  on 42  degrees of freedom
+AIC: -94.327
+
+Number of Fisher Scoring iterations: 2
+
+
+Call:
+glm(formula = Delta_over ~ abs(corrected_phi) + abs(phi), family = gaussian, 
+    data = gram)
+
+Deviance Residuals: 
+      Min         1Q     Median         3Q        Max  
+-0.181275  -0.035489   0.002053   0.042419   0.101842  
+
+Coefficients:
+                   Estimate Std. Error t value Pr(>|t|)    
+(Intercept)        -0.08604    0.01613  -5.334 3.58e-06 ***
+abs(corrected_phi)  0.16426    0.08242   1.993   0.0528 .  
+abs(phi)           -0.12623    0.05912  -2.135   0.0386 *  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for gaussian family taken to be 0.004086857)
+
+    Null deviance: 0.19230  on 44  degrees of freedom
+Residual deviance: 0.17165  on 42  degrees of freedom
+AIC: -114.9
+
+Number of Fisher Scoring iterations: 2
+
