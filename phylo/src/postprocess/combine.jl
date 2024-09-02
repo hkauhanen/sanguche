@@ -12,8 +12,10 @@ if dataset == "wals"
   control_features = control_features_wals
 
   fDict = Dict(
-               "10A" => "Nas",
-               "129A" => "HaAr"
+               #"10A" => "Nas",
+               #"129A" => "HaAr"
+               "116A" => "PolQ",
+               "112A" => "NegM"
               )
 
   for k in keys(fDict)
