@@ -36,6 +36,9 @@ Mon 2 Sep @ 16:45
 All of WALS small (<100 KB) has converged, apart from Chibchan.
 
 Mon 2 Sep @ 16:55
-Interrupted WALS. Instead, doing revbayes and the CTMC on WALS as well, so we have some tangible results.
+Interrupted WALS; doing revbayes instead. Waiting for Grambank CTMC to finish.
+
+Mon 2 Sep @ 17:50
+Doing the CTMC on WALS as well; once that's finished, will launch mrbayes_large on both WALS and Grambank and leave that running.
 
 
