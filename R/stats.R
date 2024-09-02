@@ -3,6 +3,8 @@ require(broom)
 require(pixiedust)
 require(emmeans)
 
+source("kvsk.R")
+
 
 # This loads a dataframe named "combined", which contains all our data
 load("../results/combined.RData")
@@ -10,9 +12,11 @@ data <- combined
 
 try(dir.create("../results/tables", recursive=TRUE))
 
+wals_inflpoint <- round(mean_inflection_point(data, "WALS"))
+gram_inflpoint <- round(mean_inflection_point(data, "Grambank"))
 
-wals <- data[data$dataset == "WALS" & data$k == 8, ]
-gram <- data[data$dataset == "Grambank" & data$k == 8, ]
+wals <- data[data$dataset == "WALS" & data$k == wals_inflpoint, ]
+gram <- data[data$dataset == "Grambank" & data$k == gram_inflpoint, ]
 
 
 mod_w <- glm(Delta_under ~ status+abs(phi), data=wals, family=gaussian)

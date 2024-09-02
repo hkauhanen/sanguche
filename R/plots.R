@@ -5,6 +5,9 @@ require(gridExtra)
 require(reshape2)
 require(ggplot2)
 
+source("kvsk.R")
+
+
 # create directory to save plots in
 try(dir.create("../results/plots", recursive=TRUE))
 
@@ -80,8 +83,13 @@ print(g)
 dev.off()
 
 
-wals <- data[data$dataset == "WALS" & data$k == 8, ]
-gram <- data[data$dataset == "Grambank" & data$k == 8, ]
+wals_inflpoint <- round(mean_inflection_point(data, "WALS"))
+gram_inflpoint <- round(mean_inflection_point(data, "Grambank"))
+
+
+
+wals <- data[data$dataset == "WALS" & data$k == wals_inflpoint, ]
+gram <- data[data$dataset == "Grambank" & data$k == gram_inflpoint, ]
 data_onek <- rbind(wals, gram)
 
 data_onek_long <- melt(data_onek, measure.vars=c("Delta_over", "Delta_under"))
@@ -113,7 +121,7 @@ g <- g + geom_density(position="identity", alpha=0.3)
 g <- g + scale_fill_aaas() + scale_color_aaas()
 g <- g + deftheme()
 g <- g + xlab("km") + ylab("")
-g <- g + xlim(0, 4000)
+g <- g + xlim(0, 1000)
 g <- g + theme(legend.position=c(0.89, 0.88))
 
 

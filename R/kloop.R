@@ -5,8 +5,8 @@ kloop <- function(data, dataset) {
 
   for (k in ks) {
     datah <- data[data$k == k & data$dataset == dataset, ]
-    mod <- summary(glm(Delta_over~status+abs(phi), datah, family=gaussian))
-    df[df$k == k, ]$pval <- mod$coefficients[3, "Pr(>|t|)"]
+    mod <- summary(glm(Delta_under~status+abs(phi), datah, family=gaussian))
+    df[df$k == k, ]$pval <- mod$coefficients["statusnon-interacting", "Pr(>|t|)"]
   }
 
   df
