@@ -7,9 +7,13 @@ set.seed(1230853492)
 bi <- 0.5
 
 
-files <- list.files("mrbayes/")
-mbfiles <- files[grepl(".mb.nex$", files)]
-families <- sub(".mb.nex*", "", mbfiles)
+##### We only look at families which have converged
+#files <- list.files("mrbayes/")
+#mbfiles <- files[grepl(".mb.nex$", files)]
+#families <- sub(".mb.nex*", "", mbfiles)
+files <- list.files("mrbayes/converged/")
+mbfiles <- files[grepl(".txt$", files)]
+families <- sub(".txt", "", mbfiles)
 
 
 dir.create("../data/posteriorTrees", showWarnings = F, recursive = FALSE, mode = "0777")

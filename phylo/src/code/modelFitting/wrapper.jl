@@ -1,6 +1,115 @@
 using Distributed
 
-@everywhere include("loadData.jl")
+@everywhere cd(@__DIR__)
+@everywhere using Pkg
+@everywhere Pkg.activate("..")
+@everywhere Pkg.instantiate()
+
+##
+@everywhere using LinearAlgebra, StatsBase, CSV, DataFrames, Pipe, ProgressMeter, Random, Glob
+
+
+##
+
+@everywhere using MCPhylo
+@everywhere Random.seed!(4928370335238343681)
+
+
+
+##
+
+@everywhere wals = CSV.read("../../data/charMtx.csv", DataFrame)
+@everywhere d = CSV.read("../../data/fpairMtx.csv", DataFrame)
+
+@everywhere famFreqs = combine(groupby(wals, :glot_fam), nrow)
+@everywhere sort!(famFreqs, :nrow, rev=true)
+
+@everywhere families = filter(x -> x.nrow>1, famFreqs).glot_fam
+@everywhere isolates = filter(x -> x.nrow==1, famFreqs).glot_fam
+
+
+
+##### Restrict analysis to those families only for which posterior trees actually exist
+@everywhere postfam = glob("*.posterior.tree", "../../data/posteriorTrees")
+@everywhere postfam = [split(fam)[1] for fam in postfam]
+@everywhere families = families[families .∈ [postfam]]
+
+
+@everywhere isoDict = @pipe wals |>
+      filter(x -> x.glot_fam ∈ isolates, _) |>
+      zip(_.glot_fam, _.longname) |>
+      Dict
+##
+
+
+@everywhere fm2trees = Dict()
+#@everywhere @showprogress for fm in families
+for fm in families
+      @everywhere fm2trees[$fm] = MCPhylo.ParseNewick("../../data/posteriorTrees/$fm.posterior.tree")
+end
+
+for fm in isolates
+      @everywhere fm2trees[$fm] = repeat([Node(isoDict[$fm])], 1000)
+end
+
+##
+
+
+@everywhere function renumberTree(tree::GeneralNode)
+      tips = [nd for nd in post_order(tree) if nd.nchild==0]
+      nonTips = [nd for nd in post_order(tree) if nd.nchild > 0]
+      sort!(tips, lt= (x,y) -> x.name < y.name)
+      for (i,nd) in enumerate(tips)
+            nd.num = i
+      end
+      for (i,nd) in enumerate(nonTips)
+            nd.num = i+length(tips)
+      end
+      tree
+end
+
+##
+
+for fm in keys(fm2trees)
+      @everywhere fm2trees[$fm] = renumberTree.(fm2trees[$fm])
+end
+
+##
+
+@everywhere lineages = vcat(families, isolates)
+
+##
+
+@everywhere ttrees = [[fm2trees[fm][i] for fm in lineages] for i in 1:1000]
+
+
+
+##
+
+@everywhere states = ["a", "b", "c", "d"]
+
+@everywhere nsites = 1
+
+@everywhere nbase = 4
+
+@everywhere rates = [1.0]
+
+##
+@everywhere taxa = Vector{String}[]
+for t in ttrees[1]
+      @everywhere push!(taxa, sort([nd.name for nd in pre_order($t) if nd.nchild==0]))
+end
+
+##
+
+
+
+
+
+
+
+
+
 
 @everywhere function universal(charNum::Int)
   ##

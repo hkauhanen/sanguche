@@ -1,7 +1,4 @@
 dataset = ARGS[1]
-famsize = ARGS[2]
-
-nex_filesize_limit = 100_000
 
 
 cd(@__DIR__)
@@ -57,7 +54,7 @@ glot.prune(data.longname)
 
 
 ##
-all_families = open("../data/glot3.txt") do file
+families = open("../data/glot3.txt") do file
   readlines(file)
 end
 
@@ -73,46 +70,21 @@ end
 
 
 ##### Remove families which have already converged.
-function rm_families_converged(fams; verbose = false)
+function rm_families_converged(fams)
   fams_to_remove = []
 
   for fm in fams
     if isfile("mrbayes/converged/$fm.txt")
       push!(fams_to_remove, fm)
-      if verbose
-        println("Removed $fm as it has already converged in a previous analysis")
-      end
+      println("Removed $fm as it has already converged in a previous analysis")
     end
   end
 
   return fams[fams .∉ [fams_to_remove]]
 end
 
-
-
-##### Remove either small or large families (i.e. we process the two groups
-##### in different batches)
-function rm_families_due_to_size(fams, limit, direction)
-  newfams = []
-
-  for fm in fams
-    fs = filesize("../data/asjpNex/$fm.nex")
-    if direction == "large"
-      if fs > limit
-        push!(newfams, fm)
-      end
-    elseif direction == "small"
-      if fs <= limit
-        push!(newfams, fm)
-      end
-    end
-  end
-
-  return newfams
-end
-
-all_families = rm_families_due_to_size(all_families, nex_filesize_limit, famsize)
-
+families_to_run = rm_families_converged(families)
+println(families_to_run)
 
 
 ##### DEBUG
@@ -278,72 +250,47 @@ function mbScript_gpu(fm, ngen, append)
   nex
 end
 
-#=
+
 if dataset == "wals"
   mbScript(x, y, z) = mbScript_cpu(x, y, z)
 elseif dataset == "grambank"
   mbScript(x, y, z) = mbScript_gpu(x, y, z)
 end
-=#
+
+
+mbScript(x, y, z) = mbScript_original(x, y, z)
+
+
+max_iterations = 100_000_000
 
 
 
 ##
-nrun = 0
-
-
-if famsize == "large"
-  mbScript(x, y, z) = mbScript_original(x, y, z)
-  nstep = 100_000
-  max_generations = 100*nstep
-elseif famsize == "small"
-  mbScript(x, y, z) = mbScript_original(x, y, z)
-  nstep = 1_000_000
-  max_generations = 50*nstep
-end
-
-
-
 ##### DEBUG: restrict to a couple of families
-#####all_families = ["Ndu", "Tuu", "Uralic"]
-
-
-while nrun < max_generations
-    global nrun += nstep
-
-    local families = rm_families_converged(all_families)
-    
-    if length(families) == 0
-      println("All families have converged!")
-      break
-    end
-
-for fm in families
-
+#####families_to_run = ["Ndu", "Tuu", "Uralic"]
+for fm in families_to_run
   ##### We try-catch this; in case a single family (or some families) exit with
   ##### an error for any reason, we don't want to be thrown out of the loop.
   try
     println("Executing $fm")
-    
+
+    for old_output_file in glob("../data/asjpNex/output/$fm.*")
+      rm(old_output_file)
+    end
+
     mbFile = "mrbayes/$(fm).mb.nex"
     convFile = "mrbayes/converged/$(fm).txt"
-
-    # If checkpointing file exists, we continue from there. Otherwise, start anew.
-    if isfile("../data/asjpNex/output/$(fm).ckp")
-      open(mbFile, "w") do file
-      write(file, mbScript(fm, nrun, "yes"))
-    end
-    else
-      open(mbFile, "w") do file
+    nrun = 1000000
+    open(mbFile, "w") do file
       write(file, mbScript(fm, nrun, "no"))
     end
-    end
-
+    ##### I've been unable to make things work in parallel. MPI process exits with errors
+    ##### for some reason. Hence, we do this slowly but surely, in series...
     command = `mpirun -np 8 mb $mbFile`
+    #command = `mpirun -np 1 mb $mbFile`
+    #command = `mb $mbFile`
     run(command)
-
     function converged()
-      try
       pstat = CSV.read(
         "../data/asjpNex/output/$fm.pstat",
         DataFrame,
@@ -379,17 +326,12 @@ for fm in families
       maxPSRF = maximum([maxPSRF, maximum(vstat.PSRF)])
 
       ##### employ slightly laxer convergence criteria for Austronesian for Grambank:
-      if dataset == "nevermind" #dataset == "grambank" && fm == "Austronesian"
+      if dataset == "grambank" && fm == "Austronesian"
         return maxPSRF <= 1.2 && meanStdev <= 0.02
       else
         return maxPSRF <= 1.1 && meanStdev <= 0.01
       end
-    catch e
-      return false
     end
-    end
-
-    #=
     while !converged() && nrun < max_iterations
       nrun += 1000000
       open(mbFile, "w") do file
@@ -397,7 +339,6 @@ for fm in families
       end
       run(command)
     end
-    =#
 
     if converged()
       open(convFile, "w") do file
@@ -408,4 +349,4 @@ for fm in families
     println(e)
   end
 end
-end
+

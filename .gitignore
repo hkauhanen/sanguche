@@ -1,5 +1,5 @@
 tmp/
 phylo/wals/
 phylo/grambank/
-phylo/wals_BAK/
-phylo/grambank_BAK/
+phylo/wals_*/
+phylo/grambank_*/
