@@ -1,6 +1,31 @@
 global charNum = parse(Int, ARGS[1])
 
 
+cd(@__DIR__)
+using Pkg
+Pkg.activate("..")
+Pkg.instantiate()
+
+##
+using LinearAlgebra
+using StatsBase
+using CSV
+using DataFrames
+using Pipe
+using ProgressMeter
+using Random
+using Glob
+
+
+##
+
+using MCPhylo
+Random.seed!(4928370335238343681)
+
+
+
+
+
 if charNum > 0 && charNum <= 45
   include("loadData.jl")
 

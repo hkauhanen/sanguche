@@ -1,24 +1,3 @@
-cd(@__DIR__)
-using Pkg
-Pkg.activate("..")
-Pkg.instantiate()
-
-##
-using LinearAlgebra
-using StatsBase
-using CSV
-using DataFrames
-using Pipe
-using ProgressMeter
-using Random
-using Glob
-
-
-##
-
-using MCPhylo
-Random.seed!(4928370335238343681)
-
 ##
 
 wals = CSV.read("../../data/charMtx.csv", DataFrame)

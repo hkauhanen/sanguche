@@ -1,0 +1,41 @@
+Mon 2 Sep @ 13:15
+Started mrbayes_small on both WALS and Grambank simultaneously.
+Observation: first family on WALS (Nakh-Dagestanian) went to GPU by BEAGLE's autoestimation, first family on Grambank (Pama-Nyungan) went to CPU! Second family on Grambank went to GPU (whilst first family on WALS is still being operated on same GPU).
+
+Mon 2 Sep @ 13:45
+First family converged (Maiduan, on Grambank). Interrupted WALS analysis and set nex filesize limit to 300 KB instead of 500 KB.
+
+Mon 2 Sep @ 14:50
+Grambank interrupted and also switched to the 300KB limit. By now, two (Grambank) families have converged.
+
+Mon 2 Sep @ 15:20
+Third family converges on Grambank: Koiarian.
+
+Mon 2 Sep @ 15:30
+Interrupted both; increased nstep to 1M for small families; redefined size cut to be at 100KB instead. Thus, families with nex files > 100KB have nstep 100K, and families with < 100KB have nstep 1M.
+
+Mon 2 Sep @ 15:45
+First WALS family (Mongolic) converges.
+
+Mon 2 Sep @ 15:50
+Second WALS family (Chocoan) converges.
+
+Mon 2 Sep @ 16:05
+Grambank completed, either because all small (< 100KB) families have converged, or because we reached max_iteration. 
+
+Mon 2 Sep @ 16:10
+All of Grambank small converged for sure.
+
+Mon 2 Sep @ 16:25
+Running revbayes on Grambank whilst the small mrbayes families on WALS are still running.
+
+Mon 2 Sep @ 16:40
+Running CTMC model on Grambank whilst waiting for WALS mrbayes to converge. As for the latter, Chibchan seems to be troublesome once again...
+
+Mon 2 Sep @ 16:45
+All of WALS small (<100 KB) has converged, apart from Chibchan.
+
+Mon 2 Sep @ 16:55
+Interrupted WALS. Instead, doing revbayes and the CTMC on WALS as well, so we have some tangible results.
+
+
