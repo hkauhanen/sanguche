@@ -2,13 +2,16 @@
 
 Data analysis code for the paper:
 
-> Deepthi Gopal, Henri Kauhanen, Christopher Kitching, Tobias Galla & Ricardo Bermúdez-Otero (in prep.) Contact helps dispreferred combinations of typological features to survive: geospatial evidence. Manuscript, Universities of Uppsala, Konstanz and Manchester.
+> Deepthi Gopal, Henri Kauhanen, Christopher Kitching, Tobias Galla & Ricardo Bermúdez-Otero (in prep.) Contact helps dispreferred combinations of typological features to survive: geospatial evidence. Manuscript, Universities of Uppsala, Konstanz, Manchester, and the Balearic Isles.
 
 Requirements:
 
-- Julia (version 1.10.4)
-- R (version 4.2.2 or newer)
+- Julia (both versions 1.5.3 and 1.10.4)
+- R (version 4.2.2)
+- MrBayes version FIXME with BEAGLE and MPI support
+- RevBayes version FIXME
 - GNU make
+- Bash
 - an internet connection (to download the WALS and Grambank datasets and great-circle distances)
 
 
@@ -20,8 +23,9 @@ Then, to reproduce the analysis from scratch, type the following on the command 
 
 ```
 juliaup add 1.10.4
-make DATASET=wals
-make DATASET=grambank
+make deps
+make analysis DATASET=wals
+make analysis DATASET=grambank
 ```
 
 Note the capitalization!
@@ -30,7 +34,7 @@ Carrying out the analysis for one dataset takes a few minutes depending on avail
 
 Results are saved in the `results/wals/` and `results/grambank/` directories, respectively. The `results.csv` files are in ordinary comma-separated values format; the `results.jls` files are serializations of Julia dataframes which can be loaded into a Julia session by `using Serialization, DataFrames; results = serialize("results.jls")`.
 
-To speed up processing, parts of the analysis are parallelized over processor cores. To control the number of worker processes, modify the `NPROC` variable in the `Makefile` (it is generally best to set this equal to the number of physical cores in your processor).
+To speed up processing, parts of the analysis are parallelized over processor cores. To control the number of worker processes, modify the `NPROCS` variable in the `Makefile` (it is generally best to set this equal to the number of physical cores in your processor).
 
 Temporary files are saved in `tmp/`. If you wish to delete these, type:
 
@@ -44,13 +48,13 @@ If you also wish to delete results, type:
 make purge
 ```
 
-To produce the plots:
+To produce the plots and stats:
 
 ```
-make plots
+make posthoc
 ```
 
-These will appear in `results/plots/`. Plotting is handled by R; the following packages must be installed: _tidyverse_, _ggsci_, _gridExtra_, _reshape2_.
+These will appear in `results/plots/` and `results/tables/`. Plotting is handled by R; the following packages must be installed: _tidyverse_, _ggsci_, _gridExtra_, _reshape2_.
 
 
 ## Brief description of code logic
