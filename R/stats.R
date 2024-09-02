@@ -6,11 +6,15 @@ require(emmeans)
 source("kvsk.R")
 
 
+try(dir.create("../results/tables", recursive=TRUE))
+
+sink("../results/tables/stats.txt")
+
+
 # This loads a dataframe named "combined", which contains all our data
 load("../results/combined.RData")
 data <- combined
 
-try(dir.create("../results/tables", recursive=TRUE))
 
 wals_inflpoint <- round(mean_inflection_point(data, "WALS"))
 gram_inflpoint <- round(mean_inflection_point(data, "Grambank"))
@@ -36,7 +40,31 @@ print(summary(mod_g))
 
 
 
+
+mod_w <- glm(Delta_under ~ abs(corrected_phi)+abs(phi), data=wals, family=gaussian)
+mod_g <- glm(Delta_under ~ abs(corrected_phi)+abs(phi), data=gram, family=gaussian)
+
+
+print(summary(mod_w))
+print(summary(mod_g))
+
+
+mod_w <- glm(Delta_over ~ abs(corrected_phi)+abs(phi), data=wals, family=gaussian)
+mod_g <- glm(Delta_over ~ abs(corrected_phi)+abs(phi), data=gram, family=gaussian)
+
+
+print(summary(mod_w))
+print(summary(mod_g))
+
+sink()
+
+
+
+
+#### OLD stuff
 if (1==0) {
+
+
 # preferred types, WALS
 mod <- glm(Delta_pref~Typology, data10[data10$Dataset == "WALS", ], family=gaussian)
 emm <- emmeans(mod, "Typology")
