@@ -8,7 +8,8 @@ Requirements:
 
 - Julia (both versions 1.5.3 and 1.10.4)
 - R (version 4.2.2)
-- MrBayes version 3.2.7a with BEAGLE and MPI support
+- MrBayes version 3.2.7a compiled with BEAGLE and MPI support
+- BEAGLE version 4.0.1
 - RevBayes version 1.2.3
 - GNU make
 - Bash
