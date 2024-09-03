@@ -50,4 +50,7 @@ Interrupted one of the datasets, as analyses were starting to complain of not en
 Tue 3 Sep @ 15:50
 Converged: 54/75.
 
+Tue 3 Sep @ 17:35
+Read in the MrBayes manual that multithreading is a bad idea if using GPU. Hence, splitting this into two strategies now: either use 1 CPU + 1 GPU, or 8 CPU + 0 CPU. Both datasets are running. Indeed, it seems to be faster now. Families converged: 56/75 WALS, 51/81 Grambank. Listening to Takeo Ischi (!) to keep the animal spirits flowing.
+
 
