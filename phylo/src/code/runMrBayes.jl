@@ -290,7 +290,6 @@ end
 
 
 ##
-nrun = 0
 
 
 if resource == "cpu"
@@ -299,8 +298,8 @@ if resource == "cpu"
   max_generations = 500*nstep
 elseif resource == "gpu"
   mbScript(x, y, z) = mbScript_gpu(x, y, z)
-  nstep = 1_000_000
-  max_generations = 50*nstep
+  nstep = 500_000
+  max_generations = 100*nstep
 end
 
 
@@ -319,8 +318,10 @@ end
 #####all_families = ["Ndu", "Tuu", "Uralic"]
 
 
-while nrun < max_generations
-    global nrun += nstep
+
+# loop as long as there are non-converged families
+while length(rm_families_converged(all_families)) > 0
+#    global nrun += nstep
 
     local families = rm_families_converged(all_families)
     
@@ -344,15 +345,15 @@ for fm in families
       # set nrun to current number in checkpointing file
       open("../data/asjpNex/output/$(fm).ckp") do f
         ckplines = readlines(f)
-        global nrun = parse(Int, ckplines[3][14:(end-1)]) + nstep
+        local nrun = parse(Int, ckplines[3][14:(end-1)]) + nstep
+        open(mbFile, "w") do file
+          write(file, mbScript(fm, nrun, "yes"))
+        end
       end
 
-      open(mbFile, "w") do file
-      write(file, mbScript(fm, nrun, "yes"))
-    end
     else
       open(mbFile, "w") do file
-      write(file, mbScript(fm, nrun, "no"))
+      write(file, mbScript(fm, nstep, "no"))
     end
     end
 
