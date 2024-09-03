@@ -41,4 +41,7 @@ Interrupted WALS; doing revbayes instead. Waiting for Grambank CTMC to finish.
 Mon 2 Sep @ 17:50
 Doing the CTMC on WALS as well; once that's finished, will launch mrbayes_large on both WALS and Grambank and leave that running.
 
+Tue 3 Sep @ 12:25
+Families converged: 53/75 WALS, 50/81 Grambank.
+
 
