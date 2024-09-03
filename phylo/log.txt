@@ -47,5 +47,7 @@ Families converged: 53/75 WALS, 50/81 Grambank.
 Tue 3 Sep @ 14:30
 Interrupted one of the datasets, as analyses were starting to complain of not enough GPU memory. Not sure which one got interrupted, but I'm assuming Grambank. If so, then WALS continues. Numbers of converged families at this time: 53/75 and 51/81.
 
+Tue 3 Sep @ 15:50
+Converged: 54/75.
 
 
