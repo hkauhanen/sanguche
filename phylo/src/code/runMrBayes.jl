@@ -212,13 +212,13 @@ function mbScript_cpu(fm, ngen, append)
     nex *= join(["c$i" for i in 1:length(constraints)], ",") * ");\n"
   end
 
+#\t\tset beagleprecision=double beaglescaling=dynamic beaglesse=yes;
   nex *= """
 \t\tprset brlenspr = clock:uniform;
 \t\tprset clockvarpr = igr;
 \t\tprset treeagepr=Gamma(0.05, 0.005);
 \t\tprset shapepr=Exponential(10);
-\t\tset usebeagle=yes beagledevice=cpu;
-\t\tset beagleprecision=double beaglescaling=dynamic beaglesse=yes;
+\t\tset usebeagle=no;
 \t\tmcmcp Burninfrac=0.5 stoprule=no stopval=0.01;
 \t\tmcmcp filename=../data/asjpNex/output/$fm;
 \t\tmcmcp samplefreq=1000 printfreq=5000 append=$append;
@@ -293,19 +293,17 @@ end
 nrun = 0
 
 
-if famsize == "large"
-  if resource == "optimal"
-    mbScript(x, y, z) = mbScript_original(x, y, z)
-  elseif resource == "cpu"
-    mbScript(x, y, z) = mbScript_cpu(x, y, z)
-  elseif resource == "gpu"
-    mbScript(x, y, z) = mbScript_gpu(x, y, z)
-  end
+if resource == "cpu"
+  mbScript(x, y, z) = mbScript_cpu(x, y, z)
+elseif resource == "gpu"
+  mbScript(x, y, z) = mbScript_gpu(x, y, z)
+end
 
+
+if famsize == "large"
   nstep = 100_000
   max_generations = 100*nstep
 elseif famsize == "small"
-  mbScript(x, y, z) = mbScript_original(x, y, z)
   nstep = 1_000_000
   max_generations = 50*nstep
 end
@@ -347,7 +345,12 @@ for fm in families
     end
     end
 
-    command = `mpirun -np 8 mb $mbFile`
+    if resource == "cpu"
+      command = `mpirun -np 8 mb $mbFile`
+    elseif resource == "gpu"
+      command = `mb $mbFile`
+    end
+
     run(command)
 
     function converged()
