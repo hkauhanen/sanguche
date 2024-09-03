@@ -1,5 +1,6 @@
 dataset = ARGS[1]
 famsize = ARGS[2]
+resource = ARGS[3]
 
 nex_filesize_limit = 100_000
 
@@ -293,7 +294,14 @@ nrun = 0
 
 
 if famsize == "large"
-  mbScript(x, y, z) = mbScript_original(x, y, z)
+  if resource == "optimal"
+    mbScript(x, y, z) = mbScript_original(x, y, z)
+  elseif resource == "cpu"
+    mbScript(x, y, z) = mbScript_cpu(x, y, z)
+  elseif resource == "gpu"
+    mbScript(x, y, z) = mbScript_gpu(x, y, z)
+  end
+
   nstep = 100_000
   max_generations = 100*nstep
 elseif famsize == "small"

@@ -15,10 +15,10 @@ data :
 	cd $(DATASET)/code; $J createData_$(DATASET).jl
 
 mrbayes_small : 
-	cd $(DATASET)/code; $J runMrBayes.jl $(DATASET) small
+	cd $(DATASET)/code; $J runMrBayes.jl $(DATASET) small optimal
 
 mrbayes_large : 
-	cd $(DATASET)/code; $J runMrBayes.jl $(DATASET) large
+	cd $(DATASET)/code; $J runMrBayes.jl $(DATASET) large optimal
 
 revbayes :
 	cd $(DATASET)/code/; $J --project=. -p $(NPROCS) runrevbayes.jl
