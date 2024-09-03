@@ -44,4 +44,8 @@ Doing the CTMC on WALS as well; once that's finished, will launch mrbayes_large 
 Tue 3 Sep @ 12:25
 Families converged: 53/75 WALS, 50/81 Grambank.
 
+Tue 3 Sep @ 14:30
+Interrupted one of the datasets, as analyses were starting to complain of not enough GPU memory. Not sure which one got interrupted, but I'm assuming Grambank. If so, then WALS continues. Numbers of converged families at this time: 53/75 and 51/81.
+
+
 
