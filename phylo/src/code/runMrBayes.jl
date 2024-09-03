@@ -296,7 +296,7 @@ nrun = 0
 if resource == "cpu"
   mbScript(x, y, z) = mbScript_cpu(x, y, z)
   nstep = 100_000
-  max_generations = 100*nstep
+  max_generations = 500*nstep
 elseif resource == "gpu"
   mbScript(x, y, z) = mbScript_gpu(x, y, z)
   nstep = 1_000_000
@@ -344,7 +344,7 @@ for fm in families
       # set nrun to current number in checkpointing file
       open("../data/asjpNex/output/$(fm).ckp") do f
         ckplines = readlines(f)
-        global nrun = parse(Int, ckplines[3][14:(end-1)])
+        global nrun = parse(Int, ckplines[3][14:(end-1)]) + nstep
       end
 
       open(mbFile, "w") do file
