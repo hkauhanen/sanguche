@@ -295,11 +295,16 @@ nrun = 0
 
 if resource == "cpu"
   mbScript(x, y, z) = mbScript_cpu(x, y, z)
+  nstep = 100_000
+  max_generations = 100*nstep
 elseif resource == "gpu"
   mbScript(x, y, z) = mbScript_gpu(x, y, z)
+  nstep = 1_000_000
+  max_generations = 50*nstep
 end
 
 
+#=
 if famsize == "large"
   nstep = 100_000
   max_generations = 100*nstep
@@ -307,7 +312,7 @@ elseif famsize == "small"
   nstep = 1_000_000
   max_generations = 50*nstep
 end
-
+=#
 
 
 ##### DEBUG: restrict to a couple of families
@@ -336,6 +341,12 @@ for fm in families
 
     # If checkpointing file exists, we continue from there. Otherwise, start anew.
     if isfile("../data/asjpNex/output/$(fm).ckp")
+      # set nrun to current number in checkpointing file
+      open("../data/asjpNex/output/$(fm).ckp") do f
+        ckplines = readlines(f)
+        global nrun = parse(Int, ckplines[3][14:(end-1)])
+      end
+
       open(mbFile, "w") do file
       write(file, mbScript(fm, nrun, "yes"))
     end
