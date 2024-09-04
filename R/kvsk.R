@@ -71,6 +71,14 @@ kvsk3 <- function(data, dataset) {
 }
 
 
+max_inflection_point <- function(data, dataset) {
+  df <- inflection_point(data, dataset)
+  x <- df$inflpoint
+  x <- x[x != 1]
+  max(x)
+}
+
+
 mean_inflection_point <- function(data, dataset) {
   df <- inflection_point(data, dataset)
   x <- df$inflpoint
