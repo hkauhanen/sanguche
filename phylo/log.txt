@@ -74,6 +74,7 @@ WALS model + correlations finished. So: it takes about an hour for one dataset..
 Thu 5 Sep @ 16:00
 Having restarted computer, both GPUs are recognized again... running analyses again. However, will now exclude Austronesian temporarily, as it turns out to be so problematic. Hoping that, by tomorrow, some of the other remaining families will have converged. Also: restarted Atlantic-Congo and Nakh-Dagestanian in WALS from scratch, as these families were constantly exiting with errors, perhaps something to do with checkpointing gone awry.
 
-
+Thu 5 Sep @ 17:45
+Families converged: 69/75 WALS, 72/81 Grambank.
 
 
