@@ -56,4 +56,5 @@ Read in the MrBayes manual that multithreading is a bad idea if using GPU. Hence
 Tue 3 Sep @ 18:15
 Families converged: 56/75 WALS, 52/81 Grambank. Leaving this running; will check again either tomorrow or on Thursday.
 
-
+Thu 5 Sep @ 10:30
+Families converged: 68/75 WALS, 72/81 Grambank. Grambank has stopped, not sure why. Halting WALS as well, going to install second GPU!
