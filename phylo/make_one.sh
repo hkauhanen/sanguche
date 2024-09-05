@@ -1,9 +1,9 @@
 #!/usr/bin/bash
 
 if [ "$1" == "wals" ]; then
-  GPUID=gpu2
-else
   GPUID=gpu1
+else
+  GPUID=gpu2
 fi
 
 make data DATASET=$1                          # runtime: some minutes
