@@ -65,4 +65,10 @@ Families converged: 68/75 WALS, 72/81 Grambank. Stopped each analysis in order t
 Thu 5 Sep @ 14:15
 On second thought, it is enough to stop just one of the MrBayes analyses, as these now happen on the GPU whilst model and correlations are computed on the CPU. Hence, now doing model and correlations and WALS, and MrBayes on Grambank, simultaneously.
 
+Thu 5 Sep @ 14:45
+New GPU reports "unknown error"! However, mb still seems to be running...
+
+Thu 5 Sep @ 15:15
+WALS model + correlations finished. So: it takes about an hour for one dataset..
+
 
