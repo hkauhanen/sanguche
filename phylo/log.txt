@@ -77,4 +77,8 @@ Having restarted computer, both GPUs are recognized again... running analyses ag
 Thu 5 Sep @ 17:45
 Families converged: 69/75 WALS, 72/81 Grambank.
 
+Thu 5 Sep @ 18:30
+Families converged still at 69/75 WALS, 72/81 Grambank. Going home!
+
+
 
