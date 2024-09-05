@@ -15,7 +15,7 @@ data :
 	cd $(DATASET)/code; $J createData_$(DATASET).jl
 
 mrbayes_small : 
-	cd $(DATASET)/code; $J runMrBayes.jl $(DATASET) small cpu
+	cd $(DATASET)/code; $J runMrBayes.jl $(DATASET) small $(GPUID)
 
 mrbayes_large : 
 	cd $(DATASET)/code; $J runMrBayes.jl $(DATASET) large $(GPUID)
