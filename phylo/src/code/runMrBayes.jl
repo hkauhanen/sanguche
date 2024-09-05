@@ -64,12 +64,13 @@ end
 
 
 ##### Chibchan will not converge for WALS, hence remove it
-#rm_family(fams, to_remove) = fams[fams .!= to_remove]
+rm_family(fams, to_remove) = fams[fams .!= to_remove]
 #
 #if dataset == "wals"
-#  families = rm_family(families, "Chibchan")
+#  all_families = rm_family(all_families, "Chibchan")
 #end
 
+all_families = rm_family(all_families, "Austronesian")
 
 
 
