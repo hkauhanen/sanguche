@@ -15,10 +15,10 @@ data :
 	cd $(DATASET)/code; $J createData_$(DATASET).jl
 
 mrbayes_small : 
-	cd $(DATASET)/code; $J runMrBayes.jl $(DATASET) small gpu
+	cd $(DATASET)/code; $J runMrBayes.jl $(DATASET) small cpu
 
 mrbayes_large : 
-	cd $(DATASET)/code; $J runMrBayes.jl $(DATASET) large gpu
+	cd $(DATASET)/code; $J runMrBayes.jl $(DATASET) large $(GPUID)
 
 revbayes :
 	cd $(DATASET)/code/; $J --project=. -p $(NPROCS) runrevbayes.jl

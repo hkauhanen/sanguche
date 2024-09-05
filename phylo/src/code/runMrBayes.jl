@@ -230,7 +230,7 @@ function mbScript_cpu(fm, ngen, append)
   nex
 end
 
-function mbScript_gpu(fm, ngen, append)
+function mbScript_gpu(fm, ngen, append, resourceid)
   fmTaxa = filter(x -> x.glot_fam == fm, data).longname
   nex = """
 #Nexus
@@ -266,7 +266,7 @@ function mbScript_gpu(fm, ngen, append)
 \t\tprset clockvarpr = igr;
 \t\tprset treeagepr=Gamma(0.05, 0.005);
 \t\tprset shapepr=Exponential(10);
-\t\tset usebeagle=yes beagledevice=gpu;
+\t\tset usebeagle=yes beagleresource=$resourceid;
 \t\tset beagleprecision=single beaglescaling=dynamic;
 \t\tmcmcp Burninfrac=0.5 stoprule=no stopval=0.01;
 \t\tmcmcp filename=../data/asjpNex/output/$fm;
@@ -296,8 +296,12 @@ if resource == "cpu"
   mbScript(x, y, z) = mbScript_cpu(x, y, z)
   nstep = 100_000
   max_generations = 500*nstep
-elseif resource == "gpu"
-  mbScript(x, y, z) = mbScript_gpu(x, y, z)
+elseif resource == "gpu1"
+  mbScript(x, y, z) = mbScript_gpu(x, y, z, "1")
+  nstep = 500_000
+  max_generations = 100*nstep
+elseif resource == "gpu2"
+  mbScript(x, y, z) = mbScript_gpu(x, y, z, "2")
   nstep = 500_000
   max_generations = 100*nstep
 end
@@ -359,7 +363,7 @@ for fm in families
 
     if resource == "cpu"
       command = `mpirun -np 8 mb $mbFile`
-    elseif resource == "gpu"
+    elseif resource == "gpu1" || resource == "gpu2"
       command = `mb $mbFile`
     end
 
