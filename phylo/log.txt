@@ -71,4 +71,7 @@ New GPU reports "unknown error"! However, mb still seems to be running...
 Thu 5 Sep @ 15:15
 WALS model + correlations finished. So: it takes about an hour for one dataset..
 
+Thu 5 Sep @ 16:00
+Having restarted computer, both GPUs are recognized again... running analyses again. However, will now exclude Austronesian temporarily, as it turns out to be so problematic. Hoping that, by tomorrow, some of the other remaining families will have converged.
+
 
