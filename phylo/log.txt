@@ -96,6 +96,6 @@ Fri 6 Sep @ 14:30
 Trying a higher temperature (temp=0.8).
 
 Fri 6 Sep @ 15:00
-It looks like in many (all?) cases, 8 CPUs in MPI implementation are quicker than 1 GPU in non-MPI implementation. Trying new strategy: put Austronesian on GPUs, one GPU per dataset, and do the rest on CPUs. Temp=0.8 seems to work quite well, so keeping that.
+It looks like in many (all?) cases, 8 CPUs in MPI implementation are quicker than 1 GPU in non-MPI implementation. Trying new strategy: put Austronesian on GPUs, one GPU per dataset, and do the rest on CPUs. Temp=0.8 seems to work quite well, so keeping that. Families converged: 69 and 76 (yay!).
 
 
