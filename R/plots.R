@@ -85,8 +85,8 @@ print(g)
 dev.off()
 
 
-wals_inflpoint <- round(mean_inflection_point(data, "WALS"))
-gram_inflpoint <- round(mean_inflection_point(data, "Grambank"))
+wals_inflpoint <- round(max_inflection_point(data, "WALS"))
+gram_inflpoint <- round(max_inflection_point(data, "Grambank"))
 
 
 
