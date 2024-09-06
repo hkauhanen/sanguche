@@ -295,16 +295,13 @@ end
 
 if resource == "cpu"
   mbScript(x, y, z) = mbScript_cpu(x, y, z)
-  nstep = 100_000
-  max_generations = 500*nstep
+  nstep = 1_000_000
 elseif resource == "gpu1"
   mbScript(x, y, z) = mbScript_gpu(x, y, z, "1")
-  nstep = 500_000
-  max_generations = 100*nstep
+  nstep = 1_000_000
 elseif resource == "gpu2"
   mbScript(x, y, z) = mbScript_gpu(x, y, z, "2")
-  nstep = 500_000
-  max_generations = 100*nstep
+  nstep = 1_000_000
 end
 
 
