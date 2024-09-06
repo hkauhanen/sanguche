@@ -104,4 +104,5 @@ Families converged: 70/75, 76/81.
 Fri 6 Sep @ 15:40
 I think the optimal thing is to set the small/large family cutoff at 1.5MB of the nexus file size. This leaves things like Austronesian, Atlantic-Congo and Sino-Tibetan as large, and all the rest as small. I will now do large on GPU and small on CPU. I think this is the fastest way.
 
-
+Fri 6 Sep @ 16:40
+Going home. Families converged still at 70/75, 76/81.
