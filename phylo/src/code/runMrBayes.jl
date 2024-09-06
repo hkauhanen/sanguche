@@ -231,7 +231,7 @@ function mbScript_cpu(fm, ngen, append)
   nex
 end
 
-function mbScript_gpu(fm, ngen, append, resourceid)
+function mbScript_gpu(fm, ngen, append, resourceid; nchains = 4)
   fmTaxa = filter(x -> x.glot_fam == fm, data).longname
   nex = """
 #Nexus
@@ -272,7 +272,7 @@ function mbScript_gpu(fm, ngen, append, resourceid)
 \t\tmcmcp Burninfrac=0.5 stoprule=no stopval=0.01;
 \t\tmcmcp filename=../data/asjpNex/output/$fm;
 \t\tmcmcp samplefreq=1000 printfreq=5000 append=$append;
-\t\tmcmc ngen=$ngen nchains=4 nruns=2;
+\t\tmcmc ngen=$ngen nchains=$nchains nruns=2;
 \t\tsump;
 \t\tsumt;
 \tend;
