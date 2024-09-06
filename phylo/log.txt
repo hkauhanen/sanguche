@@ -98,4 +98,10 @@ Trying a higher temperature (temp=0.8).
 Fri 6 Sep @ 15:00
 It looks like in many (all?) cases, 8 CPUs in MPI implementation are quicker than 1 GPU in non-MPI implementation. Trying new strategy: put Austronesian on GPUs, one GPU per dataset, and do the rest on CPUs. Temp=0.8 seems to work quite well, so keeping that. Families converged: 69 and 76 (yay!).
 
+Fri 6 Sep @ 15:15
+Families converged: 70/75, 76/81.
+
+Fri 6 Sep @ 15:40
+I think the optimal thing is to set the small/large family cutoff at 1.5MB of the nexus file size. This leaves things like Austronesian, Atlantic-Congo and Sino-Tibetan as large, and all the rest as small. I will now do large on GPU and small on CPU. I think this is the fastest way.
+
 

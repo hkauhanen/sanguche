@@ -2,7 +2,7 @@ dataset = ARGS[1]
 famsize = ARGS[2]
 resource = ARGS[3]
 
-nex_filesize_limit = 100_000
+nex_filesize_limit = 1_500_000
 
 
 cd(@__DIR__)
@@ -70,7 +70,7 @@ rm_family(fams, to_remove) = fams[fams .!= to_remove]
 #  all_families = rm_family(all_families, "Chibchan")
 #end
 
-all_families = rm_family(all_families, "Austronesian")
+#all_families = rm_family(all_families, "Austronesian")
 #all_families = rm_family(all_families, "Atlantic-Congo")
 #all_families = rm_family(all_families, "Sino-Tibetan")
 
@@ -297,7 +297,7 @@ end
 
 if resource == "cpu"
   mbScript(x, y, z) = mbScript_cpu(x, y, z)
-  nstep = 1_000_000
+  nstep = 10_000_000
 elseif resource == "gpu1"
   mbScript(x, y, z) = mbScript_gpu(x, y, z, "1")
   nstep = 1_000_000
