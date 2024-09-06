@@ -92,4 +92,7 @@ Families converged still at the same values. Going to disable Metropolis couplin
 Fri 6 Sep @ 13:50
 Ah nope - the above won't work, can't continue with one chain from a checkpoint that used 4 chains. So reverting back to four chains again now.
 
+Fri 6 Sep @ 14:30
+Trying a higher temperature (temp=0.8).
+
 
