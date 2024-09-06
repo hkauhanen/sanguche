@@ -84,6 +84,6 @@ Fri 6 Sep @ 10:30
 Families converged: 69/75, 75/81. New GPU has again disappeared (???).
 
 Fri 6 Sep @ 12:40
-Changing nstep from 100K to 1M. MrBayes reports parameters may be undersampled for certain families.
+Changing nstep from 100K to 1M. MrBayes reports parameters may be undersampled for certain families. Also swapping GPUs between families, so that WALS goes on the "good" one, i.e. the one that has never crashed so far.
 
 
