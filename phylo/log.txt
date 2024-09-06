@@ -80,5 +80,7 @@ Families converged: 69/75 WALS, 72/81 Grambank.
 Thu 5 Sep @ 18:30
 Families converged still at 69/75 WALS, 72/81 Grambank. Going home!
 
+Fri 6 Sep @ 10:30
+Families converged: 69/75, 75/81. New GPU has again disappeared (???).
 
 
