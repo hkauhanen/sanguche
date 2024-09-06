@@ -86,4 +86,10 @@ Families converged: 69/75, 75/81. New GPU has again disappeared (???).
 Fri 6 Sep @ 12:40
 Changing nstep from 100K to 1M. MrBayes reports parameters may be undersampled for certain families. Also swapping GPUs between families, so that WALS goes on the "good" one, i.e. the one that has never crashed so far.
 
+Fri 6 Sep @ 13:45
+Families converged still at the same values. Going to disable Metropolis coupling now (nchains=1), perhaps we don't need heated chains, at least not for all families.
+
+Fri 6 Sep @ 13:50
+Ah nope - the above won't work, can't continue with one chain from a checkpoint that used 4 chains. So reverting back to four chains again now.
+
 
