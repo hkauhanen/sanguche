@@ -71,8 +71,8 @@ rm_family(fams, to_remove) = fams[fams .!= to_remove]
 #end
 
 all_families = rm_family(all_families, "Austronesian")
-all_families = rm_family(all_families, "Atlantic-Congo")
-all_families = rm_family(all_families, "Sino-Tibetan")
+#all_families = rm_family(all_families, "Atlantic-Congo")
+#all_families = rm_family(all_families, "Sino-Tibetan")
 
 
 
