@@ -20,6 +20,9 @@ mrbayes_small :
 mrbayes_large : 
 	cd $(DATASET)/code; $J runMrBayes.jl $(DATASET) large $(RESID)
 
+mrbayes_austronesian : 
+	cd $(DATASET)/code; $J runMrBayes_Austronesian.jl $(DATASET) large $(RESID)
+
 revbayes :
 	cd $(DATASET)/code/; $J --project=. -p $(NPROCS) runrevbayes.jl
 
