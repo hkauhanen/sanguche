@@ -11,7 +11,20 @@ end
 
 nex_filesize_limit = 1_500_000
 
+
 global_temperature = 0.2
+
+if length(ARGS) == 5
+  global global_temperature = parse(Float64, ARGS[5])
+end
+
+
+nstep = 1_000_000
+
+if length(ARGS) == 6
+  global nstep = parse(Int, ARGS[6])
+end
+
 
 
 cd(@__DIR__)
@@ -318,16 +331,12 @@ end
 
 if resource == "cpu" || resource == "cpu4"
   mbScript(x, y, z) = mbScript_cpu(x, y, z)
-  nstep = 1_000_000
 elseif resource == "gpu1"
   mbScript(x, y, z) = mbScript_gpu(x, y, z, "1")
-  nstep = 1_000_000
 elseif resource == "gpu2"
   mbScript(x, y, z) = mbScript_gpu(x, y, z, "2")
-  nstep = 1_000_000
 elseif resource == "original"
   mbScript(x, y, z) = mbScript_original(x, y, z)
-  nstep = 1_000_000
 end
 
 
