@@ -110,4 +110,8 @@ Going home. Families converged still at 70/75, 76/81.
 Mon 9 Sep @ 11:40
 Families converged: 71/75, 78/81. Put temperature back to 0.2. Modified script so that logs are printed at the end of each "epoch", i.e. every nruns. This way we'll hopefully be able to track how the convergence diagnostics evolve. Strategy for remaining families: Austronesian on GPU for each dataset; the rest on CPUs. Running 4 CPU + 8 CPU + 1 GPU + 1 GPU at any given time.
 
+Mon 9 Sep @ 13:10
+Realized more than one family fits on a single GPU. Put two on each now, Austronesian and Atlantic-Congo, plus one more on one of the GPUs (Sino-Tibetan, Grambank). Siouan, WALS, is running on CPU. I believe this is the most efficient use of the available resources for the remaining families (assuming there's nothing we can do about Chibchan on WALS - though I should still try higher temperatures, maybe more chains, with it).
+
+
 

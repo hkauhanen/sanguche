@@ -2,6 +2,13 @@ dataset = ARGS[1]
 famsize = ARGS[2]
 resource = ARGS[3]
 
+sole_family = ""
+
+if length(ARGS) == 4
+  global sole_family = ARGS[4]
+end
+
+
 nex_filesize_limit = 1_500_000
 
 global_temperature = 0.2
@@ -79,9 +86,14 @@ rm_family(fams, to_remove) = fams[fams .!= to_remove]
 #  all_families = rm_family(all_families, "Chibchan")
 #end
 
-all_families = rm_family(all_families, "Austronesian")
+#all_families = rm_family(all_families, "Austronesian")
 #all_families = rm_family(all_families, "Atlantic-Congo")
 #all_families = rm_family(all_families, "Sino-Tibetan")
+
+
+if sole_family != ""
+  global all_families = [sole_family]
+end
 
 
 
@@ -313,6 +325,9 @@ elseif resource == "gpu1"
 elseif resource == "gpu2"
   mbScript(x, y, z) = mbScript_gpu(x, y, z, "2")
   nstep = 1_000_000
+elseif resource == "original"
+  mbScript(x, y, z) = mbScript_original(x, y, z)
+  nstep = 1_000_000
 end
 
 
@@ -372,7 +387,7 @@ for fm in families
       end
     end
 
-    if resource == "cpu"
+    if resource == "cpu" || resource == "original"
       command = `mpirun -np 8 mb $mbFile`
     elseif resource == "cpu4"
       command = `mpirun -np 4 mb $mbFile`
@@ -382,7 +397,7 @@ for fm in families
 
     run(command)
 
-    function converged()
+    function converged(nr::Int)
       try
       pstat = CSV.read(
         "../data/asjpNex/output/$fm.pstat",
@@ -444,7 +459,7 @@ for fm in families
     end
     =#
 
-    if converged()
+    if converged(nrun)
       open(convFile, "w") do file
         write(file, "Converged!")
       end
