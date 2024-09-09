@@ -4,6 +4,8 @@ resource = ARGS[3]
 
 nex_filesize_limit = 1_500_000
 
+global_temperature = 0.2
+
 
 cd(@__DIR__)
 
@@ -31,6 +33,13 @@ try
   mkdir("mrbayes/converged/")
 catch e
 end
+
+
+try
+  mkdir("mrbayes/logs/")
+catch e
+end
+
 
 
 
@@ -70,7 +79,7 @@ rm_family(fams, to_remove) = fams[fams .!= to_remove]
 #  all_families = rm_family(all_families, "Chibchan")
 #end
 
-#all_families = rm_family(all_families, "Austronesian")
+all_families = rm_family(all_families, "Austronesian")
 #all_families = rm_family(all_families, "Atlantic-Congo")
 #all_families = rm_family(all_families, "Sino-Tibetan")
 
@@ -184,7 +193,7 @@ function mbScript_original(fm, ngen, append)
 end
 
 
-function mbScript_cpu(fm, ngen, append; temp = 0.8)
+function mbScript_cpu(fm, ngen, append; temp = global_temperature)
   fmTaxa = filter(x -> x.glot_fam == fm, data).longname
   nex = """
   #Nexus
@@ -233,7 +242,7 @@ function mbScript_cpu(fm, ngen, append; temp = 0.8)
   nex
 end
 
-function mbScript_gpu(fm, ngen, append, resourceid; nchains = 4, temp = 0.8)
+function mbScript_gpu(fm, ngen, append, resourceid; nchains = 4, temp = global_temperature)
   fmTaxa = filter(x -> x.glot_fam == fm, data).longname
   nex = """
 #Nexus
@@ -295,9 +304,9 @@ end
 ##
 
 
-if resource == "cpu"
+if resource == "cpu" || resource == "cpu4"
   mbScript(x, y, z) = mbScript_cpu(x, y, z)
-  nstep = 10_000_000
+  nstep = 1_000_000
 elseif resource == "gpu1"
   mbScript(x, y, z) = mbScript_gpu(x, y, z, "1")
   nstep = 1_000_000
@@ -343,26 +352,30 @@ for fm in families
     
     mbFile = "mrbayes/$(fm).mb.nex"
     convFile = "mrbayes/converged/$(fm).txt"
+    logFile = "mrbayes/logs/$(fm).csv"
+
+    nrun = 0
 
     # If checkpointing file exists, we continue from there. Otherwise, start anew.
     if isfile("../data/asjpNex/output/$(fm).ckp")
       # set nrun to current number in checkpointing file
       open("../data/asjpNex/output/$(fm).ckp") do f
         ckplines = readlines(f)
-        local nrun = parse(Int, ckplines[3][14:(end-1)]) + nstep
+        global nrun = parse(Int, ckplines[3][14:(end-1)]) + nstep
         open(mbFile, "w") do file
           write(file, mbScript(fm, nrun, "yes"))
         end
       end
-
     else
       open(mbFile, "w") do file
-      write(file, mbScript(fm, nstep, "no"))
-    end
+        write(file, mbScript(fm, nstep, "no"))
+      end
     end
 
     if resource == "cpu"
       command = `mpirun -np 8 mb $mbFile`
+    elseif resource == "cpu4"
+      command = `mpirun -np 4 mb $mbFile`
     elseif resource == "gpu1" || resource == "gpu2"
       command = `mb $mbFile`
     end
@@ -404,6 +417,11 @@ for fm in families
       ) |> dropmissing
 
       maxPSRF = maximum([maxPSRF, maximum(vstat.PSRF)])
+
+      # write log
+      open(logFile, "a") do file
+        write(file, "$fm,$nrun,$meanStdev,$maxPSRF\n")
+      end
 
       ##### employ slightly laxer convergence criteria for Austronesian for Grambank:
       if dataset == "nevermind" #dataset == "grambank" && fm == "Austronesian"
