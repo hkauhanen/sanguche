@@ -41,6 +41,7 @@ using Glob
 using Statistics
 using Distributions
 using Pipe
+using Dates
 
 
 try
@@ -401,7 +402,8 @@ for fm in families
     elseif resource == "cpu4"
       command = `mpirun -np 4 mb $mbFile`
     elseif resource == "gpu1" || resource == "gpu2"
-      command = `mb $mbFile`
+      #command = `mb $mbFile`
+      command = `mpirun -np 8 mb $mbFile`
     end
 
     run(command)
@@ -444,7 +446,8 @@ for fm in families
 
       # write log
       open(logFile, "a") do file
-        write(file, "$fm,$nrun,$meanStdev,$maxPSRF\n")
+        date = Dates.now()
+        write(file, "$fm,$date,$nrun,$meanStdev,$maxPSRF\n")
       end
 
       ##### employ slightly laxer convergence criteria for Austronesian for Grambank:
