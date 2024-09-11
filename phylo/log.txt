@@ -124,3 +124,8 @@ Something has gone awry with Austronesian in Grambank; it exits with an error on
 
 Wed 11 Sep @ 14:25
 Perhaps fastest way, after all, is BEAGLE+CUDA, i.e. 8 CPU + 1 GPU working on a single family. Trying this now on WALS Austronesian and Grambank Atlantic-Congo.
+
+Wed 11 Sep @ 14:55
+Updated BIOS to see if that helps at all with the bus issue. Returning to running W Austronesian and G Atlantic-Congo as described in previous log entry.
+
+
