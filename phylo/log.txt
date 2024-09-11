@@ -116,4 +116,5 @@ Realized more than one family fits on a single GPU. Put two on each now, Austron
 Mon 9 Sep @ 14:30
 Trying Siouan (WALS) at temperature = 1.2 and nrun = 10M.
 
-
+Wed 11 Sep @ 11:40
+Families converged still at same numbers. Looking at convergence parameter logs, there appears to have been good progress for Grambank Atlantic-Congo and moderate progress for Grambank Sino-Tibetan, but bad performance on all WALS families; in particular, Siouan appears impossible to converge. Second GPU "fell off the bus" again, not sure if hardware or software issue. Tried setting some kernel boot parameters if latter. Once new power supply connectivity arrives, will use a dedicated power supply (and more fans) to probe if former. Had to do a hard restart; continuing analysis with WALS Austronesian, WALS Atlantic-Congo and Grambank Sino-Tibetan on gpu1, Grambank Austronesian and Atlantic-Congo on gpu2.
