@@ -133,3 +133,6 @@ It looks like, with this setup, G Atlantic-Congo might take something like 40 mi
 
 Wed 11 Sep @ 16:50
 Temporarily halted above analyses. Trying the following from scratch with nchains=1 in the temporary phylo2 directory: W Austronesian, W Atlantic-Congo, G Austronesian, G Sino-Tibetan.
+
+Wed 11 Sep @ 17:35
+Things are proceeding swimmingly in phylo2. Starting from scratch seems to have been the right thing to do. Now working in phylo3 to prettify code and prepare it for the final "production run".
