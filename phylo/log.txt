@@ -128,4 +128,7 @@ Perhaps fastest way, after all, is BEAGLE+CUDA, i.e. 8 CPU + 1 GPU working on a 
 Wed 11 Sep @ 14:55
 Updated BIOS to see if that helps at all with the bus issue. Returning to running W Austronesian and G Atlantic-Congo as described in previous log entry.
 
+Wed 11 Sep @ 15:00
+It looks like, with this setup, G Atlantic-Congo might take something like 40 minutes for one "epoch". Need to benchmark and see if this is actually quicker than running it on GPU with no BEAGLE.
+
 
