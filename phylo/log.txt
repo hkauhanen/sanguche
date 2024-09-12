@@ -157,3 +157,6 @@ Bloody h*** - forgot to copy src/code/runMrBayes.jl to the wals and grambank dir
 
 Thu 12 Sep @ 13:05
 Analysis restarted (from scratch).
+
+Thu 12 Sep @ 16:00
+Computer randomly restarts (AMD bug alive again?). Families converged: 30/75 and 21/81. Continuing from here.
