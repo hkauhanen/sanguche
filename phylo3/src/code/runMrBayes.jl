@@ -178,14 +178,14 @@ end
     # set nrun to current number in checkpointing file, plus some
     open("../data/asjpNex/output/$(fm).ckp") do f
       ckplines = readlines(f)
-      local nrun = parse(Int, ckplines[3][14:(end-1)]) + nrun
+      nrun_fromold = parse(Int, ckplines[3][14:(end-1)]) + nrun
       open(mbFile, "w") do file
-        write(file, mbScript(fm, nrun, "yes"))
+        write(file, mbScript(fm, nrun_fromold, "yes"))
       end
     end
   else
     open(mbFile, "w") do file
-      write(file, mbScript(fm, nstep, "no"))
+      write(file, mbScript(fm, nrun, "no"))
     end
   end
 
