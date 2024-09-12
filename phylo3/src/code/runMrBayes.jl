@@ -66,11 +66,32 @@ Pkg.build("PyCall")
 end
 
 
+
+# Remove families which have already converged.
+@everywhere function rm_families_converged(fams; verbose = false)
+  fams_to_remove = []
+
+  for fm in fams
+    if isfile("mrbayes/converged/$fm.txt")
+      push!(fams_to_remove, fm)
+      if verbose
+        println("Removed $fm as it has already converged in a previous analysis")
+      end
+    end
+  end
+
+  return fams[fams .∉ [fams_to_remove]]
+end
+
+@everywhere families_tmp2 = rm_families_converged(families_tmp)
+
+
+
 # We want to sort the families so that large and small families are being processed concurrently;
 # this leads to the most efficient use of wall-clock time. To do this, we take one family from
 # the top of the pile, the next from the bottom, the next from the top, the next from the bottom...
-# and so on. Kind of like the qualifier round on the Vierschanzentournee.
-@everywhere df = DataFrame(fm=families_tmp)
+# and so on. Kind of like the first round on the Vierschanzentournee.
+@everywhere df = DataFrame(fm=families_tmp2)
 @everywhere transform!(df, :fm => (f -> "../data/asjpNex/" .* f .* ".nex") => :filename)
 @everywhere transform!(df, :filename => (f -> filesize.(f)) => :filesize)
 @everywhere sort!(df, :filesize, rev=true)
@@ -151,9 +172,23 @@ end
   logFile = "mrbayes/logs/$(fm).csv"
 
   nrun = 1000000
-  open(mbFile, "w") do file
-    write(file, mbScript(fm, nrun, "no"))
+
+  # If checkpointing file exists, we continue from there. Otherwise, start anew.
+  if isfile("../data/asjpNex/output/$(fm).ckp")
+    # set nrun to current number in checkpointing file, plus some
+    open("../data/asjpNex/output/$(fm).ckp") do f
+      ckplines = readlines(f)
+      local nrun = parse(Int, ckplines[3][14:(end-1)]) + nrun
+      open(mbFile, "w") do file
+        write(file, mbScript(fm, nrun, "yes"))
+      end
+    end
+  else
+    open(mbFile, "w") do file
+      write(file, mbScript(fm, nstep, "no"))
+    end
   end
+
 
   #####command = `mpirun -np 8 mb $mbFile`
   command = `mb $mbFile`

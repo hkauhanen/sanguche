@@ -4,10 +4,15 @@ R=Rscript
 NPROCS=8
 
 
-.PHONY : purge data mrbayes_small mrbayes_large revbayes posterior model correlations
+.PHONY : purge data purge_mrbayes mrbayes_small mrbayes_large revbayes posterior model correlations
 
 purge :
 	rm -rf $(DATASET)
+
+purge_mrbayes :
+	rm -rf $(DATASET)/data/asjpNex/output/*
+	rm -rf $(DATASET)/code/mrbayes/converged/*
+	rm -rf $(DATASET)/code/mrbayes/logs/*
 
 data : 
 	mkdir $(DATASET)

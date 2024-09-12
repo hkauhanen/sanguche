@@ -146,4 +146,7 @@ Families converged (in phylo3): WALS 58/75, Grambank 67/81. Both GPUs running, a
 Thu 12 Sep @ 11:45
 Fans installed. Continuing with phylo3.
 
+Thu 12 Sep @ 12:35
+Shoot - realized I made a mistake. When the phylo3 version of runMrBayes.jl is called again after halting it, analysis does not continue from checkpointing file but rather from scratch. So now we effectively need to restart. No biggie - lost just half a day's computing time.
+
 
