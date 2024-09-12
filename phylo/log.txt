@@ -149,4 +149,7 @@ Fans installed. Continuing with phylo3.
 Thu 12 Sep @ 12:35
 Shoot - realized I made a mistake. When the phylo3 version of runMrBayes.jl is called again after halting it, analysis does not continue from checkpointing file but rather from scratch. So now we effectively need to restart. No biggie - lost just half a day's computing time.
 
+Thu 12 Sep @ 12:40
+Analysis (phylo3) restarted.
+
 
