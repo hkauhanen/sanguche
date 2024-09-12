@@ -163,3 +163,8 @@ Computer randomly restarts (AMD bug alive again?). Families converged: 30/75 and
 
 Thu 12 Sep @ 16:30
 Aborting run: noticed that only 8-pin power supply is connected for CPU; will attach 8+4 now. Will also recheck BIOS settings in a quest to attain stability.
+
+Thu 12 Sep @ 17:00
+Undervolted CPU to 1.1V and set multiplier to 35.00 for a target frequency of 3.5GHz. Resuming analysis. Families converged at this time: 38/75 and 28/81.
+
+
