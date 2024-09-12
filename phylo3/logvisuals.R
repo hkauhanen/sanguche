@@ -37,7 +37,7 @@ logs <- rbind(wals, gram)
 
 
 
-pdf("log.pdf", height=10, width=10)
+pdf("log.pdf", height=20, width=20)
 
 g_w1 <- ggplot(wals, aes(x=generations, y=ASDSF, color=converged, group=family)) + geom_path() + facet_wrap(.~family, scales="free") + geom_hline(yintercept=0.01, lty=2) + ggtitle("WALS, ASDSF")
 
