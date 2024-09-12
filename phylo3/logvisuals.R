@@ -1,4 +1,6 @@
 require(ggplot2)
+require(reshape2)
+require(ggsci)
 
 
 wals_files <- list.files(path="wals/code/mrbayes/logs/", pattern="*.csv", full.names=TRUE)
@@ -13,10 +15,13 @@ read_one <- function(X) {
 wals <- do.call(rbind, lapply(X=wals_files, FUN=read_one))
 wals$dataset <- "WALS"
 wals$converged <- FALSE
+wals$smaxPSRF = wals$maxPSRF/110
 
 gram <- do.call(rbind, lapply(X=gram_files, FUN=read_one))
 gram$dataset <- "Grambank"
 gram$converged <- FALSE
+gram$smaxPSRF = gram$maxPSRF/110
+
 
 for (i in 1:nrow(wals)) {
   famhere = wals[i, ]$family
@@ -33,23 +38,20 @@ for (i in 1:nrow(gram)) {
 }
 
 
-logs <- rbind(wals, gram)
+wals$lty <- ifelse(wals$converged, "1", "2")
+wals$alpha <- ifelse(wals$converged, 0.5, 1.0)
 
+gram$lty <- ifelse(gram$converged, "1", "2")
+gram$alpha <- ifelse(gram$converged, 0.5, 1.0)
 
 
 pdf("log.pdf", height=20, width=20)
 
-g_w1 <- ggplot(wals, aes(x=generations, y=ASDSF, color=converged, group=family)) + geom_path() + facet_wrap(.~family, scales="free") + geom_hline(yintercept=0.01, lty=2) + ggtitle("WALS, ASDSF")
+g_w <- ggplot(melt(wals, measure.vars=c("ASDSF", "smaxPSRF")), aes(lty=variable, x=generations, y=value, color=converged, group=interaction(variable, family))) + geom_path(lwd=1.0) + facet_wrap(.~family, scales="free", nrow=9, ncol=9) + geom_hline(yintercept=0.01, lty=1, alpha=0.5, lwd=1.0) + ggtitle("WALS") + theme_bw() + scale_color_npg() + theme(legend.position="top") + scale_y_log10() + annotation_logticks(sides="l")
 
-g_g1 <- ggplot(gram, aes(x=generations, y=ASDSF, color=converged, group=family)) + geom_path() + facet_wrap(.~family, scales="free") + geom_hline(yintercept=0.01, lty=2) + ggtitle("Grambank, ASDSF")
+g_g <- ggplot(melt(gram, measure.vars=c("ASDSF", "smaxPSRF")), aes(lty=variable, x=generations, y=value, color=converged, group=interaction(variable, family))) + geom_path(lwd=1.0) + facet_wrap(.~family, scales="free", nrow=9, ncol=9) + geom_hline(yintercept=0.01, lty=1, alpha=0.5, lwd=1.0) + ggtitle("Grambank") + theme_bw() + scale_color_npg() + theme(legend.position="top") + scale_y_log10() + annotation_logticks(sides="l")
 
-g_w2 <- ggplot(wals, aes(x=generations, y=maxPSRF, color=converged, group=family)) + geom_path() + facet_wrap(.~family, scales="free") + geom_hline(yintercept=1.1, lty=2) + ggtitle("WALS, maxPSRF")
-
-g_g2 <- ggplot(gram, aes(x=generations, y=maxPSRF, color=converged, group=family)) + geom_path() + facet_wrap(.~family, scales="free") + geom_hline(yintercept=1.1, lty=2) + ggtitle("Grambank, maxPSRF")
-
-print(g_w1)
-print(g_w2)
-print(g_g1)
-print(g_g2)
+print(g_w)
+print(g_g)
 
 dev.off()
