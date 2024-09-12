@@ -143,4 +143,7 @@ Interrupted phylo2 runs to try out new, phylo3 code. The latter has the followin
 Thu 12 Sep @ 11:15
 Families converged (in phylo3): WALS 58/75, Grambank 67/81. Both GPUs running, at 43C and 55C. Not sure extra cooling is necessary, after all! Or extra power, for that matter. Either BIOS update solved the "falling of the bus" problem, or else problem only occurs when GPU is idling (which with the phylo3 version of runMrBayes.jl happens only rarely). Going to install the two extra chassis fans anyway, since they're here.
 
+Thu 12 Sep @ 11:45
+Fans installed. Continuing with phylo3.
+
 
