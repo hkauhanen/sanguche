@@ -244,7 +244,11 @@ end
       write(file, mbScript(fm, nrun, "yes"))
     end
 
-    run(command)
+    try
+      run(command)
+    catch e
+      println("ERROR: MrBayes exited with an error for whatever reason. Continuing...")
+    end
   end
 
   if converged()
