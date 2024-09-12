@@ -160,3 +160,6 @@ Analysis restarted (from scratch).
 
 Thu 12 Sep @ 16:00
 Computer randomly restarts (AMD bug alive again?). Families converged: 30/75 and 21/81. Continuing from here.
+
+Thu 12 Sep @ 16:30
+Aborting run: noticed that only 8-pin power supply is connected for CPU; will attach 8+4 now. Will also recheck BIOS settings in a quest to attain stability.
