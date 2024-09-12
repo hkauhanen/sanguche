@@ -154,3 +154,6 @@ Analysis (phylo3) restarted.
 
 Thu 12 Sep @ 13:00
 Bloody h*** - forgot to copy src/code/runMrBayes.jl to the wals and grambank directories; hence need to restart analysis again. Set up cron job to automatically update status on github every four hours, so can monitor this from home. Logs are also automatically printed into log.pdf.
+
+Thu 12 Sep @ 13:05
+Analysis restarted (from scratch).
