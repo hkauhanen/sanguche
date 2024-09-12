@@ -4,7 +4,7 @@ R=Rscript
 NPROCS=8
 
 
-.PHONY : purge data purge_mrbayes mrbayes_small mrbayes_large revbayes posterior model correlations
+.PHONY : purge data purge_mrbayes mrbayes revbayes posterior model correlations
 
 purge :
 	rm -rf $(DATASET)
@@ -19,14 +19,8 @@ data :
 	cp -R src/code $(DATASET)/code
 	cd $(DATASET)/code; $J createData_$(DATASET).jl
 
-mrbayes_small : 
-	cd $(DATASET)/code; $J runMrBayes.jl $(DATASET) small $(RESID)
-
-mrbayes_large : 
-	cd $(DATASET)/code; $J runMrBayes.jl $(DATASET) large $(RESID)
-
-mrbayes_austronesian : 
-	cd $(DATASET)/code; $J runMrBayes_Austronesian.jl $(DATASET) large $(RESID)
+mrbayes : 
+	cd $(DATASET)/code; $J -p $(NPROCS) runMrBayes.jl $(DATASET)
 
 revbayes :
 	cd $(DATASET)/code/; $J --project=. -p $(NPROCS) runrevbayes.jl
