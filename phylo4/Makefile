@@ -35,7 +35,7 @@ mrbayes_large :
 	cd $(DATASET)/code; $J -p 3 runMrBayes.jl fm_large.txt
 
 mrbayes_problematic : 
-	cd $(DATASET)/code; $J -p 2 runMrBayes.jl fm_problematic.txt
+	cd $(DATASET)/code; $J -p 1 runMrBayes.jl fm_problematic.txt
 
 mrbayes_rest : 
 	cd $(DATASET)/code; $J -p 5 runMrBayes.jl fm_rest.txt

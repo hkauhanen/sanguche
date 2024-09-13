@@ -1,10 +1,10 @@
-Fri 13 Sep 14:55:17 CEST 2024
+Fri 13 Sep 16:00:08 CEST 2024
 ==================================================================
-Families converged, WALS:     45 / 75
+Families converged, WALS:     48 / 75
 Families converged, Grambank: 46 / 81
 ==================================================================
-furioso                           Fri Sep 13 14:55:17 2024  560.28.03
-[0] NVIDIA GeForce RTX 2070 SUPER | 50°C,  95 % |  3249 /  8192 MB | hkauhanen(222M) hkauhanen(272M) hkauhanen(166M) hkauhanen(1022M) hkauhanen(576M) hkauhanen(664M) hkauhanen(104M) hkauhanen(104M) hkauhanen(104M) root(4M) root(2M)
-[1] NVIDIA GeForce RTX 2070 SUPER | 62°C,  99 % |  3146 /  8192 MB | hkauhanen(108M) hkauhanen(1024M) hkauhanen(506M) hkauhanen(272M) hkauhanen(182M) hkauhanen(200M) hkauhanen(214M) hkauhanen(212M) hkauhanen(104M) root(183M) hkauhanen(28M) root(0M) hkauhanen(?M)
+furioso                           Fri Sep 13 16:00:08 2024  560.28.03
+[0] ((Unknown Error))             |  ?°C,   ? % |     ? /     ? MB | (Not Supported)
+[1] NVIDIA GeForce RTX 2070 SUPER | 57°C,  99 % |  5698 /  8192 MB | hkauhanen(1022M) hkauhanen(576M) hkauhanen(222M) hkauhanen(664M) hkauhanen(506M) hkauhanen(1024M) hkauhanen(212M) hkauhanen(212M) hkauhanen(104M) hkauhanen(104M) hkauhanen(104M) hkauhanen(104M) hkauhanen(104M) hkauhanen(104M) hkauhanen(104M) hkauhanen(104M) hkauhanen(104M) root(183M) hkauhanen(28M) root(0M) hkauhanen(?M)
 ==================================================================
-Tctl:         +57.4°C  
+Tctl:         +64.2°C  

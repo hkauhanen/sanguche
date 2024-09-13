@@ -196,3 +196,6 @@ Converged: 44/75, 41/81.
 
 Fri 13 Sep @ 14:55
 Converged: 45/75, 46/81.
+
+Fri 13 Sep @ 15:15
+Launched mrbayes_problematic on WALS also, with one processor (containing 8 MPI threads).
