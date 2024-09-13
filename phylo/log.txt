@@ -187,3 +187,6 @@ Families converged: 8/75, 11/81.
 
 Fri 13 Sep @ 12:40
 Families converged: 22/75, 24/81. The small ones are converging really fast!
+
+Fri 13 Sep @ 12:55
+Converged: 33/75, 29/81. Going for lunch..
