@@ -199,3 +199,8 @@ Converged: 45/75, 46/81.
 
 Fri 13 Sep @ 15:15
 Launched mrbayes_problematic on WALS also, with one processor (containing 8 MPI threads).
+
+Fri 13 Sep @ 16:30
+Second GPU has again fallen off the bus! Grrr. Not bothering to restart, as it will fall off again sooner or later. Will try to troubleshoot this next week with a second PSU (in case it's power-related, though my fairly strong suspicion now is that it is a software issue). Families converged at 48/75 and 46/81 still. Chibchan, surprisingly, seems to be doing good progress with the 8+8 chains and higher heating parameter. Going home.
+
+
