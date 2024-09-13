@@ -102,6 +102,7 @@ end
 
 
 
+
 ##
 
 @everywhere function mbScript(fm, ngen, append; nchains = 1)
@@ -174,16 +175,19 @@ end
   nrun = 1000000
 
   # If checkpointing file exists, we continue from there. Otherwise, start anew.
-  if isfile("../data/asjpNex/output/$(fm).ckp")
-    # set nrun to current number in checkpointing file, plus some
-    open("../data/asjpNex/output/$(fm).ckp") do f
-      ckplines = readlines(f)
-      nrun_fromold = parse(Int, ckplines[3][14:(end-1)]) + nrun
+  try
+    if isfile("../data/asjpNex/output/$(fm).ckp")
+      # set nrun to current number in checkpointing file, plus some
+      open("../data/asjpNex/output/$(fm).ckp") do f
+        ckplines = readlines(f)
+        nrun = parse(Int, ckplines[3][14:(end-1)]) + nrun
+      end
       open(mbFile, "w") do file
-        write(file, mbScript(fm, nrun_fromold, "yes"))
+        write(file, mbScript(fm, nrun, "yes"))
       end
     end
-  else
+  catch e
+    println("ERROR: Checkpointing file probably empty... continuing")
     open(mbFile, "w") do file
       write(file, mbScript(fm, nrun, "no"))
     end
