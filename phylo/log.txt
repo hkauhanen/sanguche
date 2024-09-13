@@ -179,4 +179,6 @@ Second GPU has again fallen off the bus. For some reason, only two mb processes 
 Fri 13 Sep @ 10:55
 Families converged: 58/75, 63/81. Anyway, there is not much point now redoing families which already converged in phylo. Hence, now concentrating on Austronesian and Atlantic-Congo in both datasets, plus Sino-Tibetan in Grambank. While these are running, will experiment and see if something can be done about Chibchan and Siouan in WALS if we increase the number of chains and the heating parameter.
 
+Fri 13 Sep @ 12:30
+Development now continues in phylo4. Partitioned analysis into large families (Austronesian, Atlantic-Congo, Sino-Tibetan), problematic families (Chibchan, Siouan), and the rest. Families converged (in phylo4): 0/75, 0/81.
 

@@ -2,24 +2,12 @@ using Distributed
 
 @everywhere cd(@__DIR__)
 
+@everywhere function argfunc(args)
+  return args
+end
 
-dataset = ARGS[1]
-
-if length(ARGS) > 1
-  @everywhere function argfunc(args)
-    return args
-  end
-
-  @everywhere families = open(argfunc(ARGS[2])) do file
-    readlines(file)
-  end
-else
-  @everywhere families = open("../data/glot3.txt") do file
-    readlines(file)
-  end
-  @everywhere families = families[families .∉ ["Austronesian", "Atlantic-Congo", "Sino-Tibetan", "Chibhan", "Siouan"]]
-  println(families)
-  @everywhere reverse!(families)
+@everywhere families = open(argfunc($ARGS[1])) do file
+  readlines(file)
 end
 
 
@@ -174,9 +162,9 @@ end
 
 
 if "Chibchan" ∈ families || "Siouan" ∈ families
-  mbScript(fm, ngen, append) = mbScript(fm, ngen, append, 8, 2.0)
+  @everywhere mbScript(fm, ngen, append) = mbScript(fm, ngen, append, 8, 2.0)
 else
-  mbScript(fm, ngen, append) = mbScript(fm, ngen, append, 1, 0.2)
+  @everywhere mbScript(fm, ngen, append) = mbScript(fm, ngen, append, 1, 0.2)
 end
 
 
