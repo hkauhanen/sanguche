@@ -182,3 +182,8 @@ Families converged: 58/75, 63/81. Anyway, there is not much point now redoing fa
 Fri 13 Sep @ 12:30
 Development now continues in phylo4. Partitioned analysis into large families (Austronesian, Atlantic-Congo, Sino-Tibetan), problematic families (Chibchan, Siouan), and the rest. Families converged (in phylo4): 0/75, 0/81.
 
+Fri 13 Sep @ 12:35
+Families converged: 8/75, 11/81.
+
+Fri 13 Sep @ 12:40
+Families converged: 22/75, 24/81. The small ones are converging really fast!
