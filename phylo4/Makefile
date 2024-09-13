@@ -9,8 +9,11 @@ NPROCS=8
 log :
 	Rscript logvisuals.R
 	date > log.txt
+	echo "==================================================================" >> log.txt
 	bash mrbayes_progress.sh >> log.txt
+	echo "==================================================================" >> log.txt
 	/home/hkauhanen/.local/bin/gpustat >> log.txt
+	echo "==================================================================" >> log.txt
 	sensors | grep Tctl >> log.txt
 
 purge :
