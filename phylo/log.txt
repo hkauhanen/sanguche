@@ -170,5 +170,13 @@ Undervolted CPU to 1.1V and set multiplier to 35.00 for a target frequency of 3.
 Thu 12 Sep @ 17:35
 Noticed that only 12 mb instances were running instead of the 16 (=8+8) expected. This must be due to the following: in case a run fails for a family for any reason, mb exits with an error and the Julia worker for that family terminates execution. Have now wrapped mb in a try-catch block in runMrBayes.jl, so this should not happen. Continuing. Families converged at this time: 40/75 and 31/81.
 
-Thu 12 Sep @17:40
+Thu 12 Sep @ 17:40
 Going home. Families converged: 42/75, 35/81.
+
+Fri 13 Sep @ 10:35
+Second GPU has again fallen off the bus. For some reason, only two mb processes are running (?). Will reboot machine and try again. This is getting frustrating... Families converged: 56/75, 61/81.
+
+Fri 13 Sep @ 10:55
+Families converged: 58/75, 63/81. Anyway, there is not much point now redoing families which already converged in phylo. Hence, now concentrating on Austronesian and Atlantic-Congo in both datasets, plus Sino-Tibetan in Grambank. While these are running, will experiment and see if something can be done about Chibchan and Siouan in WALS if we increase the number of chains and the heating parameter.
+
+
