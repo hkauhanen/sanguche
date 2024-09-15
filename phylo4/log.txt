@@ -1,10 +1,10 @@
-Sun 15 Sep 04:00:10 CEST 2024
+Sun 15 Sep 08:00:09 CEST 2024
 ==================================================================
 Families converged, WALS:     63 / 75
 Families converged, Grambank: 76 / 81
 ==================================================================
-furioso                           Sun Sep 15 04:00:10 2024  560.28.03
+furioso                           Sun Sep 15 08:00:10 2024  560.28.03
 [0] ((Unknown Error))             |  ?°C,   ? % |     ? /     ? MB | (Not Supported)
-[1] NVIDIA GeForce RTX 2070 SUPER | 52°C,  99 % |  2505 /  8192 MB | hkauhanen(1022M) hkauhanen(222M) hkauhanen(224M) hkauhanen(104M) hkauhanen(104M) hkauhanen(104M) hkauhanen(104M) hkauhanen(104M) hkauhanen(104M) hkauhanen(104M) hkauhanen(104M) root(168M) hkauhanen(27M) root(0M)
+[1] NVIDIA GeForce RTX 2070 SUPER | 46°C,  52 % |  1641 /  8192 MB | hkauhanen(272M) hkauhanen(108M) hkauhanen(224M) hkauhanen(104M) hkauhanen(104M) hkauhanen(104M) hkauhanen(104M) hkauhanen(104M) hkauhanen(104M) hkauhanen(104M) hkauhanen(104M) root(168M) hkauhanen(27M) root(0M)
 ==================================================================
-Tctl:         +57.2°C  
+Tctl:         +59.9°C  
