@@ -208,3 +208,12 @@ Converged: 73/75, 76/81. Chibchan on WALS is not going anywhere, neither is Japo
 
 Mon 16 Sep @ 11:25
 CTMC run started on WALS at 11:25.
+
+Mon 16 Sep @ 12:30
+CTMC finished on WALS. But notice there was a bug in the model.sh script: some typologies were being ran twice. Fixed now.
+
+Mon 16 Sep @ 12:35
+Rerunning CTMC on WALS: bug (see above) meant that doubly-ran files were being appended to; this will have affected the results.
+
+Mon 16 Sep @ 13:40
+CTMC finished.
