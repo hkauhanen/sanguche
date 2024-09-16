@@ -206,4 +206,5 @@ Second GPU has again fallen off the bus! Grrr. Not bothering to restart, as it w
 Mon 16 Sep @ 11:10
 Converged: 73/75, 76/81. Chibchan on WALS is not going anywhere, neither is Japonic on Grambank. Doing revbayes now on WALS and getting posterior trees for everything but Chibchan and Siouan, and will run the CTMC model. Will then return to the problem of getting Chibchan and Siouan to converge. As for Grambank, of the big families, Austronesian is still running but is very, very close to converging.
 
-
+Mon 16 Sep @ 11:25
+CTMC run started on WALS at 11:25.

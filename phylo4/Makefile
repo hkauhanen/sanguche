@@ -38,7 +38,7 @@ mrbayes_problematic :
 	cd $(DATASET)/code; $J -p 1 runMrBayes.jl fm_problematic.txt
 
 mrbayes_rest : 
-	cd $(DATASET)/code; $J -p 5 runMrBayes.jl fm_rest.txt
+	cd $(DATASET)/code; $J -p 2 runMrBayes.jl fm_rest.txt
 
 revbayes :
 	cd $(DATASET)/code/; $J --project=. -p $(NPROCS) runrevbayes.jl
