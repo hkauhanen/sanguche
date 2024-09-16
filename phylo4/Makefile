@@ -1,7 +1,6 @@
 J=julia +1.5.3
 JNEW=julia +1.10.4
 R=Rscript
-NPROCS=8
 
 
 .PHONY : log purge data purge_mrbayes mrbayes_large mrbayes_problematic mrbayes_rest revbayes posterior model correlations
@@ -32,13 +31,13 @@ data :
 	cd $(DATASET)/code; $J createFmList.jl
 
 mrbayes_large : 
-	cd $(DATASET)/code; $J -p 3 runMrBayes.jl fm_large.txt
+	cd $(DATASET)/code; $J -p $(NPROCS) runMrBayes.jl fm_large.txt
 
 mrbayes_problematic : 
-	cd $(DATASET)/code; $J -p 1 runMrBayes.jl fm_problematic.txt
+	cd $(DATASET)/code; $J -p $(NPROCS) runMrBayes.jl fm_problematic.txt
 
 mrbayes_rest : 
-	cd $(DATASET)/code; $J -p 5 runMrBayes.jl fm_rest.txt
+	cd $(DATASET)/code; $J -p $(NPROCS) runMrBayes.jl fm_rest.txt
 
 revbayes :
 	cd $(DATASET)/code/; $J --project=. -p $(NPROCS) runrevbayes.jl
