@@ -203,4 +203,7 @@ Launched mrbayes_problematic on WALS also, with one processor (containing 8 MPI 
 Fri 13 Sep @ 16:30
 Second GPU has again fallen off the bus! Grrr. Not bothering to restart, as it will fall off again sooner or later. Will try to troubleshoot this next week with a second PSU (in case it's power-related, though my fairly strong suspicion now is that it is a software issue). Families converged at 48/75 and 46/81 still. Chibchan, surprisingly, seems to be doing good progress with the 8+8 chains and higher heating parameter. Going home.
 
+Mon 16 Sep @ 11:10
+Converged: 73/75, 76/81. Chibchan on WALS is not going anywhere, neither is Japonic on Grambank. Doing revbayes now on WALS and getting posterior trees for everything but Chibchan and Siouan, and will run the CTMC model. Will then return to the problem of getting Chibchan and Siouan to converge. As for Grambank, of the big families, Austronesian is still running but is very, very close to converging.
+
 
