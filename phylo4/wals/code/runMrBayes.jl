@@ -161,8 +161,8 @@ end
 end
 
 
-if "Chibchan" ∈ families || "Siouan" ∈ families
-  @everywhere mbScript(fm, ngen, append) = mbScript(fm, ngen, append, 8, 2.0)
+if "Chibchan" ∈ families || "Siouan" ∈ families || "Japonic" ∈ families
+  @everywhere mbScript(fm, ngen, append) = mbScript(fm, ngen, append, 8, 20.0)
 else
   @everywhere mbScript(fm, ngen, append) = mbScript(fm, ngen, append, 1, 0.2)
 end
@@ -208,7 +208,7 @@ end
   end
 
 
-  if fm ∈ ["Chibchan", "Siouan"]
+  if fm ∈ ["Chibchan", "Siouan", "Japonic"]
     command = `mpirun -np 8 mb $mbFile`
   else
     command = `mb $mbFile`
