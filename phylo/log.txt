@@ -248,4 +248,5 @@ Giving up on WALS problematic for now. Discovered a bug in one of my own additio
 Tue 17 Sep @ 16:00
 universal.jl had been running for over 10 minutes without the MCMC chains even starting... investigating now whether there might not be some sort of bottleneck in the parallel operation, i.e. will run the feature pairs in series instead.
 
-
+Tue 17 Sep @ 16:30
+When launched in series (but the two databases in parallel), the thing starts after not a long time. Hence, have now programmed this so that we call up 5 concurrent processes on each database for a total of 10 CPU cores to be used in parallel. Expecting the whole thing to take about a day to run.
