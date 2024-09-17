@@ -162,7 +162,7 @@ end
 
 
 if "Chibchan" ∈ families || "Siouan" ∈ families || "Japonic" ∈ families
-  @everywhere mbScript(fm, ngen, append) = mbScript(fm, ngen, append, 8, 20.0)
+  @everywhere mbScript(fm, ngen, append) = mbScript(fm, ngen, append, 8, 1.0)
 else
   @everywhere mbScript(fm, ngen, append) = mbScript(fm, ngen, append, 1, 0.2)
 end
