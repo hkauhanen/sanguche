@@ -1,14 +1,5 @@
 cd modelFitting
 
-for i in {0..4}; do 
-  for j in {0..8}; do
-    let "k = $i*10 + $j"
-    #echo $k; sleep 2 &   ### debugging/testing
-    julia +1.5.3 universal.jl $k &
-  done
-  let "k = $i*10 + 9"
-  #echo $k; sleep 2 ;     ### debugging/testing
-  julia +1.5.3 universal.jl $k ;
-done
+bash model_1.sh & bash model_2.sh & bash model_3.sh & bash model_4.sh & bash model_5.sh
 
 cd ..
