@@ -220,3 +220,6 @@ CTMC finished.
 
 Mon 16 Sep @ 18:15
 Running: Grambank Austronesian + Grambank problematic. WALS is on a hiatus (the problematic ones are the only ones still to converge). Going home.
+
+Tue 17 Sep @ 11:50
+Grambank Austronesian has converged. What remains are the problematic families (for both databases).
