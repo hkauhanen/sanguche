@@ -226,3 +226,9 @@ Grambank Austronesian has converged. What remains are the problematic families (
 
 Tue 17 Sep @ 12:00
 Now running CTMC model on Grambank (excluding problematic families, but including Austronesian), plus problematic families on both databases (Grambank on GPU, but MrBayes insists that CPU is faster for WALS).
+
+Tue 17 Sep @ 12:20
+Dropped temperature parameter for problematic families down to 1.0, as at least in WALS, nothing was happening to convergence.
+
+Tue 17 Sep @ 13:05
+CTMC on Grambank (excl. problematic) finished.
