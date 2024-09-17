@@ -48,7 +48,7 @@ posterior :
 
 model :
 	rm -rf $(DATASET)/code/modelFitting/output
-	cd $(DATASET)/code; bash model_serial.sh
+	cd $(DATASET)/code; bash model_1.sh & bash model_2.sh & bash model_3.sh & bash model_4.sh & bash model_5.sh
 
 correlations :
 	cd $(DATASET)/code; $J correlations.jl $(DATASET)
