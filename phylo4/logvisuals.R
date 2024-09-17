@@ -45,11 +45,19 @@ gram$lty <- ifelse(gram$converged, "1", "2")
 gram$alpha <- ifelse(gram$converged, 0.5, 1.0)
 
 
+wals$converged <- ifelse(wals$converged, "yes", "no")
+gram$converged <- ifelse(gram$converged, "yes", "no")
+
+wals$converged <- factor(wals$converged, levels=c("no", "yes"))
+gram$converged <- factor(gram$converged, levels=c("no", "yes"))
+
+
+
 pdf("log.pdf", height=20, width=20)
 
-g_w <- ggplot(melt(wals, measure.vars=c("ASDSF", "smaxPSRF")), aes(lty=variable, x=generations, y=value, color=converged, group=interaction(variable, family))) + geom_path(lwd=1.0) + facet_wrap(.~family, scales="free", nrow=9, ncol=9) + geom_hline(yintercept=0.01, lty=1, alpha=0.5, lwd=1.0) + ggtitle("WALS") + theme_bw() + scale_color_npg() + theme(legend.position="top") + scale_y_log10() + annotation_logticks(sides="l")
+g_w <- ggplot(melt(wals, measure.vars=c("ASDSF", "smaxPSRF")), aes(lty=variable, x=generations, y=value, color=converged, group=interaction(variable, family))) + geom_path(lwd=1.0, show.legend=TRUE) + facet_wrap(.~family, scales="free", nrow=9, ncol=9) + geom_hline(yintercept=0.01, lty=1, alpha=0.5, lwd=1.0) + ggtitle("WALS") + theme_bw() + scale_color_npg() + theme(legend.position="top") + scale_y_log10() + annotation_logticks(sides="l")
 
-g_g <- ggplot(melt(gram, measure.vars=c("ASDSF", "smaxPSRF")), aes(lty=variable, x=generations, y=value, color=converged, group=interaction(variable, family))) + geom_path(lwd=1.0) + facet_wrap(.~family, scales="free", nrow=9, ncol=9) + geom_hline(yintercept=0.01, lty=1, alpha=0.5, lwd=1.0) + ggtitle("Grambank") + theme_bw() + scale_color_npg() + theme(legend.position="top") + scale_y_log10() + annotation_logticks(sides="l")
+g_g <- ggplot(melt(gram, measure.vars=c("ASDSF", "smaxPSRF")), aes(lty=variable, x=generations, y=value, color=converged, group=interaction(variable, family))) + geom_path(lwd=1.0, show.legend=TRUE) + facet_wrap(.~family, scales="free", nrow=9, ncol=9) + geom_hline(yintercept=0.01, lty=1, alpha=0.5, lwd=1.0) + ggtitle("Grambank") + theme_bw() + scale_color_npg() + theme(legend.position="top") + scale_y_log10() + annotation_logticks(sides="l")
 
 print(g_w)
 print(g_g)
