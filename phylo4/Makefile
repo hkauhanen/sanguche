@@ -43,9 +43,11 @@ revbayes :
 	cd $(DATASET)/code/; $J --project=. -p $(NPROCS) runrevbayes.jl
 
 posterior :
+	rm -rf $(DATASET)/data/posteriorTrees
 	cd $(DATASET)/code; $R createPosterior.r
 
 model :
+	rm -rf $(DATASET)/code/modelFitting/output
 	cd $(DATASET)/code; bash model.sh
 
 correlations :
