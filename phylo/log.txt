@@ -232,3 +232,17 @@ Dropped temperature parameter for problematic families down to 1.0, as at least 
 
 Tue 17 Sep @ 13:05
 CTMC on Grambank (excl. problematic) finished.
+
+Tue 17 Sep @ 13:15
+Nothing changed about the Grambank results with the addition of Austronesian... there is a bug somewhere. I'm thinking, as a first approximation, that the contents of code/modelFitting/output must be deleted before model is run. But something could also be amiss with the code that obtains the posterior trees - will investigate.
+
+Tue 17 Sep @ 14:20
+Grambank problematic have converged (with heating parameter = 20.0). WALS problematic appear to be stuck.
+
+Tue 17 Sep @ 14:40
+WALS problematic is not going anywhere. Starting from scratch with heating = 5.0.
+
+Tue 17 Sep @ 15:50
+Giving up on WALS problematic for now. Discovered a bug in one of my own additions to modelFitting/loadData.jl, whose consequence was that only isolates were run... Have fixed this now and have just started CTMC model on both datasets in parallel.
+
+
