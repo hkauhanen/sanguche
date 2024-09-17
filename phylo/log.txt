@@ -245,4 +245,7 @@ WALS problematic is not going anywhere. Starting from scratch with heating = 5.0
 Tue 17 Sep @ 15:50
 Giving up on WALS problematic for now. Discovered a bug in one of my own additions to modelFitting/loadData.jl, whose consequence was that only isolates were run... Have fixed this now and have just started CTMC model on both datasets in parallel.
 
+Tue 17 Sep @ 16:00
+universal.jl had been running for over 10 minutes without the MCMC chains even starting... investigating now whether there might not be some sort of bottleneck in the parallel operation, i.e. will run the feature pairs in series instead.
+
 
