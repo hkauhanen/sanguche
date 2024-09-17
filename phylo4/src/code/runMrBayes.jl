@@ -208,7 +208,7 @@ end
   end
 
 
-  if fm ∈ ["Chibchan", "Siouan", "Japonic"]
+  if 1 == 0 #fm ∈ ["Chibchan", "Siouan", "Japonic"]
     command = `mpirun -np 8 mb $mbFile`
   else
     command = `mb $mbFile`
