@@ -223,3 +223,6 @@ Running: Grambank Austronesian + Grambank problematic. WALS is on a hiatus (the 
 
 Tue 17 Sep @ 11:50
 Grambank Austronesian has converged. What remains are the problematic families (for both databases).
+
+Tue 17 Sep @ 12:00
+Now running CTMC model on Grambank (excluding problematic families, but including Austronesian), plus problematic families on both databases (Grambank on GPU, but MrBayes insists that CPU is faster for WALS).
