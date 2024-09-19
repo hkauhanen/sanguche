@@ -12,6 +12,7 @@ try(dir.create("../results/tables", recursive=TRUE))
 # This loads a dataframe named "combined", which contains all our data
 load("../results/combined.RData")
 data <- combined
+data <- data[data$pair != "PolQ & NegM", ]
 
 
 # Make "non-interacting" the reference level of "status" factor

@@ -45,6 +45,11 @@ ldata <- combined_long
 
 
 
+# remove cross of ctrl feature with other ctrl feature
+data <- data[data$pair != "PolQ & NegM", ]
+
+
+
 ###### OLD VERSION of neighbourhood size plot (medians and quartiles, no individual pairs)
 if (1 == 0) {
 data_d <- data %>% group_by(Dataset, Typology, degree) %>% summarize(median=median(Delta_dispref), q=quantile(Delta_dispref)[2], Q=quantile(Delta_dispref)[4])
@@ -173,12 +178,14 @@ df$Dataset <- factor(df$Dataset, levels=c("WALS", "Grambank"))
 
 df$estimate <- ifelse(df$estimate > 0, "> 0", "< 0")
 
-g <- ggplot(df, aes(x=k, y=pval, pch=estimate, color=estimate)) 
-g <- g + geom_path(inherit.aes=FALSE, aes(x=k, y=pval), color="grey") 
-g <- g + geom_point(size=2.0) 
+g <- ggplot(df, aes(x=k, y=pval))#, group=estimate, color=estimate)) 
+#g <- g + geom_path(inherit.aes=FALSE, aes(x=k, y=pval), color="grey") 
+#g <- g + geom_point(size=2.0) 
+g <- g + geom_path()
 g <- g + geom_hline(yintercept=0.01, lty=2) 
-#g <- g + scale_y_log10(limits=c(0.0001, 1))
-#g <- g + annotation_logticks(sides="l") 
+g <- g + scale_y_log10(limits=c(0.001, 1))
+g <- g + scale_x_log10()
+g <- g + annotation_logticks(sides="bl") 
 g <- g + deftheme() 
 g <- g + theme(legend.position=c(0.92, 0.38))
 g <- g + scale_color_aaas()
@@ -202,12 +209,14 @@ df$Dataset <- factor(df$Dataset, levels=c("WALS", "Grambank"))
 
 df$estimate <- ifelse(df$estimate > 0, "> 0", "< 0")
 
-g <- ggplot(df, aes(x=k, y=pval, pch=estimate, color=estimate)) 
-g <- g + geom_path(inherit.aes=FALSE, aes(x=k, y=pval), color="grey") 
-g <- g + geom_point(size=2.0) 
+g <- ggplot(df, aes(x=k, y=pval))#, group=estimate, color=estimate)) 
+#g <- g + geom_path(inherit.aes=FALSE, aes(x=k, y=pval), color="grey") 
+#g <- g + geom_point(size=2.0) 
+g <- g + geom_path()
 g <- g + geom_hline(yintercept=0.01, lty=2) 
-#g <- g + scale_y_log10(limits=c(0.0001, 1))
-#g <- g + annotation_logticks(sides="l") 
+g <- g + scale_y_log10(limits=c(0.001, 1))
+g <- g + scale_x_log10()
+g <- g + annotation_logticks(sides="bl") 
 g <- g + deftheme() 
 g <- g + theme(legend.position=c(0.92, 0.38))
 g <- g + scale_color_aaas()
