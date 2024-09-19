@@ -56,12 +56,25 @@ transform!(results, :pair => (p -> split.(p, "-")) => [:f1, :f2])
 
 transform!(results, :pair_pretty => (p -> stringtoset.(p)) => :pair_ID)
 
-transform!(results, :cpp => (p -> p .< 0.05) => :interacting)
+#transform!(results, :cpp => (p -> p .< 0.05) => :interacting)
+transform!(results, :cpp => (p -> p .< 0.1) => :interacting)
 
 transform!(results, [:f1, :f2] => ((a,b) -> a .∈ [control_features] .|| b .∈ [control_features]) => :control)
 
-function classifier(i, c)
+function classifier_original(i, c)
   if i && !c
+    return "interacting"
+  elseif !i && !c
+    return "unknown"
+  elseif !i && c
+    return "non-interacting"
+  else
+    return "weird"
+  end
+end
+
+function classifier(i, c)
+  if i
     return "interacting"
   elseif !i && !c
     return "unknown"
