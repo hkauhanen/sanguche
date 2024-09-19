@@ -256,3 +256,6 @@ Noting that it took the script around 14 minutes to read in the trees for WALS. 
 
 Tue 17 Sep @ 16:55
 Estimated time to completion of one chain (after 10%), WALS: around 50 minutes. RAM usage at the moment: 74GB... need to make sure we don't run into a problem here (parallelizing by too much will lead to a memory bottleneck for sure, and we definitely don't want to end up swapping). Grambank is still reading in the trees... but at least the progress meter has now appeared...
+
+Thu 19 Sep @ 10:40
+Model has no output for WALS pairs 17 and 18, and Grambank pairs 5-9. I'm guessing the RAM bottleneck was reached at that point, or something like that. Running the missing pairs on WALS now.
