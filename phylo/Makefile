@@ -6,10 +6,10 @@ R=Rscript
 .PHONY : log purge data purge_mrbayes mrbayes_large mrbayes_problematic mrbayes_rest revbayes posterior model correlations
 
 log :
-	Rscript logvisuals.R
+	cd $(DATASET)/code; Rscript logvisuals.R
 	date > log.txt
 	echo "==================================================================" >> log.txt
-	bash mrbayes_progress.sh >> log.txt
+	bash mrbayes_progress.sh $(DATASET) >> log.txt
 	echo "==================================================================" >> log.txt
 	/home/hkauhanen/.local/bin/gpustat >> log.txt
 	echo "==================================================================" >> log.txt
