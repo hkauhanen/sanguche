@@ -259,3 +259,6 @@ Estimated time to completion of one chain (after 10%), WALS: around 50 minutes. 
 
 Thu 19 Sep @ 10:40
 Model has no output for WALS pairs 17 and 18, and Grambank pairs 5-9. I'm guessing the RAM bottleneck was reached at that point, or something like that. Running the missing pairs on WALS now.
+
+Thu 19 Sep @ 17:55
+Rerunning Grambank MrBayes on new control features. Script run.sh is now used for this as a top-level mechanism.
