@@ -7,7 +7,7 @@ PN & NG,1334,interacting,5.86,0.0033,0.74,0.46
 VO & NG,1662,interacting,5.23,0.00864,0.32,0.37
 VS & NNum,1783,interacting,4.62,0.0184,-0.34,-0.34
 VO & NNum,1712,interacting,4.14,0.0341,-0.35,-0.32
-VS & NG,1730,unknown,3.73,0.0575,0.31,0.34
+VS & NG,1730,interacting,3.73,0.0575,0.31,0.34
 NG & ND,1600,unknown,1.94,0.183,0.46,0.25
 NG & Pas,1315,non-interacting,1.65,0.345,-0.01,0.26
 NA & Pas,435,non-interacting,1.12,0.591,0.11,-0.3
