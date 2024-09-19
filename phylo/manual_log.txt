@@ -262,3 +262,6 @@ Model has no output for WALS pairs 17 and 18, and Grambank pairs 5-9. I'm guessi
 
 Thu 19 Sep @ 17:55
 Rerunning Grambank MrBayes on new control features. Script run.sh is now used for this as a top-level mechanism.
+
+Thu 19 Sep @ 18:10
+Computer hung up and crashed... same weird problems again as a few years ago. Never again AMD... Anyway, MrBayes is up and running again for Grambank. Logging is now dataset-specific, as we are no longer running datasets in parallel. Going home.
