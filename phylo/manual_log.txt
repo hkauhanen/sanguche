@@ -1,0 +1,261 @@
+Mon 2 Sep @ 13:15
+Started mrbayes_small on both WALS and Grambank simultaneously.
+Observation: first family on WALS (Nakh-Dagestanian) went to GPU by BEAGLE's autoestimation, first family on Grambank (Pama-Nyungan) went to CPU! Second family on Grambank went to GPU (whilst first family on WALS is still being operated on same GPU).
+
+Mon 2 Sep @ 13:45
+First family converged (Maiduan, on Grambank). Interrupted WALS analysis and set nex filesize limit to 300 KB instead of 500 KB.
+
+Mon 2 Sep @ 14:50
+Grambank interrupted and also switched to the 300KB limit. By now, two (Grambank) families have converged.
+
+Mon 2 Sep @ 15:20
+Third family converges on Grambank: Koiarian.
+
+Mon 2 Sep @ 15:30
+Interrupted both; increased nstep to 1M for small families; redefined size cut to be at 100KB instead. Thus, families with nex files > 100KB have nstep 100K, and families with < 100KB have nstep 1M.
+
+Mon 2 Sep @ 15:45
+First WALS family (Mongolic) converges.
+
+Mon 2 Sep @ 15:50
+Second WALS family (Chocoan) converges.
+
+Mon 2 Sep @ 16:05
+Grambank completed, either because all small (< 100KB) families have converged, or because we reached max_iteration. 
+
+Mon 2 Sep @ 16:10
+All of Grambank small converged for sure.
+
+Mon 2 Sep @ 16:25
+Running revbayes on Grambank whilst the small mrbayes families on WALS are still running.
+
+Mon 2 Sep @ 16:40
+Running CTMC model on Grambank whilst waiting for WALS mrbayes to converge. As for the latter, Chibchan seems to be troublesome once again...
+
+Mon 2 Sep @ 16:45
+All of WALS small (<100 KB) has converged, apart from Chibchan.
+
+Mon 2 Sep @ 16:55
+Interrupted WALS; doing revbayes instead. Waiting for Grambank CTMC to finish.
+
+Mon 2 Sep @ 17:50
+Doing the CTMC on WALS as well; once that's finished, will launch mrbayes_large on both WALS and Grambank and leave that running.
+
+Tue 3 Sep @ 12:25
+Families converged: 53/75 WALS, 50/81 Grambank.
+
+Tue 3 Sep @ 14:30
+Interrupted one of the datasets, as analyses were starting to complain of not enough GPU memory. Not sure which one got interrupted, but I'm assuming Grambank. If so, then WALS continues. Numbers of converged families at this time: 53/75 and 51/81.
+
+Tue 3 Sep @ 15:50
+Converged: 54/75.
+
+Tue 3 Sep @ 17:35
+Read in the MrBayes manual that multithreading is a bad idea if using GPU. Hence, splitting this into two strategies now: either use 1 CPU + 1 GPU, or 8 CPU + 0 GPU. Both datasets are running. Indeed, it seems to be faster now. Families converged: 56/75 WALS, 51/81 Grambank. Listening to Takeo Ischi (!) to keep the animal spirits flowing.
+
+Tue 3 Sep @ 18:15
+Families converged: 56/75 WALS, 52/81 Grambank. Leaving this running; will check again either tomorrow or on Thursday.
+
+Thu 5 Sep @ 10:30
+Families converged: 68/75 WALS, 72/81 Grambank. Grambank has stopped, not sure why. Halting WALS as well, going to install second GPU!
+
+Thu 5 Sep @ 14:10
+Families converged: 68/75 WALS, 72/81 Grambank. Stopped each analysis in order to obtain posterior distributions and run the model and correlations on this set of families. After that, will continue MrBayes analysis with remaining families.
+
+Thu 5 Sep @ 14:15
+On second thought, it is enough to stop just one of the MrBayes analyses, as these now happen on the GPU whilst model and correlations are computed on the CPU. Hence, now doing model and correlations and WALS, and MrBayes on Grambank, simultaneously.
+
+Thu 5 Sep @ 14:45
+New GPU reports "unknown error"! However, mb still seems to be running...
+
+Thu 5 Sep @ 15:15
+WALS model + correlations finished. So: it takes about an hour for one dataset..
+
+Thu 5 Sep @ 16:00
+Having restarted computer, both GPUs are recognized again... running analyses again. However, will now exclude Austronesian temporarily, as it turns out to be so problematic. Hoping that, by tomorrow, some of the other remaining families will have converged. Also: restarted Atlantic-Congo and Nakh-Dagestanian in WALS from scratch, as these families were constantly exiting with errors, perhaps something to do with checkpointing gone awry.
+
+Thu 5 Sep @ 17:45
+Families converged: 69/75 WALS, 72/81 Grambank.
+
+Thu 5 Sep @ 18:30
+Families converged still at 69/75 WALS, 72/81 Grambank. Going home!
+
+Fri 6 Sep @ 10:30
+Families converged: 69/75, 75/81. New GPU has again disappeared (???).
+
+Fri 6 Sep @ 12:40
+Changing nstep from 100K to 1M. MrBayes reports parameters may be undersampled for certain families. Also swapping GPUs between families, so that WALS goes on the "good" one, i.e. the one that has never crashed so far.
+
+Fri 6 Sep @ 13:45
+Families converged still at the same values. Going to disable Metropolis coupling now (nchains=1), perhaps we don't need heated chains, at least not for all families.
+
+Fri 6 Sep @ 13:50
+Ah nope - the above won't work, can't continue with one chain from a checkpoint that used 4 chains. So reverting back to four chains again now.
+
+Fri 6 Sep @ 14:30
+Trying a higher temperature (temp=0.8).
+
+Fri 6 Sep @ 15:00
+It looks like in many (all?) cases, 8 CPUs in MPI implementation are quicker than 1 GPU in non-MPI implementation. Trying new strategy: put Austronesian on GPUs, one GPU per dataset, and do the rest on CPUs. Temp=0.8 seems to work quite well, so keeping that. Families converged: 69 and 76 (yay!).
+
+Fri 6 Sep @ 15:15
+Families converged: 70/75, 76/81.
+
+Fri 6 Sep @ 15:40
+I think the optimal thing is to set the small/large family cutoff at 1.5MB of the nexus file size. This leaves things like Austronesian, Atlantic-Congo and Sino-Tibetan as large, and all the rest as small. I will now do large on GPU and small on CPU. I think this is the fastest way.
+
+Fri 6 Sep @ 16:40
+Going home. Families converged still at 70/75, 76/81.
+
+Mon 9 Sep @ 11:40
+Families converged: 71/75, 78/81. Put temperature back to 0.2. Modified script so that logs are printed at the end of each "epoch", i.e. every nruns. This way we'll hopefully be able to track how the convergence diagnostics evolve. Strategy for remaining families: Austronesian on GPU for each dataset; the rest on CPUs. Running 4 CPU + 8 CPU + 1 GPU + 1 GPU at any given time.
+
+Mon 9 Sep @ 13:10
+Realized more than one family fits on a single GPU. Put two on each now, Austronesian and Atlantic-Congo, plus one more on one of the GPUs (Sino-Tibetan, Grambank). Siouan, WALS, is running on CPU. I believe this is the most efficient use of the available resources for the remaining families (assuming there's nothing we can do about Chibchan on WALS - though I should still try higher temperatures, maybe more chains, with it).
+
+Mon 9 Sep @ 14:30
+Trying Siouan (WALS) at temperature = 1.2 and nrun = 10M.
+
+Wed 11 Sep @ 11:40
+Families converged still at same numbers. Looking at convergence parameter logs, there appears to have been good progress for Grambank Atlantic-Congo and moderate progress for Grambank Sino-Tibetan, but bad performance on all WALS families; in particular, Siouan appears impossible to converge. Second GPU "fell off the bus" again, not sure if hardware or software issue. Tried setting some kernel boot parameters if latter. Once new power supply connectivity arrives, will use a dedicated power supply (and more fans) to probe if former. Had to do a hard restart; continuing analysis with WALS Austronesian, WALS Atlantic-Congo and Grambank Sino-Tibetan on gpu1, Grambank Austronesian and Atlantic-Congo on gpu2.
+
+Wed 11 Sep @ 14:15
+Something has gone awry with Austronesian in Grambank; it exits with an error once the MCMC has completed... can't think of anything else to do except delete the checkpointing file and start from scratch.
+
+Wed 11 Sep @ 14:25
+Perhaps fastest way, after all, is BEAGLE+CUDA, i.e. 8 CPU + 1 GPU working on a single family. Trying this now on WALS Austronesian and Grambank Atlantic-Congo.
+
+Wed 11 Sep @ 14:55
+Updated BIOS to see if that helps at all with the bus issue. Returning to running W Austronesian and G Atlantic-Congo as described in previous log entry.
+
+Wed 11 Sep @ 15:00
+It looks like, with this setup, G Atlantic-Congo might take something like 40 minutes for one "epoch". Need to benchmark and see if this is actually quicker than running it on GPU with no BEAGLE. W Austronesian also predicted to take on the order of 40 minutes. This doesn't seem too bad!
+
+Wed 11 Sep @ 16:50
+Temporarily halted above analyses. Trying the following from scratch with nchains=1 in the temporary phylo2 directory: W Austronesian, W Atlantic-Congo, G Austronesian, G Sino-Tibetan.
+
+Wed 11 Sep @ 17:35
+Things are proceeding swimmingly in phylo2. Starting from scratch seems to have been the right thing to do. Now working in phylo3 to prettify code and prepare it for the final "production run".
+
+Wed 11 Sep @ 18:35
+Interrupted phylo2 runs to try out new, phylo3 code. The latter has the following benefits: (1) it uses MrBayes' BEAGLE autoestimation procedure to select the best computing resource; (2) it cycles through families "optimally", taking big and small families simultaneously; (3) it produces sensible logs. We'll see how many families will have converged by tomorrow!
+
+Thu 12 Sep @ 11:15
+Families converged (in phylo3): WALS 58/75, Grambank 67/81. Both GPUs running, at 43C and 55C. Not sure extra cooling is necessary, after all! Or extra power, for that matter. Either BIOS update solved the "falling of the bus" problem, or else problem only occurs when GPU is idling (which with the phylo3 version of runMrBayes.jl happens only rarely). Going to install the two extra chassis fans anyway, since they're here.
+
+Thu 12 Sep @ 11:45
+Fans installed. Continuing with phylo3.
+
+Thu 12 Sep @ 12:35
+Shoot - realized I made a mistake. When the phylo3 version of runMrBayes.jl is called again after halting it, analysis does not continue from checkpointing file but rather from scratch. So now we effectively need to restart. No biggie - lost just half a day's computing time.
+
+Thu 12 Sep @ 12:40
+Analysis (phylo3) restarted.
+
+Thu 12 Sep @ 13:00
+Bloody h*** - forgot to copy src/code/runMrBayes.jl to the wals and grambank directories; hence need to restart analysis again. Set up cron job to automatically update status on github every four hours, so can monitor this from home. Logs are also automatically printed into log.pdf.
+
+Thu 12 Sep @ 13:05
+Analysis restarted (from scratch).
+
+Thu 12 Sep @ 16:00
+Computer randomly restarts (AMD bug alive again?). Families converged: 30/75 and 21/81. Continuing from here.
+
+Thu 12 Sep @ 16:30
+Aborting run: noticed that only 8-pin power supply is connected for CPU; will attach 8+4 now. Will also recheck BIOS settings in a quest to attain stability.
+
+Thu 12 Sep @ 17:00
+Undervolted CPU to 1.1V and set multiplier to 35.00 for a target frequency of 3.5GHz. Resuming analysis. Families converged at this time: 38/75 and 28/81.
+
+Thu 12 Sep @ 17:35
+Noticed that only 12 mb instances were running instead of the 16 (=8+8) expected. This must be due to the following: in case a run fails for a family for any reason, mb exits with an error and the Julia worker for that family terminates execution. Have now wrapped mb in a try-catch block in runMrBayes.jl, so this should not happen. Continuing. Families converged at this time: 40/75 and 31/81.
+
+Thu 12 Sep @ 17:40
+Going home. Families converged: 42/75, 35/81.
+
+Fri 13 Sep @ 10:35
+Second GPU has again fallen off the bus. For some reason, only two mb processes are running (?). Will reboot machine and try again. This is getting frustrating... Families converged: 56/75, 61/81.
+
+Fri 13 Sep @ 10:55
+Families converged: 58/75, 63/81. Anyway, there is not much point now redoing families which already converged in phylo. Hence, now concentrating on Austronesian and Atlantic-Congo in both datasets, plus Sino-Tibetan in Grambank. While these are running, will experiment and see if something can be done about Chibchan and Siouan in WALS if we increase the number of chains and the heating parameter.
+
+Fri 13 Sep @ 12:30
+Development now continues in phylo4. Partitioned analysis into large families (Austronesian, Atlantic-Congo, Sino-Tibetan), problematic families (Chibchan, Siouan), and the rest. Families converged (in phylo4): 0/75, 0/81.
+
+Fri 13 Sep @ 12:35
+Families converged: 8/75, 11/81.
+
+Fri 13 Sep @ 12:40
+Families converged: 22/75, 24/81. The small ones are converging really fast!
+
+Fri 13 Sep @ 12:55
+Converged: 33/75, 29/81. Going for lunch..
+
+Fri 13 Sep @ 13:40
+Converged: 44/75, 41/81.
+
+Fri 13 Sep @ 14:55
+Converged: 45/75, 46/81.
+
+Fri 13 Sep @ 15:15
+Launched mrbayes_problematic on WALS also, with one processor (containing 8 MPI threads).
+
+Fri 13 Sep @ 16:30
+Second GPU has again fallen off the bus! Grrr. Not bothering to restart, as it will fall off again sooner or later. Will try to troubleshoot this next week with a second PSU (in case it's power-related, though my fairly strong suspicion now is that it is a software issue). Families converged at 48/75 and 46/81 still. Chibchan, surprisingly, seems to be doing good progress with the 8+8 chains and higher heating parameter. Going home.
+
+Mon 16 Sep @ 11:10
+Converged: 73/75, 76/81. Chibchan on WALS is not going anywhere, neither is Japonic on Grambank. Doing revbayes now on WALS and getting posterior trees for everything but Chibchan and Siouan, and will run the CTMC model. Will then return to the problem of getting Chibchan and Siouan to converge. As for Grambank, of the big families, Austronesian is still running but is very, very close to converging.
+
+Mon 16 Sep @ 11:25
+CTMC run started on WALS at 11:25.
+
+Mon 16 Sep @ 12:30
+CTMC finished on WALS. But notice there was a bug in the model.sh script: some typologies were being ran twice. Fixed now.
+
+Mon 16 Sep @ 12:35
+Rerunning CTMC on WALS: bug (see above) meant that doubly-ran files were being appended to; this will have affected the results.
+
+Mon 16 Sep @ 13:40
+CTMC finished.
+
+Mon 16 Sep @ 18:15
+Running: Grambank Austronesian + Grambank problematic. WALS is on a hiatus (the problematic ones are the only ones still to converge). Going home.
+
+Tue 17 Sep @ 11:50
+Grambank Austronesian has converged. What remains are the problematic families (for both databases).
+
+Tue 17 Sep @ 12:00
+Now running CTMC model on Grambank (excluding problematic families, but including Austronesian), plus problematic families on both databases (Grambank on GPU, but MrBayes insists that CPU is faster for WALS).
+
+Tue 17 Sep @ 12:20
+Dropped temperature parameter for problematic families down to 1.0, as at least in WALS, nothing was happening to convergence.
+
+Tue 17 Sep @ 13:05
+CTMC on Grambank (excl. problematic) finished.
+
+Tue 17 Sep @ 13:15
+Nothing changed about the Grambank results with the addition of Austronesian... there is a bug somewhere. I'm thinking, as a first approximation, that the contents of code/modelFitting/output must be deleted before model is run. But something could also be amiss with the code that obtains the posterior trees - will investigate.
+
+Tue 17 Sep @ 14:20
+Grambank problematic have converged (with heating parameter = 20.0). WALS problematic appear to be stuck.
+
+Tue 17 Sep @ 14:40
+WALS problematic is not going anywhere. Starting from scratch with heating = 5.0.
+
+Tue 17 Sep @ 15:50
+Giving up on WALS problematic for now. Discovered a bug in one of my own additions to modelFitting/loadData.jl, whose consequence was that only isolates were run... Have fixed this now and have just started CTMC model on both datasets in parallel.
+
+Tue 17 Sep @ 16:00
+universal.jl had been running for over 10 minutes without the MCMC chains even starting... investigating now whether there might not be some sort of bottleneck in the parallel operation, i.e. will run the feature pairs in series instead.
+
+Tue 17 Sep @ 16:30
+When launched in series (but the two databases in parallel), the thing starts after not a long time. Hence, have now programmed this so that we call up 5 concurrent processes on each database for a total of 10 CPU cores to be used in parallel. Expecting the whole thing to take about a day to run.
+
+Tue 17 Sep @ 16:50
+Noting that it took the script around 14 minutes to read in the trees for WALS. MCMC now started. Grambank still reading trees.
+
+Tue 17 Sep @ 16:55
+Estimated time to completion of one chain (after 10%), WALS: around 50 minutes. RAM usage at the moment: 74GB... need to make sure we don't run into a problem here (parallelizing by too much will lead to a memory bottleneck for sure, and we definitely don't want to end up swapping). Grambank is still reading in the trees... but at least the progress meter has now appeared...
+
+Thu 19 Sep @ 10:40
+Model has no output for WALS pairs 17 and 18, and Grambank pairs 5-9. I'm guessing the RAM bottleneck was reached at that point, or something like that. Running the missing pairs on WALS now.
