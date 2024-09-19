@@ -1,5 +1,9 @@
 # sanguche
 
+IMPORTANT FIXME/TODO: need to swap the order of parts 1 and 2, as the dataset creation for phylogenetic analysis depends on the files created in the `tmp` directory in the sandwichness analysis!!!
+
+
+
 Data analysis code for the paper:
 
 > Deepthi Gopal, Henri Kauhanen, Christopher Kitching, Tobias Galla & Ricardo Bermúdez-Otero (in prep.) Contact helps dispreferred combinations of typological features to survive: geospatial evidence. Manuscript, Universities of Uppsala, Konstanz, Manchester, and the Balearic Isles.
