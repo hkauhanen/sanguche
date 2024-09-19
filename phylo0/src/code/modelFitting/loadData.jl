@@ -13,7 +13,7 @@ isolates = filter(x -> x.nrow==1, famFreqs).glot_fam
 
 ##### Restrict analysis to those families only for which posterior trees actually exist
 postfam = glob("*.posterior.tree", "../../data/posteriorTrees")
-postfam = [split(split(fam, "/")[end], ".")[1] for fam in postfam]
+postfam = [split(fam)[1] for fam in postfam]
 families = families[families .∈ [postfam]]
 
 

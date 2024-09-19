@@ -11,6 +11,7 @@ features_wals = vcat(wo_features, control_features_wals)
 
 # Grambank features we are interested in
 wo_features = ["GB130", "GB065", "GB193", "GB025", "GB024", "VO", "NRc", "PN"]
-control_features_grambank = ["GB030", "GB302"]
+#control_features_grambank = ["GB030", "GB302"]
+control_features_grambank = ["GB059", "GB068"]
 features_grambank = vcat(wo_features, control_features_grambank)
 

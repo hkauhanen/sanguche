@@ -1,7 +1,6 @@
-dataset = "grambank"
+dataset = "wals"
 
 include("../../../jl/params.jl")
-
 
 
 cd(@__DIR__)
@@ -16,7 +15,6 @@ using Pipe
 using DataStructures
 using StatsBase
 using ProgressMeter
-using Missings
 using Random
 Random.seed!(2002261988307380348)
 
@@ -59,7 +57,7 @@ codes = CSV.read(codesF, DataFrame)
 ##
 
 
-woFeatures = features_grambank
+woFeatures = features_wals
 
 
 data = unstack(
@@ -73,74 +71,14 @@ data = unstack(
 
 ##
 
-
-
-  # some GB values are "?"; replace these with missing
-  for i in 1:size(data,1), j in 2:size(data,2)
-    if !ismissing(data[i,j]) && data[i,j] == "?"
-      data[i,j] = missing
-    end
-  end
-
-  # for some GB features, coding starts at 0. If so, increase all values by one
-  for feat in names(data)[2:end]
-    #if minimum(subset(codes, :Parameter_ID => p -> p .== feat).Name) == 0
-    if minimum(filter(x -> x.Parameter_ID .== feat, codes).Name) == 0
-      for r in 1:nrow(data)
-        if !ismissing(data[r, feat]) && data[r, feat] == "0"
-          data[r, feat] = "1"
-        elseif !ismissing(data[r, feat]) && data[r, feat] == "1"
-          data[r, feat] = "2"
-        elseif !ismissing(data[r, feat]) && data[r, feat] == "2"
-          data[r, feat] = "3"
-        elseif !ismissing(data[r, feat]) && data[r, feat] == "3"
-          data[r, feat] = "4"
-        end
-      end
-    end
-  end
-
-  for i in 1:size(data,1), j in 2:size(data,2)
-    v = data[i,j]
-    if !ismissing(v) && isnothing(tryparse(Int, v))
-      data[i,j] = missing
-    elseif !ismissing(v) && parse(Int, v) > 2
-      data[i,j] = missing
-    end
-  end
-
-
-
-function adjustnumbering(n)
-  if minimum(skipmissing(n)) == 0
-    return n .+ 1
-  else
-    return n
-  end
-end
-
-
 filter!(x -> x.Parameter_ID ∈ woFeatures, codes)
-
-codes = combine(groupby(codes, :Parameter_ID), :ID, :Name, :Name => (n -> adjustnumbering(n)) => :Number)
 
 select!(codes, [:ID, :Parameter_ID, :Name, :Number])
 
-
 filter!(x -> x.Number ∈ [1,2], codes)
 ##
-#
 
-
-# the next for loop expects feature values as numerics, so we parse
-# the strings into numbers
-#
-data2 = passmissing(tryparse).(Int, data[:, 2:end])
-data2[:, :Language_ID] .= data.Language_ID
-data = data2
-
-
-for i in 1:size(data,1), j in 1:(size(data,2)-1)
+for i in 1:size(data,1), j in 2:size(data,2)
     v = data[i,j]
     if !ismissing(v) && v > 2
         data[i,j] = missing
@@ -244,24 +182,25 @@ asjpCC = filter(x -> x.longname ∈ taxa, asjp18Clustered)
 data = filter(x -> x.longname ∈ taxa, data)
 
 fDict = Dict(
-    "GB130" => "VS",
-    "GB065" => "NG",
-    "GB193" => "NA",
-    "GB025" => "ND",
-    "GB024" => "NNum",
-    #"GB030" => "Gen",
-    #"GB302" => "Pas"
-    "GB059" => "AdPo",
-    "GB068" => "AdjPr"
+    "82A" => "VS",
+    "83A" => "VO",
+    "85A" => "PN",
+    "86A" => "NG",
+    "87A" => "NA",
+    "88A" => "ND",
+    "89A" => "NNum",
+    "90A" => "NRc",
+    #"10A" => "Nas",
+    #"129A" => "HaAr",
+    "116A" => "PolQ",
+    "112A" => "NegM"
 )
+
 
 
 rename!(data, fDict)
 
-#select!(data, [:longname, :glot_fam, :VS, :VO, :PN, :NG, :NA, :ND, :NNum, :NRc, :Gen, :Pas])
-select!(data, [:longname, :glot_fam, :VS, :VO, :PN, :NG, :NA, :ND, :NNum, :NRc, :AdPo, :AdjPr])
-
-
+select!(data, [:longname, :glot_fam, :VS, :VO, :PN, :NG, :NA, :ND, :NNum, :NRc, :PolQ, :NegM])
 
 
 

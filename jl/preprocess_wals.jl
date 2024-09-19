@@ -171,8 +171,8 @@ push!(codes, ["PN-1", "PN", 1, "prepositions"])
 
 # writeout
 #
-CSV.write("../tmp/grambank/values.csv", vals)
-CSV.write("../tmp/grambank/codes.csv", codes)
+CSV.write("../tmp/wals/values.csv", vals)
+CSV.write("../tmp/wals/codes.csv", codes)
 
 
 

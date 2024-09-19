@@ -1,47 +1,29 @@
-dataset = ARGS[1]
-famsize = ARGS[2]
-resource = ARGS[3]
+using Distributed
 
-sole_family = ""
+@everywhere cd(@__DIR__)
 
-if length(ARGS) == 4
-  global sole_family = ARGS[4]
+@everywhere function argfunc(args)
+  return args
+end
+
+@everywhere families = open(argfunc($ARGS[1])) do file
+  readlines(file)
 end
 
 
-nex_filesize_limit = 1_500_000
-
-
-global_temperature = 0.2
-
-if length(ARGS) == 5
-  global global_temperature = parse(Float64, ARGS[5])
-end
-
-
-nstep = 1_000_000
-
-if length(ARGS) == 6
-  global nstep = parse(Int, ARGS[6])
-end
-
-
-
-cd(@__DIR__)
-
-using Pkg
-Pkg.activate("mrbayes_project")
-Pkg.instantiate()
+@everywhere using Pkg
+@everywhere Pkg.activate("mrbayes_project")
+@everywhere Pkg.instantiate()
 
 ##
-using ProgressMeter
-using CSV
-using DataFrames
-using Glob
-using Statistics
-using Distributions
-using Pipe
-using Dates
+@everywhere using ProgressMeter
+@everywhere using CSV
+@everywhere using DataFrames
+@everywhere using Statistics
+@everywhere using Distributions
+@everywhere using Pipe
+@everywhere using Dates
+@everywhere using Random
 
 
 try
@@ -49,6 +31,10 @@ try
 catch e
 end
 
+try
+  mkdir("mrbayes/logs/")
+catch e
+end
 
 try
   mkdir("mrbayes/converged/")
@@ -56,63 +42,40 @@ catch e
 end
 
 
-try
-  mkdir("mrbayes/logs/")
-catch e
-end
+##
 
-
-
-
-using Conda
-Conda.pip_interop(true)
+@everywhere using Conda
+@everywhere Conda.pip_interop(true)
 Conda.pip("install", "ete3")
 
 
-ENV["PYTHON"] = ""
+@everywhere ENV["PYTHON"] = ""
 Pkg.build("PyCall")
-using PyCall
+@everywhere using PyCall
 
-ete3 = pyimport("ete3")
-
-
-##
-data = CSV.read("../data/charMtx.csv", DataFrame)
-
-##
-worldGlotF = download("https://osf.io/jyvgt/download", "../data/world_fullGlot.tre")
-
-glot = ete3.Tree(worldGlotF)
-
-glot.prune(data.longname)
+@everywhere ete3 = pyimport("ete3")
 
 
 ##
-all_families = open("../data/glot3.txt") do file
-  readlines(file)
-end
+@everywhere data = CSV.read("../data/charMtx.csv", DataFrame)
+
+##
+@everywhere worldGlotF = download("https://osf.io/jyvgt/download", "../data/world_fullGlot.tre")
+
+@everywhere glot = ete3.Tree(worldGlotF)
+
+@everywhere glot.prune(data.longname)
 
 
-##### Chibchan will not converge for WALS, hence remove it
-rm_family(fams, to_remove) = fams[fams .!= to_remove]
-#
-#if dataset == "wals"
-#  all_families = rm_family(all_families, "Chibchan")
+##
+#@everywhere families_tmp = open("../data/glot3.txt") do file
+#  readlines(file)
 #end
 
-#all_families = rm_family(all_families, "Austronesian")
-#all_families = rm_family(all_families, "Atlantic-Congo")
-#all_families = rm_family(all_families, "Sino-Tibetan")
 
 
-if sole_family != ""
-  global all_families = [sole_family]
-end
-
-
-
-##### Remove families which have already converged.
-function rm_families_converged(fams; verbose = false)
+# Remove families which have already converged.
+@everywhere function rm_families_converged(fams; verbose = false)
   fams_to_remove = []
 
   for fm in fams
@@ -127,53 +90,32 @@ function rm_families_converged(fams; verbose = false)
   return fams[fams .∉ [fams_to_remove]]
 end
 
+@everywhere families = rm_families_converged(families)
 
 
-##### Remove either small or large families (i.e. we process the two groups
-##### in different batches)
-function rm_families_due_to_size(fams, limit, direction)
-  newfams = []
-
-  for fm in fams
-    fs = filesize("../data/asjpNex/$fm.nex")
-    if direction == "large"
-      if fs > limit
-        push!(newfams, fm)
-      end
-    elseif direction == "small"
-      if fs <= limit
-        push!(newfams, fm)
-      end
-    end
-  end
-
-  return newfams
-end
-
-all_families = rm_families_due_to_size(all_families, nex_filesize_limit, famsize)
-
-
-
-##### DEBUG
-#####println(length(families))
-
-
-##### DEBUG
 #=
-for fm in families
-println(fm)
-end
+# We want to sort the families so that large and small families are being processed concurrently;
+# this leads to the most efficient use of wall-clock time. To do this, we take one family from
+# the top of the pile, the next from the bottom, the next from the top, the next from the bottom...
+# and so on. Kind of like the first round on the Vierschanzentournee.
+@everywhere df = DataFrame(fm=families_tmp2)
+@everywhere transform!(df, :fm => (f -> "../data/asjpNex/" .* f .* ".nex") => :filename)
+@everywhere transform!(df, :filename => (f -> filesize.(f)) => :filesize)
+@everywhere sort!(df, :filesize, rev=true)
+@everywhere df.sizeorder = 1:nrow(df)
+@everywhere df.neworder = (df.sizeorder .- nrow(df)/2) .^ 2
+@everywhere sort!(df, :neworder, rev=true)
+@everywhere families = df.fm
 =#
-
 
 
 
 ##
 
-function mbScript_original(fm, ngen, append)
+@everywhere function mbScript(fm, ngen, append, nchains, temp)
   fmTaxa = filter(x -> x.glot_fam == fm, data).longname
   nex = """
-  #Nexus
+#Nexus
 \tBegin MrBayes;
 \t\tset seed=6789580436154794230;
 \t\tset swapseed = 614090213;
@@ -210,274 +152,132 @@ function mbScript_original(fm, ngen, append)
 \t\tmcmcp Burninfrac=0.5 stoprule=no stopval=0.01;
 \t\tmcmcp filename=../data/asjpNex/output/$fm;
 \t\tmcmcp samplefreq=1000 printfreq=5000 append=$append;
-\t\tmcmc ngen=$ngen nchains=4 nruns=2;
-\t\tsump;
-\t\tsumt;
-\tend;
-"""
-  nex
-end
-
-
-function mbScript_cpu(fm, ngen, append; temp = global_temperature)
-  fmTaxa = filter(x -> x.glot_fam == fm, data).longname
-  nex = """
-  #Nexus
-\tBegin MrBayes;
-\t\tset seed=6789580436154794230;
-\t\tset swapseed = 614090213;
-\t\texecute ../data/asjpNex/$fm.nex;
-\t\tlset rates=gamma coding=all;
-"""
-
-  fmGlot = glot.copy()
-  fmGlot.prune(fmTaxa)
-  constraints = []
-  if length(fmTaxa) > 5
-    for nd in fmGlot.get_descendants()
-      if !nd.is_leaf()
-        push!(constraints, nd.get_leaf_names())
-      end
-    end
-  end
-
-  if length(constraints) > 0
-    for (i, cn) in enumerate(constraints)
-      nex *= "\t\tconstraint c$i = " * join(cn, " ") * ";\n"
-    end
-
-    nex *= "\t\tprset topologypr = constraints("
-    nex *= join(["c$i" for i in 1:length(constraints)], ",") * ");\n"
-  end
-
-#\t\tset beagleprecision=double beaglescaling=dynamic beaglesse=yes;
-  nex *= """
-\t\tprset brlenspr = clock:uniform;
-\t\tprset clockvarpr = igr;
-\t\tprset treeagepr=Gamma(0.05, 0.005);
-\t\tprset shapepr=Exponential(10);
-\t\tset usebeagle=no;
-\t\tmcmcp Burninfrac=0.5 stoprule=no stopval=0.01;
-\t\tmcmcp filename=../data/asjpNex/output/$fm;
-\t\tmcmcp samplefreq=1000 printfreq=5000 append=$append;
-\t\tmcmc ngen=$ngen nchains=4 nruns=2 temp=$temp;
-\t\tsump;
-\t\tsumt;
-\tend;
-"""
-  nex
-end
-
-function mbScript_gpu(fm, ngen, append, resourceid; nchains = 4, temp = global_temperature)
-  fmTaxa = filter(x -> x.glot_fam == fm, data).longname
-  nex = """
-#Nexus
-\tBegin MrBayes;
-\t\tset seed=6789580436154794230;
-\t\tset swapseed = 614090213;
-\t\texecute ../data/asjpNex/$fm.nex;
-\t\tlset rates=gamma coding=all;
-"""
-
-  fmGlot = glot.copy()
-  fmGlot.prune(fmTaxa)
-  constraints = []
-  if length(fmTaxa) > 5
-    for nd in fmGlot.get_descendants()
-      if !nd.is_leaf()
-        push!(constraints, nd.get_leaf_names())
-      end
-    end
-  end
-
-  if length(constraints) > 0
-    for (i, cn) in enumerate(constraints)
-      nex *= "\t\tconstraint c$i = " * join(cn, " ") * ";\n"
-    end
-
-    nex *= "\t\tprset topologypr = constraints("
-    nex *= join(["c$i" for i in 1:length(constraints)], ",") * ");\n"
-  end
-
-  nex *= """
-\t\tprset brlenspr = clock:uniform;
-\t\tprset clockvarpr = igr;
-\t\tprset treeagepr=Gamma(0.05, 0.005);
-\t\tprset shapepr=Exponential(10);
-\t\tset usebeagle=yes beagleresource=$resourceid;
-\t\tset beagleprecision=single beaglescaling=dynamic;
-\t\tmcmcp Burninfrac=0.5 stoprule=no stopval=0.01;
-\t\tmcmcp filename=../data/asjpNex/output/$fm;
-\t\tmcmcp samplefreq=1000 printfreq=5000 append=$append;
 \t\tmcmc ngen=$ngen nchains=$nchains nruns=2 temp=$temp;
 \t\tsump;
 \t\tsumt;
 \tend;
-  """
+"""
   nex
 end
 
-#=
-if dataset == "wals"
-  mbScript(x, y, z) = mbScript_cpu(x, y, z)
-elseif dataset == "grambank"
-  mbScript(x, y, z) = mbScript_gpu(x, y, z)
+
+if "Chibchan" ∈ families || "Siouan" ∈ families || "Japonic" ∈ families
+  @everywhere mbScript(fm, ngen, append) = mbScript(fm, ngen, append, 8, 5.0)
+else
+  @everywhere mbScript(fm, ngen, append) = mbScript(fm, ngen, append, 1, 0.2)
 end
-=#
+
+
+
+
+##### Chibchan will not converge for WALS, hence remove it
+#if dataset == "wals"
+#    families = families[families .!= "Chibchan"]
+#end
 
 
 
 ##
+@sync @distributed for fm in families
+  println("Executing $fm")
+  
+  mbFile = "mrbayes/$(fm).mb.nex"
+  convFile = "mrbayes/converged/$(fm).txt"
+  logFile = "mrbayes/logs/$(fm).csv"
 
+  nrun = 1000000
 
-if resource == "cpu" || resource == "cpu4"
-  mbScript(x, y, z) = mbScript_cpu(x, y, z)
-elseif resource == "gpu1"
-  mbScript(x, y, z) = mbScript_gpu(x, y, z, "1")
-elseif resource == "gpu2"
-  mbScript(x, y, z) = mbScript_gpu(x, y, z, "2")
-elseif resource == "original"
-  mbScript(x, y, z) = mbScript_original(x, y, z)
-end
+  # If checkpointing file exists, we continue from there. Otherwise, start anew.
+  open(mbFile, "w") do file
+    write(file, mbScript(fm, nrun, "no"))
+  end
 
-
-#=
-if famsize == "large"
-  nstep = 100_000
-  max_generations = 100*nstep
-elseif famsize == "small"
-  nstep = 1_000_000
-  max_generations = 50*nstep
-end
-=#
-
-
-##### DEBUG: restrict to a couple of families
-#####all_families = ["Ndu", "Tuu", "Uralic"]
-
-
-
-# loop as long as there are non-converged families
-while length(rm_families_converged(all_families)) > 0
-#    global nrun += nstep
-
-    local families = rm_families_converged(all_families)
-    
-    if length(families) == 0
-      println("All families have converged!")
-      break
-    end
-
-for fm in families
-
-  ##### We try-catch this; in case a single family (or some families) exit with
-  ##### an error for any reason, we don't want to be thrown out of the loop.
   try
-    println("Executing $fm")
-    
-    mbFile = "mrbayes/$(fm).mb.nex"
-    convFile = "mrbayes/converged/$(fm).txt"
-    logFile = "mrbayes/logs/$(fm).csv"
-
-    nrun = 0
-
-    # If checkpointing file exists, we continue from there. Otherwise, start anew.
     if isfile("../data/asjpNex/output/$(fm).ckp")
-      # set nrun to current number in checkpointing file
+      # set nrun to current number in checkpointing file, plus some
       open("../data/asjpNex/output/$(fm).ckp") do f
         ckplines = readlines(f)
-        global nrun = parse(Int, ckplines[3][14:(end-1)]) + nstep
-        open(mbFile, "w") do file
-          write(file, mbScript(fm, nrun, "yes"))
-        end
+        nrun = parse(Int, ckplines[3][14:(end-1)]) + nrun
       end
-    else
-      open(mbFile, "w") do file
-        write(file, mbScript(fm, nstep, "no"))
-      end
-    end
-
-    if resource == "cpu" || resource == "original"
-      command = `mpirun -np 8 mb $mbFile`
-    elseif resource == "cpu4"
-      command = `mpirun -np 4 mb $mbFile`
-    elseif resource == "gpu1" || resource == "gpu2"
-      #command = `mb $mbFile`
-      command = `mpirun -np 8 mb $mbFile`
-    end
-
-    run(command)
-
-    function converged(nr::Int)
-      try
-      pstat = CSV.read(
-        "../data/asjpNex/output/$fm.pstat",
-        DataFrame,
-        header = 2,
-        datarow = 3,
-        delim = "\t",
-        ignorerepeated = true,
-      )
-
-      maxPSRF = maximum(pstat.PSRF)
-
-      tstat = CSV.read(
-        "../data/asjpNex/output/$fm.tstat",
-        DataFrame,
-        header = 2,
-        datarow = 3,
-        delim = "\t",
-        ignorerepeated = true,
-      )
-
-      meanStdev = mean(tstat[:,4])
-
-      vstat = CSV.read(
-        "../data/asjpNex/output/$fm.vstat",
-        DataFrame,
-        header = 2,
-        datarow = 3,
-        delim = "\t",
-        ignorerepeated = true,
-        missingstring="NA",
-      ) |> dropmissing
-
-      maxPSRF = maximum([maxPSRF, maximum(vstat.PSRF)])
-
-      # write log
-      open(logFile, "a") do file
-        date = Dates.now()
-        write(file, "$fm,$date,$nrun,$meanStdev,$maxPSRF\n")
-      end
-
-      ##### employ slightly laxer convergence criteria for Austronesian for Grambank:
-      if dataset == "nevermind" #dataset == "grambank" && fm == "Austronesian"
-        return maxPSRF <= 1.2 && meanStdev <= 0.02
-      else
-        return maxPSRF <= 1.1 && meanStdev <= 0.01
-      end
-    catch e
-      return false
-    end
-    end
-
-    #=
-    while !converged() && nrun < max_iterations
-      nrun += 1000000
       open(mbFile, "w") do file
         write(file, mbScript(fm, nrun, "yes"))
       end
-      run(command)
-    end
-    =#
-
-    if converged(nrun)
-      open(convFile, "w") do file
-        write(file, "Converged!")
-      end
     end
   catch e
-    println(e)
+    println("ERROR: Checkpointing file probably empty... starting family from scratch!")
+  end
+
+
+  if 1 == 0 #fm ∈ ["Chibchan", "Siouan", "Japonic"]
+    command = `mpirun -np 8 mb $mbFile`
+  else
+    command = `mb $mbFile`
+  end
+
+  run(command)
+
+  function converged()
+    pstat = CSV.read(
+      "../data/asjpNex/output/$fm.pstat",
+      DataFrame,
+      header = 2,
+      datarow = 3,
+      delim = "\t",
+      ignorerepeated = true,
+    )
+
+    maxPSRF = maximum(pstat.PSRF)
+
+    tstat = CSV.read(
+      "../data/asjpNex/output/$fm.tstat",
+      DataFrame,
+      header = 2,
+      datarow = 3,
+      delim = "\t",
+      ignorerepeated = true,
+    )
+
+    meanStdev = mean(tstat[:,4])
+
+    vstat = CSV.read(
+      "../data/asjpNex/output/$fm.vstat",
+      DataFrame,
+      header = 2,
+      datarow = 3,
+      delim = "\t",
+      ignorerepeated = true,
+      missingstring="NA",
+    ) |> dropmissing
+
+    maxPSRF = maximum([maxPSRF, maximum(vstat.PSRF)])
+
+    open(logFile, "a") do file
+      date = Dates.now()
+      write(file, "$fm,$date,$nrun,$meanStdev,$maxPSRF\n")
+    end
+
+    maxPSRF <= 1.1 && meanStdev <= 0.01
+  end
+
+  while !converged()
+    nrun += 1000000
+
+    open(mbFile, "w") do file
+      write(file, mbScript(fm, nrun, "yes"))
+    end
+
+    try
+      run(command)
+    catch e
+      println("ERROR: MrBayes exited with an error for whatever reason. Continuing...")
+    end
+  end
+
+  if converged()
+    open(convFile, "w") do file
+      write(file, "Converged!")
+    end
   end
 end
-end
+
+
