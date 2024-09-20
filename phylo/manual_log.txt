@@ -265,3 +265,6 @@ Rerunning Grambank MrBayes on new control features. Script run.sh is now used fo
 
 Thu 19 Sep @ 18:10
 Computer hung up and crashed... same weird problems again as a few years ago. Never again AMD... Anyway, MrBayes is up and running again for Grambank. Logging is now dataset-specific, as we are no longer running datasets in parallel. Going home.
+
+Fri 20 Sep @ 14:20
+Second GPU had fallen off the bus even though an active display was connected to it. Not sure where the problem lies now. Faulty GPU? Bug in the driver? Giving up on the idea that I can easily fix this, so continuing with one GPU only.
