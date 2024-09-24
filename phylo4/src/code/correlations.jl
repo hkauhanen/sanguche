@@ -37,6 +37,8 @@ Random.seed!(818480685100856001)
 ##
 
 fpairs = CSV.read("../data/fpairs.txt", DataFrame, header=false)[:,1]
+fpairs = fpairs[1:no_feature_pairs]
+
 
 ##
 function getEqulibirium(rates)
