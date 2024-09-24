@@ -161,7 +161,7 @@ end
 end
 
 
-if "Chibchan" ∈ families || "Siouan" ∈ families || "Japonic" ∈ families
+if argfunc($ARGS[1]) == "fm_problematic.txt"
   @everywhere mbScript(fm, ngen, append) = mbScript(fm, ngen, append, 8, 5.0)
 else
   @everywhere mbScript(fm, ngen, append) = mbScript(fm, ngen, append, 1, 0.2)
