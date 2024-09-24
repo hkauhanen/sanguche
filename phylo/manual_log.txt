@@ -275,4 +275,5 @@ Analysis is somehow stuck, with only 4 instances running... interrupting and lau
 Tue 24 Sep @ 14:30
 Redid WALS correlations (in phylo4) without the control-control pair. Looking good.
 
-
+Tue 24 Sep @ 15:00
+Moved Ta-Ne-Omotic, Tungusic and Uralic to the group of problematic families. They are running at 2x4 chains now, with the rest on 2x1. Seven (7) families remain to converge. Hoping to see results tomorrow or the day after...
