@@ -19,10 +19,10 @@ purge :
 	rm -rf $(DATASET)
 
 purge_mrbayes :
-	rm -rf $(DATASET)/data/asjpNex/output/*
-	rm -rf $(DATASET)/code/mrbayes/converged/*
-	rm -rf $(DATASET)/code/mrbayes/logs/*
-	rm -rf $(DATASET)/code/mrbayes/*
+	rm -rf $(DATASET)/data/asjpNex/output/$(FAMILY).*
+	rm -rf $(DATASET)/code/mrbayes/converged/$(FAMILY).*
+	rm -rf $(DATASET)/code/mrbayes/logs/$(FAMILY).*
+	rm -rf $(DATASET)/code/mrbayes/$(FAMILY).*
 
 data : 
 	mkdir $(DATASET)
