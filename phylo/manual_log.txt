@@ -277,3 +277,6 @@ Redid WALS correlations (in phylo4) without the control-control pair. Looking go
 
 Tue 24 Sep @ 15:00
 Moved Ta-Ne-Omotic, Tungusic and Uralic to the group of problematic families. They are running at 2x4 chains now, with the rest on 2x1. Seven (7) families remain to converge. Hoping to see results tomorrow or the day after...
+
+Tue 24 Sep @ 17:40
+I've just noticed there is an "orphaned" mb process seemingly running Atlantic-Congo... as if we had two processes running the same family simultaneously. This makes no sense, so I am interrupting everything and restarting. Families converged: 77/81.
