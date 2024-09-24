@@ -6,7 +6,9 @@ using Distributed
   return args
 end
 
-@everywhere families = open(argfunc($ARGS[1])) do file
+@everywhere fm_file = argfunc($ARGS[1])
+
+@everywhere families = open(fm_file) do file
   readlines(file)
 end
 
@@ -161,7 +163,7 @@ end
 end
 
 
-if argfunc($ARGS[1]) == "fm_problematic.txt"
+if fm_file == "fm_problematic.txt"
   @everywhere mbScript(fm, ngen, append) = mbScript(fm, ngen, append, 8, 5.0)
 else
   @everywhere mbScript(fm, ngen, append) = mbScript(fm, ngen, append, 1, 0.2)
