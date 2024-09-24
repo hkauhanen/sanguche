@@ -268,3 +268,6 @@ Computer hung up and crashed... same weird problems again as a few years ago. Ne
 
 Fri 20 Sep @ 14:20
 Second GPU had fallen off the bus even though an active display was connected to it. Not sure where the problem lies now. Faulty GPU? Bug in the driver? Giving up on the idea that I can easily fix this, so continuing with one GPU only.
+
+Tue 24 Sep @ 12:30
+Analysis is somehow stuck, with only 4 instances running... interrupting and launching anew from current checkpoints.
