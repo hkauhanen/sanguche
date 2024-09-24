@@ -271,3 +271,8 @@ Second GPU had fallen off the bus even though an active display was connected to
 
 Tue 24 Sep @ 12:30
 Analysis is somehow stuck, with only 4 instances running... interrupting and launching anew from current checkpoints.
+
+Tue 24 Sep @ 14:30
+Redid WALS correlations (in phylo4) without the control-control pair. Looking good.
+
+
