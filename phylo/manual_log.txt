@@ -284,4 +284,7 @@ I've just noticed there is an "orphaned" mb process seemingly running Atlantic-C
 Wed 25 Sep @ 11:50
 Redoing G Atlantic-Congo from scratch as a problematic family (2x4 chains), as convergence did not look likely otherwise. Checkpoint of 1-chain run is saved in phylo_BAK (not git'ed).
 
+Wed 25 Sep @ 12:00
+Since we seem to have the resources, am continuing the old analysis of Atlantic-Congo (as a "large family") in phylo_BAK alongside the new one.
+
 
