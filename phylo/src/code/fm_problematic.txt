@@ -4,3 +4,4 @@ Siouan
 Ta-Ne-Omotic
 Tungusic
 Uralic
+Atlantic-Congo
