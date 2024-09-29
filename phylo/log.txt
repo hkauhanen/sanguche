@@ -1,8 +1,8 @@
-Sun 29 Sep 20:00:06 CEST 2024
+Mon 30 Sep 00:00:07 CEST 2024
 ==================================================================
 Families converged: 80 / 81
 ==================================================================
-furioso                           Sun Sep 29 20:00:07 2024  560.28.03
-[0] NVIDIA GeForce RTX 2070 SUPER | 39°C,  86 % |  4332 /  8192 MB | hkauhanen(3142M) hkauhanen(984M) root(171M) hkauhanen(11M) root(2M)
+furioso                           Mon Sep 30 00:00:07 2024  560.28.03
+[0] NVIDIA GeForce RTX 2070 SUPER | 36°C,  56 % |  4328 /  8192 MB | hkauhanen(3142M) hkauhanen(980M) root(171M) hkauhanen(11M) root(2M)
 ==================================================================
-Tctl:         +44.5°C  
+Tctl:         +43.1°C  
