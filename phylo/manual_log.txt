@@ -287,4 +287,5 @@ Redoing G Atlantic-Congo from scratch as a problematic family (2x4 chains), as c
 Wed 25 Sep @ 12:00
 Since we seem to have the resources, am continuing the old analysis of Atlantic-Congo (as a "large family") in phylo_BAK alongside the new one.
 
-
+Tue 01 Oct @ 12:30
+Grambank Atlantic-Congo has finally converged. Now running CTMC model on Grambank.
