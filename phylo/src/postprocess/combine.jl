@@ -25,8 +25,10 @@ else
   control_features = control_features_grambank
 
   fDict = Dict(
-               "GB030" => "Gen",
-               "GB302" => "Pas"
+               #"GB030" => "Gen",
+               #"GB302" => "Pas"
+               "GB059" => "AdPo",
+               "GB068" => "AdjPr"
               )
 
   for k in keys(fDict)
