@@ -6,14 +6,14 @@ R=Rscript
 .PHONY : log purge data purge_mrbayes mrbayes_large mrbayes_problematic mrbayes_rest revbayes posterior model correlations
 
 log :
-	cd $(DATASET)/code; Rscript logvisuals.R
-	date > log.txt
-	echo "==================================================================" >> log.txt
-	bash mrbayes_progress.sh $(DATASET) >> log.txt
-	echo "==================================================================" >> log.txt
-	/home/hkauhanen/.local/bin/gpustat >> log.txt
-	echo "==================================================================" >> log.txt
-	sensors | grep Tctl >> log.txt
+	cd $(DATASET)/code; Rscript logvisuals.R $(DATASET)
+	date > log_$(DATASET).txt
+	echo "==================================================================" >> log_$(DATASET).txt
+	bash mrbayes_progress.sh $(DATASET) >> log_$(DATASET).txt
+	echo "==================================================================" >> log_$(DATASET).txt
+	/home/hkauhanen/.local/bin/gpustat >> log_$(DATASET).txt
+	echo "==================================================================" >> log_$(DATASET).txt
+	sensors | grep Tctl >> log_$(DATASET).txt
 
 purge :
 	rm -rf $(DATASET)
