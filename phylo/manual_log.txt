@@ -293,4 +293,7 @@ Grambank Atlantic-Congo has finally converged. Now running CTMC model on Gramban
 Fri 04 Oct @ 14:50
 Rerunning everything with the parameters agreed upon in yesterday's plenary meeting. Employing just one GPU, as we don't want this thing crashing all over the place at random times.
 
+Fri 04 Oct @ 15:00
+MrBayes runs started, in series: WALS first, then Grambank. Without the problematic families for WALS (Chibchan and Siouan).
+
 
