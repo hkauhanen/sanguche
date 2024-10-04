@@ -2,12 +2,14 @@ JULIA=julia +1.10.4
 JOPTS=--project=.
 J=$(JULIA) $(JOPTS)
 R=Rscript
-NPROCS=2
+NPROCS=16
 
 
-.PHONY : analysis posthoc deps preprocess data dicts sand pretty Jdeps Rdeps merge stats plots clean purge
+.PHONY : preparations analysis posthoc deps preprocess data dicts sand pretty Jdeps Rdeps merge stats plots clean purge
 
 deps : Jdeps Rdeps
+
+preparations : preprocess data
 
 analysis : preprocess data dicts sand pretty
 

@@ -17,6 +17,7 @@ log :
 
 purge :
 	rm -rf $(DATASET)
+	rm -rf results/$(DATASET)
 
 purge_mrbayes :
 	rm -rf $(DATASET)/data/asjpNex/output/$(FAMILY).*
