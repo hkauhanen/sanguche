@@ -4,10 +4,10 @@ make data DATASET=wals & make data DATASET=grambank
 
 wait
 
-make revbayes DATASET=wals NPROCS=16
-make revbayes DATASET=grambank NPROCS=16
+make revbayes DATASET=wals NPROCS=8 & make revbayes DATASET=grambank NPROCS=8
 
-#make mrbayes_large DATASET=$1 NPROCS=3 & make mrbayes_rest DATASET=$1 NPROCS=12
+wait
+
 make mrbayes_rest DATASET=wals NPROCS=4 \
   & make mrbayes_rest DATASET=grambank NPROCS=4 \
   & make mrbayes_large DATASET=wals NPROCS=3 \
