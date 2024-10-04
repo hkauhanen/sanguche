@@ -1,9 +1,5 @@
 # sanguche
 
-IMPORTANT FIXME/TODO: need to swap the order of parts 1 and 2, as the dataset creation for phylogenetic analysis depends on the files created in the `tmp` directory in the sandwichness analysis!!!
-
-
-
 Data analysis code for the paper:
 
 > Deepthi Gopal, Henri Kauhanen, Christopher Kitching, Tobias Galla & Ricardo Bermúdez-Otero (in prep.) Contact helps dispreferred combinations of typological features to survive: geospatial evidence. Manuscript, Universities of Uppsala, Konstanz, Manchester, and the Balearic Isles.
@@ -22,16 +18,35 @@ Requirements:
 
 ## Roadmap
 
-The code is divided into three parts:
+The code is divided into four parts:
 
-1. **Phylogenetic analysis.** This part first creates a set of posterior trees, then runs Jäger and Wahle's continuous time Markov chain model on those phylogenies to obtain "phylogenetically corrected" phi coefficients (along with other relevant summary statistics) for all feature pairs of interest.
-2. **"Sandwichness" analysis.** This part measures Delta (neighbourhood entropy differential) values from the actual empirical geographical distribution of languages.
-3. **Post-processing.** This part combines parts 1 and 2 into the final combined dataset, plus runs statistics and produces plots.
+1. **Preparations.** In this first part, the data (WALS and Grambank) are downloaded and prepared for later use.
+2. **Phylogenetic analysis.** This part first creates a set of posterior trees, then runs Jäger and Wahle's continuous time Markov chain model on those phylogenies to obtain "phylogenetically corrected" phi coefficients (along with other relevant summary statistics) for all feature pairs of interest.
+3. **"Sandwichness" analysis.** This part measures Delta (neighbourhood entropy differential) values from the actual empirical geographical distribution of languages.
+4. **Post-processing.** This part combines the output of parts 2 and 3 into the final combined dataset, plus runs statistics and produces plots.
 
 Each part needs to be run on our two datasets, WALS and Grambank, separately.
 
 
-## Instructions, Part 1: Phylogenetic analysis
+## Instructions, Part 1: Preparations
+
+Part 1 requires Julia version 1.10.4.
+
+First, install Juliaup by following the instructions at <https://github.com/JuliaLang/juliaup>.
+
+Then, to reproduce the analysis from scratch, type the following on the command line, paying special attention to the capitalization:
+
+```
+juliaup add 1.10.4
+make Jdeps
+make preparations DATASET=wals
+make preparations DATASET=grambank
+```
+
+(For any subsequent reproductions of this analysis, you may omit the `make Jdeps` bit which simply installs all required Julia dependencies.)
+
+
+## Instructions, Part 2: Phylogenetic analysis
 
 This bit is (very) time-consuming, as estimating the posterior distributions for all language families takes considerable time. We have attempted to parallelize the code as much as feasible, but, in practice, on our system (AMD Ryzen 3950X, 128GB DDR4 RAM, and 2 x NVIDIA GeForce RTX 2070 Super), the wall clock time of Part 1 is FIXME.
 
@@ -49,24 +64,16 @@ As long as these exist, the code in Part 3 will be able to combine the results o
 Part 1 is an adaptation of the code to Jäger and Wahle (FIXME), released under the MIT Licence.
 
 
-## Instructions, Part 2: "Sandwichness" analysis
+## Instructions, Part 3: "Sandwichness" analysis
 
-Part 2 is considerably less time-consuming, taking between some minutes and an hour depending on available computing power.
+Part 3 requires Julia version 1.10.4.
 
-Part 2 requires Julia version 1.10.4.
-
-First, install Juliaup by following the instructions at <https://github.com/JuliaLang/juliaup>.
-
-Then, to reproduce the analysis from scratch, type the following on the command line, paying special attention to the capitalization:
+To reproduce the analysis from scratch, type the following on the command line, paying special attention to the capitalization:
 
 ```
-juliaup add 1.10.4
-make Jdeps
 make analysis DATASET=wals
 make analysis DATASET=grambank
 ```
-
-(For any subsequent reproductions of this analysis, you may omit the `make Jdeps` bit which simply installs all required Julia dependencies.)
 
 Results are saved in the `results/wals/` and `results/grambank/` directories, respectively. The `results.csv` files are in ordinary comma-separated values format; the `results.jls` files are serializations of Julia dataframes which can be loaded into a Julia session by `using Serialization, DataFrames; results = serialize("results.jls")`.
 
@@ -85,9 +92,9 @@ make purge
 ```
 
 
-## Instructions, Part 3: Post-processing
+## Instructions, Part 4: Post-processing
 
-The final part, which combines the output of Parts 1 and 2, is quick. It depends on Julia version 1.10.4 and R version 4.4.2.
+The final part, which combines the output of Parts 2 and 3, is quick. It depends on Julia version 1.10.4 and R version 4.4.2.
 
 ```
 make Rdeps
@@ -97,7 +104,7 @@ make posthoc
 The resulting statistics and plots will appear in `results/tables/` and `results/plots/` and `results/tables/`, respectively.
 
 
-## Interlude: Brief description of code logic of Part 2
+## Postlude: Brief description of code logic of Part 3
 
 The data analysis in Part 2 is broken down into four major phases. All source code is contained in the `jl/` directory; the relationships between the various phases can be examined in the `Makefile`.
 
