@@ -289,3 +289,8 @@ Since we seem to have the resources, am continuing the old analysis of Atlantic-
 
 Tue 01 Oct @ 12:30
 Grambank Atlantic-Congo has finally converged. Now running CTMC model on Grambank.
+
+Fri 04 Oct @ 14:50
+Rerunning everything with the parameters agreed upon in yesterday's plenary meeting. Employing just one GPU, as we don't want this thing crashing all over the place at random times.
+
+
