@@ -69,12 +69,6 @@ Pkg.build("PyCall")
 @everywhere glot.prune(data.longname)
 
 
-##
-#@everywhere families_tmp = open("../data/glot3.txt") do file
-#  readlines(file)
-#end
-
-
 
 # Remove families which have already converged.
 @everywhere function rm_families_converged(fams; verbose = false)
@@ -93,22 +87,6 @@ Pkg.build("PyCall")
 end
 
 @everywhere families = rm_families_converged(families)
-
-
-#=
-# We want to sort the families so that large and small families are being processed concurrently;
-# this leads to the most efficient use of wall-clock time. To do this, we take one family from
-# the top of the pile, the next from the bottom, the next from the top, the next from the bottom...
-# and so on. Kind of like the first round on the Vierschanzentournee.
-@everywhere df = DataFrame(fm=families_tmp2)
-@everywhere transform!(df, :fm => (f -> "../data/asjpNex/" .* f .* ".nex") => :filename)
-@everywhere transform!(df, :filename => (f -> filesize.(f)) => :filesize)
-@everywhere sort!(df, :filesize, rev=true)
-@everywhere df.sizeorder = 1:nrow(df)
-@everywhere df.neworder = (df.sizeorder .- nrow(df)/2) .^ 2
-@everywhere sort!(df, :neworder, rev=true)
-@everywhere families = df.fm
-=#
 
 
 
@@ -166,16 +144,10 @@ end
 if fm_file == "fm_problematic.txt"
   @everywhere mbScript(fm, ngen, append) = mbScript(fm, ngen, append, 8, 5.0)
 else
-  @everywhere mbScript(fm, ngen, append) = mbScript(fm, ngen, append, 1, 0.2)
+  @everywhere mbScript(fm, ngen, append) = mbScript(fm, ngen, append, 8, 0.2)
 end
 
 
-
-
-##### Chibchan will not converge for WALS, hence remove it
-#if dataset == "wals"
-#    families = families[families .!= "Chibchan"]
-#end
 
 
 
@@ -209,12 +181,7 @@ end
     println("ERROR: Checkpointing file probably empty... starting family from scratch!")
   end
 
-
-  if 1 == 0 #fm ∈ ["Chibchan", "Siouan", "Japonic"]
-    command = `mpirun -np 8 mb $mbFile`
-  else
-    command = `mb $mbFile`
-  end
+  command = `mb $mbFile`
 
   run(command)
 

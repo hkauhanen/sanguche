@@ -25,10 +25,10 @@ else
   control_features = control_features_grambank
 
   fDict = Dict(
-               #"GB030" => "Gen",
-               #"GB302" => "Pas"
-               "GB059" => "AdPo",
-               "GB068" => "AdjPr"
+               "GB030" => "Gen",
+               "GB302" => "Pas"
+               #"GB059" => "AdPo",
+               #"GB068" => "AdjPr"
               )
 
   for k in keys(fDict)
@@ -58,8 +58,8 @@ transform!(results, :pair => (p -> split.(p, "-")) => [:f1, :f2])
 
 transform!(results, :pair_pretty => (p -> stringtoset.(p)) => :pair_ID)
 
-#transform!(results, :cpp => (p -> p .< 0.05) => :interacting)
-transform!(results, :cpp => (p -> p .< 0.1) => :interacting)
+transform!(results, :cpp => (p -> p .< 0.05) => :interacting)
+#transform!(results, :cpp => (p -> p .< 0.1) => :interacting)
 
 transform!(results, [:f1, :f2] => ((a,b) -> a .∈ [control_features] .|| b .∈ [control_features]) => :control)
 
