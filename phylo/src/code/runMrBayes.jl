@@ -141,10 +141,10 @@ end
 end
 
 
-if fm_file == "fm_problematic.txt"
+if fm_file == "fm_problematic_wals.txt" || fm_file == "fm_problematic_grambank.txt"
   @everywhere mbScript(fm, ngen, append) = mbScript(fm, ngen, append, 8, 5.0)
 else
-  @everywhere mbScript(fm, ngen, append) = mbScript(fm, ngen, append, 8, 0.2)
+  @everywhere mbScript(fm, ngen, append) = mbScript(fm, ngen, append, 4, 0.2)
 end
 
 
