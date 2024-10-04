@@ -296,4 +296,5 @@ Rerunning everything with the parameters agreed upon in yesterday's plenary meet
 Fri 04 Oct @ 15:00
 MrBayes runs started, in series: WALS first, then Grambank. Without the problematic families for WALS (Chibchan and Siouan).
 
-
+Fri 04 Oct @ 15:50
+Realized it makes more sense to run the large families in parallel in both databases, as they take so long. Restarting now with the following setup: at any given time, running in parallel 3 large families from both W and G, as well as 4 "normal" families from both W and G, for a total of 8+6=14 concurrent processes.

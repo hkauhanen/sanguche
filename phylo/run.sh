@@ -1,9 +1,27 @@
 #!/usr/bin/bash
 
-#make data DATASET=$1
-#make revbayes DATASET=$1 NPROCS=16
-make mrbayes_large DATASET=$1 NPROCS=3 & make mrbayes_rest DATASET=$1 NPROCS=12
-make posterior DATASET=$1
-make model DATASET=$1
-sleep 3h   # make sure model has finished for all feature pairs before proceeding to correlations
-make correlations DATASET=$1
+make data DATASET=wals & make data DATASET=grambank
+
+wait
+
+make revbayes DATASET=wals NPROCS=16
+make revbayes DATASET=grambank NPROCS=16
+
+#make mrbayes_large DATASET=$1 NPROCS=3 & make mrbayes_rest DATASET=$1 NPROCS=12
+make mrbayes_rest DATASET=wals NPROCS=4 \
+  & make mrbayes_rest DATASET=grambank NPROCS=4 \
+  & make mrbayes_large DATASET=wals NPROCS=3 \
+  & make mrbayes_large DATASET=grambank NPROCS=3
+
+wait
+
+make posterior DATASET=wals
+make posterior DATASET=grambank
+
+make model DATASET=wals
+make model DATASET=grambank
+
+wait
+
+make correlations DATASET=wals
+make correlations DATASET=grambank
