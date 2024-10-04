@@ -29,16 +29,16 @@ data :
 	mkdir $(DATASET)
 	cp -R src/code $(DATASET)/code
 	cd $(DATASET)/code; $J createData_$(DATASET).jl
-	cd $(DATASET)/code; $J createFmList.jl
+	cd $(DATASET)/code; $J createFmList.jl $(DATASET)
 
 mrbayes_large : 
-	cd $(DATASET)/code; $J -p $(NPROCS) runMrBayes.jl fm_large.txt
+	cd $(DATASET)/code; $J -p $(NPROCS) runMrBayes.jl fm_large_$(DATASET).txt
 
 mrbayes_problematic : 
-	cd $(DATASET)/code; $J -p $(NPROCS) runMrBayes.jl fm_problematic.txt
+	cd $(DATASET)/code; $J -p $(NPROCS) runMrBayes.jl fm_problematic_$(DATASET).txt
 
 mrbayes_rest : 
-	cd $(DATASET)/code; $J -p $(NPROCS) runMrBayes.jl fm_rest.txt
+	cd $(DATASET)/code; $J -p $(NPROCS) runMrBayes.jl fm_rest_$(DATASET).txt
 
 revbayes :
 	cd $(DATASET)/code/; $J --project=. -p $(NPROCS) runrevbayes.jl
