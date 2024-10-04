@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 
 #make data DATASET=$1
-make revbayes DATASET=$1 NPROCS=16
+#make revbayes DATASET=$1 NPROCS=16
 make mrbayes_large DATASET=$1 NPROCS=3 & make mrbayes_rest DATASET=$1 NPROCS=12
 make posterior DATASET=$1
 make model DATASET=$1
