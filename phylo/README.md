@@ -58,8 +58,9 @@ mkdir build
 cd build
 cmake -DCMAKE_INSTALL_PREFIX:PATH=$HOME -DBUILD_OPENCL=ON -DBUILD_JNI=OFF ..
 sudo make install
-export LD_LIBRARY_PATH=$HOME/lib:$LD_LIBRARY_PATH
 ```
+
+Then add `$HOME/lib` to path (e.g. `fish_add_path $HOME/lib` if using fish).
 
 
 ### 4. Install MrBayes
