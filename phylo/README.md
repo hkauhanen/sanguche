@@ -44,7 +44,8 @@ autoconf \
 automake \
 libtool \
 subversion \
-pkg-config
+pkg-config \
+curl
 ```
 
 
