@@ -36,14 +36,14 @@ Run the deviceQuery sample to verify that installation was successful.
 ### 2. Install other dependencies
 
 ```
-sudo apt install openmpi-bin /
-openmpi-common /
-mpi-default-dev /
-cmake /
-autoconf /
-automake /
-libtool /
-subversion /
+sudo apt install openmpi-bin \
+openmpi-common \
+mpi-default-dev \
+cmake \
+autoconf \
+automake \
+libtool \
+subversion \
 pkg-config
 ```
 
