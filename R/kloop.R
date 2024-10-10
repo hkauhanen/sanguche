@@ -1,7 +1,7 @@
 kloop <- function(data, dataset, variable = "Delta_under", indvariable = "status") {
   data$status <- relevel(data$status, ref="non-interacting")
 
-  ks <- 1:200
+  ks <- 1:100
 
   df <- expand.grid(k=ks, estimate=NA, pval=NA, dataset=dataset)
 
