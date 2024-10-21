@@ -40,8 +40,8 @@ Rdeps : R/Rdeps.R
 
 merge : results/combined.RData
 	
-results/combined.RData : phylo4/src/postprocess/combine.jl R/merge.R results/wals/results.jls results/grambank/results.jls
-	cd phylo4/src/postprocess; $(JULIA) combine.jl wals; $(JULIA) combine.jl grambank
+results/combined.RData : phylo/src/postprocess/combine.jl R/merge.R results/wals/results.jls results/grambank/results.jls
+	cd phylo/src/postprocess; $(JULIA) combine.jl wals; $(JULIA) combine.jl grambank
 	cd R; $R merge.R
 
 plots : results/plots/boxplot.png results/plots/distances.png results/plots/neighbourhood_dispref.png results/plots/kdiff.png

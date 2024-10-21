@@ -36,15 +36,16 @@ Run the deviceQuery sample to verify that installation was successful.
 ### 2. Install other dependencies
 
 ```
-sudo apt install openmpi-bin /
-openmpi-common /
-mpi-default-dev /
-cmake /
-autoconf /
-automake /
-libtool /
-subversion /
-pkg-config
+sudo apt install openmpi-bin \
+openmpi-common \
+mpi-default-dev \
+cmake \
+autoconf \
+automake \
+libtool \
+subversion \
+pkg-config \
+curl
 ```
 
 
@@ -55,10 +56,11 @@ git clone --depth=1 https://github.com/beagle-dev/beagle-lib.git
 cd beagle-lib
 mkdir build
 cd build
-cmake -DCMAKE_INSTALL_PREFIX:PATH=$HOME -DBUILD_OPENCL=OFF -DBUILD_JNI=OFF ..
+cmake -DCMAKE_INSTALL_PREFIX:PATH=$HOME -DBUILD_OPENCL=ON -DBUILD_JNI=OFF ..
 sudo make install
-export LD_LIBRARY_PATH=$HOME/lib:$LD_LIBRARY_PATH
 ```
+
+Then add `$HOME/lib` to path (e.g. `fish_add_path $HOME/lib` if using fish).
 
 
 ### 4. Install MrBayes
