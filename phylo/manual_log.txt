@@ -301,3 +301,6 @@ Realized it makes more sense to run the large families in parallel in both datab
 
 Fri 04 Oct @ 16:00
 Had wrong number of chains in runMrBayes.jl. Restarting.
+
+Mon 20 Oct @ 16:55
+Folded in GB Austronesian posterior trees from home machine to office machine. Now running CTMC models on office machine.
