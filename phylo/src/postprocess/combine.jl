@@ -103,7 +103,7 @@ transform!(tabletoprint, :phi => (p -> round.(p, digits=2)) => :phi)
 rename!(tabletoprint, [:feature_pair, :sample_size, :status, :LBF, :CPP, :phi, :corrected_phi])
 
 
-CSV.write("../../../results/$dataset/featuretable.csv", tabletoprint)
+CSV.write("../../../results/featuretable_$dataset.csv", tabletoprint)
 
 transform!(allresults, [:H, :H_pref] => ((a,b) -> b - a) => :Delta_over)
 transform!(allresults, [:H, :H_dispref] => ((a,b) -> b - a) => :Delta_under)

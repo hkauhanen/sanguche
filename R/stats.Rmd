@@ -1,0 +1,120 @@
+---
+title: "Contact helps dispreferred combinations of typological features to survive: geospatial evidence"
+subtitle: "Statistical analyses"
+output: pdf_document
+---
+
+
+# Preliminaries
+
+```{r}
+# required packages
+require(tidyverse)
+require(broom)
+require(pixiedust)
+require(emmeans)
+
+# create results/tables, if it doesn't exist already
+try(dir.create("../results/tables", recursive=TRUE))
+
+# load (and rename) dataframe "combined", which contains all our data
+load("../results/combined.RData")
+data <- combined
+data <- data[data$pair != "PolQ & NegM", ]
+data <- data[data$pair != "Gen & Pas", ]
+
+# make "non-interacting" the reference level of "status" factor
+data$status <- relevel(data$status, ref="non-interacting")
+
+# inflection points
+infl <- read.csv("../results/tables/inflection_points.csv")
+ip_wals <- round(mean(infl[infl$dataset == "WALS" & infl$inflpoint > 1, ]$inflpoint))
+ip_grambank <- round(mean(infl[infl$dataset == "Grambank" & infl$inflpoint > 1, ]$inflpoint))
+
+# restrict to final choice of k
+wals <- data[data$dataset == "WALS" & data$k == ip_wals, ]
+gram <- data[data$dataset == "Grambank" & data$k == ip_grambank, ]
+```
+
+
+# Basic model: comparison of $\Delta$ between typologies of different statuses
+
+## Under-represented types ($\Delta^-$)
+
+```{r}
+mod_w <- lm(Delta_under ~ status+abs(phi), data=wals)
+mod_g <- lm(Delta_under ~ status+abs(phi), data=gram)
+
+#mod_w %>% dust %>% sprinkle(round=5) %>% write.csv(file="../results/tables/mod1_under_wals.csv", row.names=FALSE)
+#mod_g %>% dust %>% sprinkle(round=5) %>% write.csv(file="../results/tables/mod1_under_grambank.csv", row.names=FALSE)
+
+print(summary(mod_w))
+print(summary(mod_g))
+```
+
+
+## Over-represented types ($\Delta^+$)
+
+```{r}
+mod_w <- lm(Delta_over ~ status+abs(phi), data=wals)
+mod_g <- lm(Delta_over ~ status+abs(phi), data=gram)
+
+#mod_w %>% dust %>% sprinkle(round=5) %>% write.csv(file="../results/tables/mod1_over_wals.csv", row.names=FALSE)
+#mod_g %>% dust %>% sprinkle(round=5) %>% write.csv(file="../results/tables/mod1_over_grambank.csv", row.names=FALSE)
+
+print(summary(mod_w))
+print(summary(mod_g))
+```
+
+
+# Model 2: model comparison between $\varphi$ and $\varphi_c$ as predictors
+
+## Under-represented types
+
+```{r}
+mod_w <- lm(Delta_under ~ abs(phi), data=wals)
+mod_wc <- lm(Delta_under ~ abs(corrected_phi), data=wals)
+
+print(summary(mod_w))
+print(summary(mod_wc))
+
+print(AIC(mod_w))
+print(AIC(mod_wc))
+
+mod_g <- lm(Delta_under ~ abs(phi), data=gram)
+mod_gc <- lm(Delta_under ~ abs(corrected_phi), data=gram)
+
+print(summary(mod_g))
+print(summary(mod_gc))
+
+print(AIC(mod_g))
+print(AIC(mod_gc))
+
+#mod_w %>% dust %>% sprinkle(round=5) %>% write.csv(file="../results/tables/mod2_under_wals.csv", row.names=FALSE)
+#mod_g %>% dust %>% sprinkle(round=5) %>% write.csv(file="../results/tables/mod2_under_grambank.csv", row.names=FALSE)
+#mod_wc %>% dust %>% sprinkle(round=5) %>% write.csv(file="../results/tables/mod2_under_corrected_wals.csv", row.names=FALSE)
+#mod_gc %>% dust %>% sprinkle(round=5) %>% write.csv(file="../results/tables/mod2_under_corrected_grambank.csv", row.names=FALSE)
+```
+
+## Over-represented types
+
+```{r}
+mod_w <- lm(Delta_over ~ abs(phi), data=wals)
+mod_wc <- lm(Delta_over ~ abs(corrected_phi), data=wals)
+
+print(summary(mod_w))
+print(summary(mod_wc))
+
+print(AIC(mod_w))
+print(AIC(mod_wc))
+
+mod_g <- lm(Delta_over ~ abs(phi), data=gram)
+mod_gc <- lm(Delta_over ~ abs(corrected_phi), data=gram)
+
+print(summary(mod_g))
+print(summary(mod_gc))
+
+print(AIC(mod_g))
+print(AIC(mod_gc))
+```
+

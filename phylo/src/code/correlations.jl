@@ -1,5 +1,6 @@
 dataset = ARGS[1]
-no_feature_pairs = 45
+#no_feature_pairs = 45
+no_feature_pairs = 44
 
 cd(@__DIR__)
 

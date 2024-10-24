@@ -52,9 +52,9 @@ results/plots/boxplot.png results/plots/distances.png results/plots/neighbourhoo
 results/tables/inflection_points.csv : R/inflection.R
 	cd R; $R inflection.R
 
-stats : results/tables/stats.txt
+stats : results/tables/stats.pdf
 
-results/tables/stats.txt : results/combined.RData R/stats.R results/tables/inflection_points.csv
+results/tables/stats.pdf : results/combined.RData R/stats.R R/stats.Rmd results/tables/inflection_points.csv
 	cd R; $R stats.R
 
 tmp/$(DATASET)/codes.csv tmp/$(DATASET)/languages.csv tmp/$(DATASET)/parameters.csv tmp/$(DATASET)/values.csv &: jl/preprocess_$(DATASET).jl
