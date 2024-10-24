@@ -1,11 +1,4 @@
 tmp/
-phylo0/
 phylo/wals/
 phylo/grambank/
-phylo/wals_*/
-phylo/grambank_*/
-phylo2/
-phylo3/
-phylo4/
-phylo_BAK/
-phylo_BAK2/
+phylo_OLD/
