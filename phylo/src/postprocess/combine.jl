@@ -102,8 +102,11 @@ transform!(tabletoprint, :phi => (p -> round.(p, digits=2)) => :phi)
 
 rename!(tabletoprint, [:feature_pair, :sample_size, :status, :LBF, :CPP, :phi, :corrected_phi])
 
-
 CSV.write("../../../results/featuretable_$dataset.csv", tabletoprint)
+
+smalltabletoprint = @pipe subset(tabletoprint, :CPP => c -> c .< 0.05) |> select(_, [:feature_pair, :sample_size, :LBF, :CPP, :phi, :corrected_phi]) |> rename(_, ["typology", "sample size", "LBF", "CPP", "\$phi\$", "\$phi_c\$"])
+
+CSV.write("../../../results/featuretable_interacting_$dataset.csv", smalltabletoprint, writeheader=false)
 
 transform!(allresults, [:H, :H_pref] => ((a,b) -> b - a) => :Delta_over)
 transform!(allresults, [:H, :H_dispref] => ((a,b) -> b - a) => :Delta_under)

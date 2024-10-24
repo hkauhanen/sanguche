@@ -131,6 +131,7 @@ g <- g + deftheme()
 g <- g + theme(legend.position=c(0.85, 0.81))
 g <- g + scale_fill_sanguche() + scale_color_sanguche()
 g <- g + xlab("Mean distance to neighbour") 
+g <- g + ylab("Density")
 g <- g + guides(color=guide_legend(expression("Neighbourhood size"~italic(k))), fill=guide_legend(expression("Neighbourhood size"~italic(k))), lty=guide_legend(expression("Neighbourhood size"~italic(k))))
 g <- g + geom_vline(data=meanmeans, aes(xintercept=x), color="black", alpha=0.5, lty=2)
 g <- g + geom_text(data=meanmeans, inherit.aes=FALSE, aes(x=x, y=0.014, label=pretty), nudge_x=160, alpha=0.8)
@@ -155,25 +156,38 @@ df2$Dataset <- "Grambank"
 df <- rbind(df1, df2)
 df$Dataset <- factor(df$Dataset, levels=c("WALS", "Grambank"))
 
-df$estimate <- ifelse(df$estimate > 0, "> 0", "< 0")
-
-g <- ggplot(df, aes(x=k, y=pval, pch=Dataset, color=Dataset))#, group=estimate, color=estimate)) 
+g <- ggplot(df, aes(x=k, y=pval, pch=Dataset, color=Dataset))
 g <- g + geom_line(alpha=0.6)
 g <- g + geom_point(alpha=0.9, size=2.0)
-g <- g + geom_hline(yintercept=0.01, lty=3)
-g <- g + geom_hline(yintercept=0.05, lty=3)
+g <- g + geom_hline(yintercept=0.01, lty=2, alpha=0.8)
+g <- g + geom_hline(yintercept=0.05, lty=2, alpha=0.8)
 g <- g + scale_y_log10(limits=c(0.005, 1))
 g <- g + annotation_logticks(sides="l") 
 g <- g + deftheme() 
-g <- g + theme(legend.position=c(0.38, 0.80))
-g <- g + annotate("text", x=95.5, y=0.008, parse=TRUE, label="italic(p)==0.01")
-g <- g + annotate("text", x=95.5, y=0.04, parse=TRUE, label="italic(p)==0.05")
+#g <- g + theme(legend.position=c(0.38, 0.80))
+g <- g + theme(legend.position="none")
+g <- g + annotate("text", x=87.5, y=0.008, parse=TRUE, label="italic(p)==0.01", size=3, alpha=0.9)
+g <- g + annotate("text", x=87.5, y=0.04, parse=TRUE, label="italic(p)==0.05", size=3, alpha=0.9)
 g <- g + scale_color_sanguche2()
 g <- g + ylab(expression(italic(p)*"-value"))
 g <- g + xlab(expression("Neighbourhood size"~italic(k)))
 
-png("../results/plots/ksweep_mod1_under.png", res=300, width=2000, height=1500)
-print(g)
+g1 <- g
+
+g <- ggplot(df, aes(x=k, y=estimate, pch=Dataset, color=Dataset))
+g <- g + geom_line(alpha=0.6)
+g <- g + geom_point(alpha=0.9, size=2.0)
+g <- g + deftheme() 
+g <- g + theme(legend.position=c(0.70, 0.20))
+g <- g + scale_color_sanguche2()
+g <- g + ylab("Estimate")
+g <- g + xlab(expression("Neighbourhood size"~italic(k)))
+g <- g + ylim(-0.2, 0.2)
+
+g2 <- g
+
+png("../results/plots/ksweep_mod1_under.png", res=300, width=2000, height=1300)
+print(grid.arrange(g2, g1, nrow=1))
 dev.off()
 
 
@@ -186,25 +200,38 @@ df2$Dataset <- "Grambank"
 df <- rbind(df1, df2)
 df$Dataset <- factor(df$Dataset, levels=c("WALS", "Grambank"))
 
-df$estimate <- ifelse(df$estimate > 0, "> 0", "< 0")
-
-g <- ggplot(df, aes(x=k, y=pval, pch=Dataset, color=Dataset))#, group=estimate, color=estimate)) 
+g <- ggplot(df, aes(x=k, y=pval, pch=Dataset, color=Dataset))
 g <- g + geom_line(alpha=0.6)
 g <- g + geom_point(alpha=0.9, size=2.0)
-g <- g + geom_hline(yintercept=0.01, lty=3)
-g <- g + geom_hline(yintercept=0.05, lty=3)
+g <- g + geom_hline(yintercept=0.01, lty=2, alpha=0.8)
+g <- g + geom_hline(yintercept=0.05, lty=2, alpha=0.8)
 g <- g + scale_y_log10(limits=c(0.005, 1))
 g <- g + annotation_logticks(sides="l") 
 g <- g + deftheme() 
-g <- g + theme(legend.position=c(0.60, 0.30))
-g <- g + annotate("text", x=7.5, y=0.008, parse=TRUE, label="italic(p)==0.01")
-g <- g + annotate("text", x=7.5, y=0.04, parse=TRUE, label="italic(p)==0.05")
+#g <- g + theme(legend.position=c(0.38, 0.80))
+g <- g + theme(legend.position="none")
+g <- g + annotate("text", x=12.5, y=0.008, parse=TRUE, label="italic(p)==0.01", size=3, alpha=0.9)
+g <- g + annotate("text", x=12.5, y=0.04, parse=TRUE, label="italic(p)==0.05", size=3, alpha=0.9)
 g <- g + scale_color_sanguche2()
 g <- g + ylab(expression(italic(p)*"-value"))
 g <- g + xlab(expression("Neighbourhood size"~italic(k)))
 
-png("../results/plots/ksweep_mod1_over.png", res=300, width=2000, height=1500)
-print(g)
+g1 <- g
+
+g <- ggplot(df, aes(x=k, y=estimate, pch=Dataset, color=Dataset))
+g <- g + geom_line(alpha=0.6)
+g <- g + geom_point(alpha=0.9, size=2.0)
+g <- g + deftheme() 
+g <- g + theme(legend.position=c(0.70, 0.20))
+g <- g + scale_color_sanguche2()
+g <- g + ylab("Estimate")
+g <- g + xlab(expression("Neighbourhood size"~italic(k)))
+g <- g + ylim(-0.2, 0.2)
+
+g2 <- g
+
+png("../results/plots/ksweep_mod1_over.png", res=300, width=2000, height=1300)
+print(grid.arrange(g2, g1, nrow=1))
 dev.off()
 
 
