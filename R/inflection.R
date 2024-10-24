@@ -1,14 +1,16 @@
 require(tidyverse)
-require(broom)
-require(pixiedust)
-require(emmeans)
+
+
+# create directories to save stuff in
+try(dir.create("../results/plots", recursive=TRUE))
+try(dir.create("../results/tables", recursive=TRUE))
 
 
 # This loads a dataframe named "combined", which contains all our data
 load("../results/combined.RData")
 
 
-# We restrict attention to neighbourhood sizes smaller than 50
+# We restrict attention to neighbourhood sizes smaller than 100
 maxk <- 100
 alldata <- combined[combined$k <= maxk, ]
 
@@ -22,7 +24,7 @@ do_one_pair <- function(X, data) {
   inflpoint <- NA
 
   # Fit LOESS to Delta_over + Delta_under
-  lo <- loess(Delta_over + Delta_under ~ k, dhere, span=0.5, degree=2)#, weights=((100:1)/100)^2)
+  lo <- loess(Delta_over + Delta_under ~ k, dhere, span=0.5, degree=2)
   lof <- lo$fitted
 
   # Cycle through neighbourhood sizes k, starting from the right,
@@ -51,7 +53,7 @@ infl <- rbind(wals_infl, gram_infl)
 
 # Plot them
 
-pdf("inflections.pdf", height=8, width=8)
+pdf("../results/plots/inflections.pdf", height=8, width=8)
 
 print(ggplot(infl[infl$k==1, ], aes(x=inflpoint, fill=dataset)) + geom_histogram() + facet_wrap(.~dataset))
 
@@ -63,15 +65,9 @@ for (pair in unique(infl$pair)) {
 dev.off()
 
 
-# Print means
-wi <- wals_infl$inflpoint
-wi <- wi[wi != 1]
-gi <- gram_infl$inflpoint
-gi <- gi[gi != 1]
-print(paste("WALS mean (non-1):", mean(wi)))
-print(paste("Grambank mean (non-1):", mean(gi)))
+# Print inflection points to CSV
 
-print(paste("WALS max (non-1):", max(wi)))
-print(paste("Grambank max (non-1):", max(gi)))
-
+out <- infl[, c("pair", "dataset", "inflpoint")]
+out <- out[!duplicated(out), ]
+write.csv(out, file="../results/tables/inflection_points.csv", row.names=FALSE)
 

@@ -5,6 +5,8 @@ require(gridExtra)
 require(reshape2)
 require(ggplot2)
 
+source("kvsk.R")
+
 
 # create directory to save plots in
 try(dir.create("../results/plots", recursive=TRUE))
@@ -16,15 +18,14 @@ deftheme <- function() {
 #  g <- g + theme(panel.grid.major=element_blank(), panel.grid.minor=element_blank())
   g <- g + theme(panel.grid.minor=element_blank())
   g <- g + theme(axis.text=element_text(color="black"))
-  g <- g + theme(strip.text=element_text(size=12), strip.background=element_blank())
-  #g <- g + theme(strip.text=element_text(size=12, hjust=0), strip.background=element_blank())
+  g <- g + theme(strip.text=element_text(size=12, hjust=0), strip.background=element_blank())
   g
 }
 
 
 # default colour palettes
-mypal <- pal_locuszoom(alpha=1.0)(5)
-mypal <- mypal[c(3:1, 5:4)]
+mypal <- pal_futurama(alpha=1.0)(3)
+mypal <- mypal[c(3,1,2)]
 
 scale_color_sanguche <- function() {
 	scale_color_manual(values=mypal)
@@ -100,22 +101,18 @@ gram <- data[data$dataset == "Grambank" & data$k == 21, ]
 data_onek <- rbind(wals, gram)
 
 data_onek_long <- melt(data_onek, measure.vars=c("Delta_over", "Delta_under"))
-levels(data_onek_long$variable) <- c("Over-represented", "Under-represented")
+levels(data_onek_long$variable) <- c("Over-represented types", "Under-represented types")
 
 g <- ggplot(data_onek_long, aes(x=status, fill=status, y=value)) 
-#g <- g + facet_grid(dataset~variable) 
-g <- g + facet_wrap(.~dataset+variable, nrow=1)
-#g <- g + geom_boxplot(alpha=0.35)
-g <- g + geom_boxplot(alpha=0.8)
+g <- g + facet_grid(dataset~variable) 
+g <- g + geom_boxplot(alpha=0.35)
 g <- g + scale_fill_sanguche()
 g <- g + deftheme()
-g <- g + theme(axis.text.x=element_text(angle=40, hjust=1))
-g <- g + theme(strip.text=element_text(size=10))
 g <- g + xlab("")
 g <- g + ylab(expression("Neighbourhood entropy differential"~Delta))
 g <- g + theme(legend.position="none")#c(0.15, 0.89))
 
-png("../results/plots/boxplot.png", res=300, width=1800, height=1500)
+png("../results/plots/boxplot.png", res=300, width=1800, height=2000)
 print(g)
 dev.off()
 
@@ -132,8 +129,7 @@ g <- ggplot(data_onek_long, aes(x=value, group=control, lty=control, fill=contro
 #g <- g + facet_wrap(variable~., nrow=2)
 g <- g + facet_grid(dataset~variable)
 g <- g + geom_density(position="identity", alpha=0.3)
-#g <- g + scale_fill_aaas() + scale_color_aaas()
-g <- g + scale_fill_sanguche() + scale_color_sanguche()
+g <- g + scale_fill_aaas() + scale_color_aaas()
 g <- g + deftheme()
 g <- g + xlab("km") + ylab("")
 g <- g + xlim(0, 1000)
@@ -154,12 +150,11 @@ g <- g + geom_density(position="identity", alpha=0.4)
 g <- g + facet_wrap(.~factor(dataset, levels=c("WALS", "Grambank")), nrow=2) 
 g <- g + deftheme() 
 g <- g + theme(legend.position=c(0.85, 0.83))
-#g <- g + scale_fill_npg() 
-#g <- g + scale_color_npg() 
-g <- g + scale_fill_sanguche() + scale_color_sanguche()
+g <- g + scale_fill_npg() 
+g <- g + scale_color_npg() 
 g <- g + xlab("Mean distance to neighbour") 
 g <- g + guides(color=guide_legend(expression("Neighbourhood size"~italic(k))), fill=guide_legend(expression("Neighbourhood size"~italic(k))), lty=guide_legend(expression("Neighbourhood size"~italic(k))))
-g <- g + geom_vline(data=meanmeans, aes(xintercept=x), color="black", alpha=0.5, lty=2)
+#g <- g + geom_vline(data=meanmeans, aes(xintercept=x), color="black", alpha=0.5)
 
 
 png("../results/plots/distances.png", res=300, width=2000, height=2000)
@@ -187,8 +182,8 @@ df$estimate <- ifelse(df$estimate > 0, "> 0", "< 0")
 g <- ggplot(df, aes(x=k, y=pval, pch=Dataset, color=Dataset))#, group=estimate, color=estimate)) 
 #g <- g + geom_path(inherit.aes=FALSE, aes(x=k, y=pval), color="grey") 
 #g <- g + geom_point(size=2.0) 
-g <- g + geom_line(alpha=0.6)
-g <- g + geom_point(alpha=0.9, size=2.0)
+g <- g + geom_line(alpha=0.5)
+g <- g + geom_point(alpha=0.5, size=2.0)
 g <- g + geom_hline(yintercept=0.01, lty=3)
 g <- g + geom_hline(yintercept=0.05, lty=3)
 g <- g + scale_y_log10(limits=c(0.005, 1))
@@ -198,8 +193,7 @@ g <- g + deftheme()
 g <- g + theme(legend.position=c(0.35, 0.80))
 g <- g + annotate("text", x=95.5, y=0.008, parse=TRUE, label="italic(p)==0.01")
 g <- g + annotate("text", x=95.5, y=0.04, parse=TRUE, label="italic(p)==0.05")
-##g <- g + scale_color_aaas()
-g <- g + scale_color_sanguche()
+g <- g + scale_color_aaas()
 #g <- g + facet_wrap(.~Dataset, nrow=2)
 g <- g + ylab(expression(italic(p)*"-value"))
 g <- g + xlab(expression("Neighbourhood size"~italic(k)))

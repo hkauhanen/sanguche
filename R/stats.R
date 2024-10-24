@@ -31,8 +31,10 @@ write.csv(ipdf, file="../results/tables/inflection_points.csv", row.names=FALSE)
 
 
 # Restrict to final choice of k
-wals <- data[data$dataset == "WALS" & data$k == wals_max_inflpoint, ]
-gram <- data[data$dataset == "Grambank" & data$k == gram_max_inflpoint, ]
+#wals <- data[data$dataset == "WALS" & data$k == wals_max_inflpoint, ]
+#gram <- data[data$dataset == "Grambank" & data$k == gram_max_inflpoint, ]
+wals <- data[data$dataset == "WALS" & data$k == 25, ]
+gram <- data[data$dataset == "Grambank" & data$k == 21, ]
 
 
 # Basic model: comparison of Delta_under between different statuses
