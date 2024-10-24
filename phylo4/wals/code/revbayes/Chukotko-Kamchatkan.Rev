@@ -1,2 +1,0 @@
-family = "Chukotko-Kamchatkan"
-source("../phylogeny.Rev")

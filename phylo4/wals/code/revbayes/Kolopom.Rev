@@ -1,2 +1,0 @@
-family = "Kolopom"
-source("../phylogeny.Rev")

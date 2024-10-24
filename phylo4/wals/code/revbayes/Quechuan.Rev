@@ -1,2 +1,0 @@
-family = "Quechuan"
-source("../phylogeny.Rev")
