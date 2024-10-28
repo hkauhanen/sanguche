@@ -4,7 +4,7 @@ VO & PN,1426,interacting,13.33,1.63e-6,0.33,0.51
 VS & PN,1479,interacting,11.88,8.55e-6,0.31,0.44
 VO & NG,1662,interacting,7.88,0.000385,0.32,0.29
 VS & NG,1730,interacting,6.81,0.00149,0.31,0.28
-NG & Gen,1807,interacting,3.33,0.0361,0.06,0.18
+NG & Gen,1807,non-interacting,3.33,0.0361,0.06,0.18
 ND & Pas,1341,non-interacting,3.3,0.0717,-0.09,0.22
 PN & NG,1334,unknown,2.99,0.12,0.74,0.19
 VS & NRc,1174,unknown,2.98,0.168,0.21,-0.19

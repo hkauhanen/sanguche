@@ -10,8 +10,8 @@ VS & PN,877,interacting,11.14,3.74e-5,0.37,0.45
 VO & NRc,635,interacting,7.88,0.000417,-0.63,0.39
 NA & NRc,618,interacting,6.71,0.00163,-0.5,0.37
 NA & ND,888,interacting,6.03,0.00403,0.59,0.26
-PN & NRc,551,interacting,4.51,0.0149,-0.59,0.29
-NNum & NRc,588,interacting,3.88,0.0352,-0.18,0.29
+PN & NRc,551,unknown,4.51,0.0149,-0.59,0.29
+NNum & NRc,588,unknown,3.88,0.0352,-0.18,0.29
 NG & NRc,596,unknown,3.11,0.0777,-0.53,0.24
 PN & NA,831,unknown,2.54,0.151,0.19,-0.2
 VO & PolQ,632,non-interacting,2.34,0.239,-0.41,-0.19

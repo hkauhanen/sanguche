@@ -1,5 +1,6 @@
 dataset = ARGS[1]
 
+pvaluelimit = 0.01
 
 using CSV
 using DataFrames
@@ -58,7 +59,7 @@ transform!(results, :pair => (p -> split.(p, "-")) => [:f1, :f2])
 
 transform!(results, :pair_pretty => (p -> stringtoset.(p)) => :pair_ID)
 
-transform!(results, :cpp => (p -> p .< 0.05) => :interacting)
+transform!(results, :cpp => (p -> p .< pvaluelimit) => :interacting)
 #transform!(results, :cpp => (p -> p .< 0.1) => :interacting)
 
 transform!(results, [:f1, :f2] => ((a,b) -> a .∈ [control_features] .|| b .∈ [control_features]) => :control)
@@ -104,7 +105,7 @@ rename!(tabletoprint, [:feature_pair, :sample_size, :status, :LBF, :CPP, :phi, :
 
 CSV.write("../../../results/featuretable_$dataset.csv", tabletoprint)
 
-smalltabletoprint = @pipe subset(tabletoprint, :CPP => c -> c .< 0.05) |> select(_, [:feature_pair, :sample_size, :LBF, :CPP, :phi, :corrected_phi]) |> rename(_, ["typology", "sample size", "LBF", "CPP", "\$phi\$", "\$phi_c\$"])
+smalltabletoprint = @pipe subset(tabletoprint, :CPP => c -> c .< pvaluelimit) |> select(_, [:feature_pair, :sample_size, :LBF, :CPP, :phi, :corrected_phi]) |> rename(_, ["typology", "sample size", "LBF", "CPP", "\$phi\$", "\$phi_c\$"])
 
 CSV.write("../../../results/featuretable_interacting_$dataset.csv", smalltabletoprint, writeheader=false)
 
