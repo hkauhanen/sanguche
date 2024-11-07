@@ -16,26 +16,38 @@ maxk_for_lookup <- 50
 alldata <- combined[combined$k <= maxk, ]
 
 
-# This function does one feature pair in one dataset, left to right
-do_one_pair_LR <- function(X, data, span = 0.5, degree = 2) {
+# This function does one feature pair. Window = how many far to look
+# for extremum detection (on each side)
+do_one_pair <- function(X, data, window = 5, span = 0.5, degree = 2) {
   # Data here
   dhere <- data[data$pair == X, ]
 
-  # Inflection point
+  # Extrema (potential inflection points)
+  extrema <- NULL
   inflpoint <- NA
 
   # Fit LOESS to Delta_over + Delta_under
   lo <- loess(Delta_over + Delta_under ~ k, dhere, span=span, degree=degree)
   lof <- lo$fitted
 
-  # Cycle through neighbourhood sizes k, starting from the left,
-  # looking for the maximal monotonic connected segment
-  for (k in 1:maxk_for_lookup) {
-    D <- lof[1:k]
+  # Cycle through points in the LOESS curve, identifying extremum points
+  for (k in (window + 1):(maxk_for_lookup - window - 1)) {
+    Dunder <- lof[(k - window):(k - 1)]
+    Dover <- lof[(k + 1):(k + window)]
 
-    # if segment is monotonic, update inflection point
-    if (all(D == cummin(D)) || all(D == cummax(D))) {
-      inflpoint <- k
+    # k is an extremum if either (Dunder is increasing & Dover is decreasing) or
+    # (Dunder is decreasing & Dover is increasing)
+    if ((all(Dunder == cummax(Dunder)) && all(Dover == cummin(Dover))) ||
+        (all(Dunder == cummin(Dunder)) && all(Dover == cummax(Dover)))) {
+      extrema <- c(extrema, k)
+    }
+
+    # Inflection point is the extremum with the highest amplitude (distance from zero).
+    # If there are no extrema, we return an NA.
+    if (length(extrema) > 0) {
+      amps <- data.frame(k=extrema, amp=abs(lof[extrema]))
+      amps <- amps[order(amps$amp, decreasing=TRUE), ]
+      inflpoint <- amps[1, ]$k
     }
   }
 
@@ -44,83 +56,13 @@ do_one_pair_LR <- function(X, data, span = 0.5, degree = 2) {
 }
 
 
-
-# This function does one feature pair in one dataset, right to left
-do_one_pair_RL <- function(X, data, span = 0.5, degree = 2) {
-  # Data here
-  dhere <- data[data$pair == X, ]
-
-  # Inflection point
-  inflpoint <- NA
-
-  # Fit LOESS to Delta_over + Delta_under
-  lo <- loess(Delta_over + Delta_under ~ k, dhere, span=span, degree=degree)
-  lof <- lo$fitted
-
-  # Cycle through neighbourhood sizes k, starting from the right,
-  # looking for the maximal monotonic connected segment
-  for (k in maxk_for_lookup:1) {
-    D <- lof[k:maxk_for_lookup]
-
-    # if segment is monotonic, update inflection point
-    if (all(D == cummin(D)) || all(D == cummax(D))) {
-      inflpoint <- k
-    }
-  }
-
-  # Return
-  cbind(dhere, loess=lof, inflpoint)
-}
-
-
-# This function does one feature pair in one dataset, left to right and right to left
-do_one_pair <- function(X, data, span = 0.5, degree = 2) {
-  # Data here
-  dhere <- data[data$pair == X, ]
-
-  # Inflection points
-  inflpoint_LR <- NA
-  inflpoint_RL <- NA
-
-  # Fit LOESS to Delta_over + Delta_under
-  lo <- loess(Delta_over + Delta_under ~ k, dhere, span=span, degree=degree)
-  lof <- lo$fitted
-
-  # Cycle through neighbourhood sizes k, starting from the left,
-  # looking for the maximal monotonic connected segment
-  for (k in 1:maxk_for_lookup) {
-    D <- lof[1:k]
-
-    # if segment is monotonic, update inflection point
-    if (all(D == cummin(D)) || all(D == cummax(D))) {
-      inflpoint_LR <- k
-    }
-  }
-
-  # Cycle through neighbourhood sizes k, starting from the right,
-  # looking for the maximal monotonic connected segment
-  for (k in maxk_for_lookup:1) {
-    D <- lof[k:maxk_for_lookup]
-
-    # if segment is monotonic, update inflection point
-    if (all(D == cummin(D)) || all(D == cummax(D))) {
-      inflpoint_RL <- k
-    }
-  }
-
-  # Return
-  toret <- cbind(dhere, loess=lof, inflpoint_LR, inflpoint_RL)
-  toret$inflpoint <- mean(c(inflpoint_LR, inflpoint_RL))
-  toret
-}
-
-
-sp <- 0.30
+win <- 3
+sp <- 0.2
 deg <- 2
 
-wals_infl <- do.call(rbind, lapply(X=unique(alldata[alldata$dataset=="WALS", ]$pair), FUN=do_one_pair, alldata[alldata$dataset=="WALS", ], span=sp, degree=deg))
+wals_infl <- do.call(rbind, lapply(X=unique(alldata[alldata$dataset=="WALS", ]$pair), FUN=do_one_pair, alldata[alldata$dataset=="WALS", ], window=win, span=sp, degree=deg))
 
-gram_infl <- do.call(rbind, lapply(X=unique(alldata[alldata$dataset=="Grambank", ]$pair), FUN=do_one_pair, alldata[alldata$dataset=="Grambank", ], span=sp, degree=deg))
+gram_infl <- do.call(rbind, lapply(X=unique(alldata[alldata$dataset=="Grambank", ]$pair), FUN=do_one_pair, alldata[alldata$dataset=="Grambank", ], window=win, span=sp, degree=deg))
 
 infl <- rbind(wals_infl, gram_infl)
 
