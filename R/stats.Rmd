@@ -28,8 +28,11 @@ data$status <- relevel(data$status, ref="non-interacting")
 
 # inflection points
 infl <- read.csv("../results/tables/inflection_points.csv")
-ip_wals <- round(mean(infl[infl$dataset == "WALS" & infl$inflpoint > 1, ]$inflpoint))
-ip_grambank <- round(mean(infl[infl$dataset == "Grambank" & infl$inflpoint > 1, ]$inflpoint))
+ip_wals <- round(mean(infl[infl$dataset == "WALS" & !is.na(infl$inflpoint), ]$inflpoint))
+ip_grambank <- round(mean(infl[infl$dataset == "Grambank" & !is.na(infl$inflpoint), ]$inflpoint))
+
+print(ip_wals)
+print(ip_grambank)
 
 # restrict to final choice of k
 wals <- data[data$dataset == "WALS" & data$k == ip_wals, ]

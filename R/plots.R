@@ -58,8 +58,8 @@ data <- data[data$pair != "Gen & Pas", ]
 
 # get inflection points
 infl <- read.csv("../results/tables/inflection_points.csv")
-ip_wals <- round(mean(infl[infl$dataset == "WALS" & infl$inflpoint > 1, ]$inflpoint))
-ip_grambank <- round(mean(infl[infl$dataset == "Grambank" & infl$inflpoint > 1, ]$inflpoint))
+ip_wals <- round(mean(infl[infl$dataset == "WALS" & !is.na(infl$inflpoint), ]$inflpoint))
+ip_grambank <- round(mean(infl[infl$dataset == "Grambank" & !is.na(infl$inflpoint), ]$inflpoint))
 
 
 
@@ -124,7 +124,7 @@ grambank_meanmean <- median(data[data$dataset == "Grambank" & data$k == ip_gramb
 meanmeans <- data.frame(dataset=c("WALS", "Grambank"), x=c(wals_meanmean, grambank_meanmean), k=c(ip_wals, ip_grambank))
 meanmeans$pretty <- paste(round(meanmeans$x), "km")
 
-g <- ggplot(data[data$k %in% c(1, 10, 26, 28, 100), ], aes(x=mean_distance, lty=factor(k), color=factor(k), fill=factor(k), group=factor(k))) 
+g <- ggplot(data[data$k %in% c(1, 10, ip_wals, ip_grambank, 100), ], aes(x=mean_distance, lty=factor(k), color=factor(k), fill=factor(k), group=factor(k))) 
 g <- g + geom_density(position="identity", alpha=0.4) 
 g <- g + facet_wrap(.~factor(dataset, levels=c("WALS", "Grambank")), nrow=2) 
 g <- g + deftheme() 
