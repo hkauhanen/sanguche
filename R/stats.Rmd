@@ -17,26 +17,8 @@ require(emmeans)
 # create results/tables, if it doesn't exist already
 try(dir.create("../results/tables", recursive=TRUE))
 
-# load (and rename) dataframe "combined", which contains all our data
-load("../results/combined.RData")
-data <- combined
-data <- data[data$pair != "PolQ & NegM", ]
-data <- data[data$pair != "Gen & Pas", ]
-
-# make "non-interacting" the reference level of "status" factor
-data$status <- relevel(data$status, ref="non-interacting")
-
-# inflection points
-infl <- read.csv("../results/tables/inflection_points.csv")
-ip_wals <- round(mean(infl[infl$dataset == "WALS" & !is.na(infl$inflpoint), ]$inflpoint))
-ip_grambank <- round(mean(infl[infl$dataset == "Grambank" & !is.na(infl$inflpoint), ]$inflpoint))
-
-print(ip_wals)
-print(ip_grambank)
-
-# restrict to final choice of k
-wals <- data[data$dataset == "WALS" & data$k == ip_wals, ]
-gram <- data[data$dataset == "Grambank" & data$k == ip_grambank, ]
+# load data
+source("load_data.R")
 ```
 
 
