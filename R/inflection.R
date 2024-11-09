@@ -16,6 +16,29 @@ maxk_for_lookup <- 50
 alldata <- combined[combined$k <= maxk, ]
 
 
+# Check whether vector of numbers is increasing or decreasing
+increasing <- function(x, strict = TRUE) {
+  L <- length(x)
+
+  if (strict) {
+    return(all(x[1:(L-1)] < x[2:L]))
+  } else {
+    return(all(x[1:(L-1)] <= x[2:L]))
+  }
+}
+
+decreasing <- function(x, strict = TRUE) {
+  L <- length(x)
+
+  if (strict) {
+    return(all(x[1:(L-1)] > x[2:L]))
+  } else {
+    return(all(x[1:(L-1)] >= x[2:L]))
+  }
+}
+
+
+
 # This function does one feature pair. Window = how many far to look
 # for extremum detection (on each side)
 do_one_pair <- function(X, data, window = 5, span = 0.5, degree = 2) {
@@ -37,8 +60,8 @@ do_one_pair <- function(X, data, window = 5, span = 0.5, degree = 2) {
 
     # k is an extremum if either (Dunder is increasing & Dover is decreasing) or
     # (Dunder is decreasing & Dover is increasing)
-    if ((all(Dunder == cummax(Dunder)) && all(Dover == cummin(Dover))) ||
-        (all(Dunder == cummin(Dunder)) && all(Dover == cummax(Dover)))) {
+    if ((increasing(Dunder, strict=TRUE) && decreasing(Dover, strict=TRUE)) ||
+        (decreasing(Dunder, strict=TRUE) && increasing(Dover, strict=TRUE))) {
       extrema <- c(extrema, k)
     }
 
