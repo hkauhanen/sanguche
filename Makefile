@@ -46,15 +46,12 @@ results/combined.RData : phylo/src/postprocess/combine.jl R/merge.R results/wals
 
 plots : results/plots/boxplot.png results/plots/distances.png results/plots/neighbourhood_dispref.png results/plots/kdiff.png
 	
-results/plots/boxplot.png results/plots/distances.png results/plots/neighbourhood_dispref.png results/plots/kdiff.png &: results/combined.RData R/plots.R results/tables/inflection_points.csv
+results/plots/boxplot.png results/plots/distances.png results/plots/neighbourhood_dispref.png results/plots/kdiff.png &: results/combined.RData R/plots.R R/load_data.R
 	cd R; $R plots.R
-
-results/tables/inflection_points.csv : R/inflection.R
-	cd R; $R inflection.R
 
 stats : results/tables/stats.pdf
 
-results/tables/stats.pdf : results/combined.RData R/stats.R R/stats.Rmd results/tables/inflection_points.csv
+results/tables/stats.pdf : results/combined.RData R/stats.R R/stats.Rmd R/load_data.R
 	cd R; $R stats.R
 
 tmp/$(DATASET)/codes.csv tmp/$(DATASET)/languages.csv tmp/$(DATASET)/parameters.csv tmp/$(DATASET)/values.csv &: jl/preprocess_$(DATASET).jl
