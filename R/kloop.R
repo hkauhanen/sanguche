@@ -9,8 +9,8 @@ kloop <- function(data, dataset, variable = "Delta_under", indvariable = "status
     datah <- data[data$k == k & data$dataset == dataset, ]
 
     mod1 <- summary(lm(eval(parse(text=variable))~eval(parse(text=indvariable))+abs(phi), datah))
-    mod2a <- lm(eval(parse(text=variable))~phi, datah)
-    mod2b <- lm(eval(parse(text=variable))~corrected_phi, datah)
+    mod2a <- lm(eval(parse(text=variable))~abs(phi), datah)
+    mod2b <- lm(eval(parse(text=variable))~abs(corrected_phi), datah)
     
     df[df$k == k, ]$estimate <- mod1$coefficients[2, "Estimate"]
     df[df$k == k, ]$pval <- mod1$coefficients[2, "Pr(>|t|)"]
