@@ -153,8 +153,24 @@ g <- g + ylim(-0.2, 0.2)
 
 g2 <- g
 
+g <- ggplot(df, aes(x=k, y=DAIC, pch=Dataset, color=Dataset))
+g <- g + geom_line(alpha=0.6)
+g <- g + geom_point(alpha=0.7, size=2.0)
+g <- g + deftheme() 
+g <- g + theme(legend.position=c(0.72, 0.27))
+g <- g + scale_color_sanguche2()
+g <- g + ylab(expression(Delta*"AIC in favour of"~phi[c]))
+g <- g + xlab(expression("Neighbourhood size"~italic(k)))
+#g <- g + ylim(-0.2, 0.2)
+
+g3 <- g
+
+
 png("../results/plots/ksweep_mod1_under.png", res=300, width=2000, height=1200)
-print(grid.arrange(g2, g1, nrow=1))
+#png("../results/plots/ksweep_mod1_under.png", res=300, width=2000, height=2200)
+plo <- grid.arrange(g2, g1, nrow=1)
+#plo <- grid.arrange(plo, g3, nrow=2)
+print(plo)
 dev.off()
 
 
@@ -197,7 +213,22 @@ g <- g + ylim(-0.2, 0.2)
 
 g2 <- g
 
+g <- ggplot(df, aes(x=k, y=DAIC, pch=Dataset, color=Dataset))
+g <- g + geom_line(alpha=0.6)
+g <- g + geom_point(alpha=0.7, size=2.0)
+g <- g + deftheme() 
+g <- g + theme(legend.position=c(0.72, 0.27))
+g <- g + scale_color_sanguche2()
+g <- g + ylab(expression(Delta*"AIC in favour of"~phi[c]))
+g <- g + xlab(expression("Neighbourhood size"~italic(k)))
+#g <- g + ylim(-0.2, 0.2)
+
+g3 <- g
+
+
 png("../results/plots/ksweep_mod1_over.png", res=300, width=2000, height=1200)
-print(grid.arrange(g2, g1, nrow=1))
+plo <- grid.arrange(g2, g1, nrow=1)
+#plo <- grid.arrange(plo, g3, nrow=2)
+print(plo)
 dev.off()
 
