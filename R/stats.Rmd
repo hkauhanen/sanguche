@@ -1,7 +1,7 @@
 ---
 title: "Contact helps dispreferred combinations of typological features to survive: geospatial evidence"
 subtitle: "Statistical analyses"
-output: pdf_document
+output: html_document
 ---
 
 
@@ -21,34 +21,90 @@ try(dir.create("../results/tables", recursive=TRUE))
 source("load_data.R")
 ```
 
+# Descriptive statistics
+
+Mean sample size, WALS:
+
+```{r}
+round(mean(wals$N))
+```
+
+Mean sample size, Grambank:
+
+```{r}
+round(mean(gram$N))
+```
+
+These suggest the following neighbourhood sizes to use:
+
+```{r}
+round(sqrt(round(mean(wals$N))))
+```
+
+and
+
+```{r}
+round(sqrt(round(mean(gram$N))))
+```
+
 
 # Basic model: comparison of $\Delta$ between typologies of different statuses
 
 ## Under-represented types ($\Delta^-$)
 
 ```{r}
-mod_w <- lm(Delta_under ~ status+abs(phi), data=wals)
-mod_g <- lm(Delta_under ~ status+abs(phi), data=gram)
+mod1_under_w <- lm(Delta_under ~ status+abs(phi), data=wals)
+mod1_under_g <- lm(Delta_under ~ status+abs(phi), data=gram)
 
-#mod_w %>% dust %>% sprinkle(round=5) %>% write.csv(file="../results/tables/mod1_under_wals.csv", row.names=FALSE)
-#mod_g %>% dust %>% sprinkle(round=5) %>% write.csv(file="../results/tables/mod1_under_grambank.csv", row.names=FALSE)
+mathematize <- function(value) {
+  paste0("[", value, "]")
+}
 
-print(summary(mod_w))
-print(summary(mod_g))
+mod1_under_w %>% 
+  dust %>% 
+  sprinkle(round=3) %>% 
+  sprinkle(cols="term", replace=c("intercept", "interacting (vs. non-interacting)", 
+                                  "unknown (vs. non-interacting)", "|φ|")) %>% 
+  write.table(file="../results/tables/mod1_under_wals.csv", 
+              row.names=FALSE, col.names=FALSE, sep=",", quote=FALSE)
+
+mod1_under_g %>% 
+  dust %>% 
+  sprinkle(round=3) %>% 
+  sprinkle(cols="term", replace=c("intercept", "interacting (vs. non-interacting)", 
+                                  "unknown (vs. non-interacting)", "|φ|")) %>% 
+  write.table(file="../results/tables/mod1_under_grambank.csv", 
+              row.names=FALSE, col.names=FALSE, sep=",", quote=FALSE)
+
+print(summary(mod1_under_w))
+print(summary(mod1_under_g))
 ```
 
 
 ## Over-represented types ($\Delta^+$)
 
 ```{r}
-mod_w <- lm(Delta_over ~ status+abs(phi), data=wals)
-mod_g <- lm(Delta_over ~ status+abs(phi), data=gram)
+mod1_over_w <- lm(Delta_over ~ status+abs(phi), data=wals)
+mod1_over_g <- lm(Delta_over ~ status+abs(phi), data=gram)
 
-#mod_w %>% dust %>% sprinkle(round=5) %>% write.csv(file="../results/tables/mod1_over_wals.csv", row.names=FALSE)
-#mod_g %>% dust %>% sprinkle(round=5) %>% write.csv(file="../results/tables/mod1_over_grambank.csv", row.names=FALSE)
+mod1_over_w %>% 
+  dust %>% 
+  sprinkle(round=3) %>% 
+  sprinkle(cols="term", replace=c("intercept", "interacting (vs. non-interacting)", 
+                                  "unknown (vs. non-interacting)", "|φ|")) %>% 
+  write.table(file="../results/tables/mod1_over_wals.csv", 
+              row.names=FALSE, col.names=FALSE, sep=",", quote=FALSE)
 
-print(summary(mod_w))
-print(summary(mod_g))
+mod1_over_g %>% 
+  dust %>% 
+  sprinkle(round=3) %>% 
+  sprinkle(cols="term", replace=c("intercept", "interacting (vs. non-interacting)", 
+                                  "unknown (vs. non-interacting)", "|φ|")) %>% 
+  write.table(file="../results/tables/mod1_over_grambank.csv", 
+              row.names=FALSE, col.names=FALSE, sep=",", quote=FALSE)
+
+print(summary(mod1_over_w))
+print(summary(mod1_over_g))
 ```
 
 

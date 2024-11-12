@@ -1,1 +1,1 @@
-rmarkdown::render("stats.Rmd", output_file="../results/tables/stats.pdf")
+rmarkdown::render("stats.Rmd", output_file="../results/stats.html")

@@ -7,6 +7,12 @@ using DataFrames
 using Pipe
 using Serialization
 
+try
+  mkdir("../../../results/featuretables")
+catch e
+end
+
+
 include("../../../jl/params.jl")
 
 if dataset == "wals"
@@ -103,11 +109,11 @@ transform!(tabletoprint, :phi => (p -> round.(p, digits=2)) => :phi)
 
 rename!(tabletoprint, [:feature_pair, :sample_size, :status, :LBF, :CPP, :phi, :corrected_phi])
 
-CSV.write("../../../results/featuretable_$dataset.csv", tabletoprint)
+CSV.write("../../../results/featuretables/featuretable_$dataset.csv", tabletoprint, writeheader=false)
 
 smalltabletoprint = @pipe subset(tabletoprint, :CPP => c -> c .< pvaluelimit) |> select(_, [:feature_pair, :sample_size, :LBF, :CPP, :phi, :corrected_phi]) |> rename(_, ["typology", "sample size", "LBF", "CPP", "\$phi\$", "\$phi_c\$"])
 
-CSV.write("../../../results/featuretable_interacting_$dataset.csv", smalltabletoprint, writeheader=false)
+CSV.write("../../../results/featuretables/featuretable_interacting_$dataset.csv", smalltabletoprint, writeheader=false)
 
 transform!(allresults, [:H, :H_pref] => ((a,b) -> b - a) => :Delta_over)
 transform!(allresults, [:H, :H_dispref] => ((a,b) -> b - a) => :Delta_under)
