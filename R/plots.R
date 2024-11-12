@@ -63,7 +63,7 @@ source("load_data.R")
 #####
 
 data_onek_long <- melt(data, measure.vars=c("Delta_over", "Delta_under"))
-levels(data_onek_long$variable) <- c("over-represented", "under-represented")
+levels(data_onek_long$variable) <- c("overattested", "underattested")
 
 g <- ggplot(data_onek_long, aes(x=status, fill=status, y=value)) 
 #g <- g + facet_grid(dataset~variable) 
