@@ -44,7 +44,10 @@ tmp/wals/neighbour_distances.csv tmp/grambank/neighbour_distances.csv &: jl/neig
 	cd jl; $J neighbour_distances.jl wals
 	cd jl; $J neighbour_distances.jl grambank
 
-merge : results/combined.RData
+merge : results/combined.RData results/featuretables/featuretable_withDelta_wals.csv results/featuretables/featuretable_withDelta_grambank.csv
+
+results/featuretables/featuretable_withDelta_wals.csv results/featuretables/featuretable_withDelta_grambank.csv &: R/featuretables.R
+	cd R; $R featuretables.R
 	
 results/combined.RData : phylo/src/postprocess/combine.jl R/merge.R results/wals/results.jls results/grambank/results.jls
 	cd phylo/src/postprocess; $(JULIA) combine.jl wals; $(JULIA) combine.jl grambank
