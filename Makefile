@@ -16,7 +16,7 @@ analysis : preprocess data dicts sand pretty
 posthoc : distances merge plots stats
 
 clean :
-	rm -rf tmp/$(DATASET)
+	rm -rf tmp/$(DATASET)*
 
 purge :
 	rm -rf tmp
