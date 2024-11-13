@@ -5,7 +5,7 @@ source("load_data.R")
 ft1 <- read.csv("../results/featuretables/featuretable_wals.csv", header=FALSE)
 names(ft1) <- c("pair", "N", "status", "LBF", "CPP", "phi", "phic")
 
-ft2 <- read.csv("../results/featuretables/featuretable_grambank.csv")
+ft2 <- read.csv("../results/featuretables/featuretable_grambank.csv", header=FALSE)
 names(ft2) <- c("pair", "N", "status", "LBF", "CPP", "phi", "phic")
 
 ft1 <- merge(ft1, wals, by="pair")
