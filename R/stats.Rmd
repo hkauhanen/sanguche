@@ -13,12 +13,18 @@ require(tidyverse)
 require(broom)
 require(pixiedust)
 require(emmeans)
+source("pvalString_demo.R")
 
 # create results/tables, if it doesn't exist already
 try(dir.create("../results/tables", recursive=TRUE))
 
 # load data
 source("load_data.R")
+
+# make "non-interacting" the reference level of "status" factor
+data$status <- relevel(data$status, ref="non-interacting")
+wals$status <- relevel(wals$status, ref="non-interacting")
+gram$status <- relevel(gram$status, ref="non-interacting")
 ```
 
 # Descriptive statistics
@@ -65,6 +71,7 @@ mod1_under_w %>%
   sprinkle(round=3) %>% 
   sprinkle(cols="term", replace=c("intercept", "interacting (vs. non-interacting)", 
                                   "unknown (vs. non-interacting)", "|φ|")) %>% 
+  sprinkle(cols="p.value", fn = quote(pvalString_demo(value, stars=TRUE))) %>%
   write.table(file="../results/tables/mod1_under_wals.csv", 
               row.names=FALSE, col.names=FALSE, sep=",", quote=FALSE)
 
@@ -73,6 +80,7 @@ mod1_under_g %>%
   sprinkle(round=3) %>% 
   sprinkle(cols="term", replace=c("intercept", "interacting (vs. non-interacting)", 
                                   "unknown (vs. non-interacting)", "|φ|")) %>% 
+  sprinkle(cols="p.value", fn = quote(pvalString_demo(value, stars=TRUE))) %>%
   write.table(file="../results/tables/mod1_under_grambank.csv", 
               row.names=FALSE, col.names=FALSE, sep=",", quote=FALSE)
 
@@ -92,6 +100,7 @@ mod1_over_w %>%
   sprinkle(round=3) %>% 
   sprinkle(cols="term", replace=c("intercept", "interacting (vs. non-interacting)", 
                                   "unknown (vs. non-interacting)", "|φ|")) %>% 
+  sprinkle(cols="p.value", fn = quote(pvalString_demo(value, stars=TRUE))) %>%
   write.table(file="../results/tables/mod1_over_wals.csv", 
               row.names=FALSE, col.names=FALSE, sep=",", quote=FALSE)
 
@@ -100,6 +109,7 @@ mod1_over_g %>%
   sprinkle(round=3) %>% 
   sprinkle(cols="term", replace=c("intercept", "interacting (vs. non-interacting)", 
                                   "unknown (vs. non-interacting)", "|φ|")) %>% 
+  sprinkle(cols="p.value", fn = quote(pvalString_demo(value, stars=TRUE))) %>%
   write.table(file="../results/tables/mod1_over_grambank.csv", 
               row.names=FALSE, col.names=FALSE, sep=",", quote=FALSE)
 
@@ -130,11 +140,6 @@ print(summary(mod_gc))
 
 print(AIC(mod_g))
 print(AIC(mod_gc))
-
-#mod_w %>% dust %>% sprinkle(round=5) %>% write.csv(file="../results/tables/mod2_under_wals.csv", row.names=FALSE)
-#mod_g %>% dust %>% sprinkle(round=5) %>% write.csv(file="../results/tables/mod2_under_grambank.csv", row.names=FALSE)
-#mod_wc %>% dust %>% sprinkle(round=5) %>% write.csv(file="../results/tables/mod2_under_corrected_wals.csv", row.names=FALSE)
-#mod_gc %>% dust %>% sprinkle(round=5) %>% write.csv(file="../results/tables/mod2_under_corrected_grambank.csv", row.names=FALSE)
 ```
 
 ## Over-represented types

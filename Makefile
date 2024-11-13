@@ -2,7 +2,7 @@ JULIA=julia +1.10.4
 JOPTS=--project=.
 J=$(JULIA) $(JOPTS)
 R=Rscript
-NPROCS=16
+NPROCS=6
 
 
 .PHONY : preparations analysis posthoc deps preprocess data dicts sand pretty Jdeps Rdeps distances merge stats plots clean purge
@@ -11,9 +11,9 @@ deps : Jdeps Rdeps
 
 preparations : preprocess data
 
-analysis : preprocess data dicts sand pretty
+analysis : preparations dicts sand pretty
 
-posthoc : distances merge plots stats
+posthoc : merge plots stats
 
 clean :
 	rm -rf tmp/$(DATASET)*
@@ -38,7 +38,7 @@ pretty : results/$(DATASET)/results.jls results/$(DATASET)/results.csv
 Rdeps : R/Rdeps.R
 	cd R; $R Rdeps.R
 
-distances : tmp/wals/neighbour_distances.csv tmp/grambank/neighbour_distances.csv
+distances : merge tmp/wals/neighbour_distances.csv tmp/grambank/neighbour_distances.csv
 
 tmp/wals/neighbour_distances.csv tmp/grambank/neighbour_distances.csv &: jl/neighbour_distances.jl tmp/wals/Ddists.jls tmp/grambank/Ddists.jls
 	cd jl; $J neighbour_distances.jl wals
