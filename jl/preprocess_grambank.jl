@@ -107,7 +107,7 @@ function VO_filter(gb130, gb131, gb132, gb133)
   if ismissing(gb130) || ismissing(gb131) || ismissing(gb132) || ismissing(gb133)
     return missing
   else
-    if (gb133 == "1" && gb130 == "1") || (gb132 == "1" && gb130 == "1")
+    if (gb133 == "1" && gb130 == "1") || (gb132 == "1" && gb130 == "2")
       return "0"
     elseif (gb131 == "1" && gb130 == "2") || (gb132 == "1" && gb130 == "1")
       return "1"
