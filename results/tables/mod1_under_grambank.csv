@@ -1,4 +1,4 @@
-intercept,0.041,0.014,2.962,0.005
-interacting (vs. non-interacting),0.093,0.033,2.809,0.008
-unknown (vs. non-interacting),0.054,0.02,2.757,0.009
+intercept,0.134,0.032,4.253,0
+interacting (vs. non-interacting),-0.039,0.029,-1.368,0.179
+unknown (vs. non-interacting),-0.093,0.033,-2.809,0.008
 |φ|,-0.056,0.044,-1.283,0.207

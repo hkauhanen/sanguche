@@ -480,11 +480,11 @@ print(summary(mod1_under_w))</code></pre>
 ## -0.07117 -0.03676 -0.01405  0.02890  0.11073 
 ## 
 ## Coefficients:
-##                   Estimate Std. Error t value Pr(&gt;|t|)   
-## (Intercept)        0.04266    0.01539   2.771  0.00843 **
-## statusinteracting  0.05300    0.02513   2.109  0.04127 * 
-## statusunknown      0.02089    0.01683   1.241  0.22187   
-## abs(phi)          -0.05168    0.04488  -1.152  0.25635   
+##                       Estimate Std. Error t value Pr(&gt;|t|)   
+## (Intercept)            0.09566    0.03002   3.187  0.00279 **
+## statusunknown         -0.03212    0.02379  -1.350  0.18459   
+## statusnon-interacting -0.05300    0.02513  -2.109  0.04127 * 
+## abs(phi)              -0.05168    0.04488  -1.152  0.25635   
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
@@ -501,11 +501,11 @@ print(summary(mod1_under_w))</code></pre>
 ## -0.087397 -0.040869  0.000164  0.033713  0.112064 
 ## 
 ## Coefficients:
-##                   Estimate Std. Error t value Pr(&gt;|t|)   
-## (Intercept)        0.04088    0.01380   2.962  0.00512 **
-## statusinteracting  0.09311    0.03314   2.809  0.00764 **
-## statusunknown      0.05407    0.01961   2.757  0.00874 **
-## abs(phi)          -0.05644    0.04398  -1.283  0.20677   
+##                       Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)            0.13399    0.03151   4.253 0.000123 ***
+## statusunknown         -0.03904    0.02854  -1.368 0.178951    
+## statusnon-interacting -0.09311    0.03314  -2.809 0.007641 ** 
+## abs(phi)              -0.05644    0.04398  -1.283 0.206772    
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
@@ -544,13 +544,11 @@ print(summary(mod1_over_w))</code></pre>
 ## -0.069612 -0.000688  0.007237  0.011959  0.022515 
 ## 
 ## Coefficients:
-##                    Estimate Std. Error t value Pr(&gt;|t|)  
-## (Intercept)       -0.006100   0.006859  -0.889   0.3792  
-## statusinteracting -0.003184   0.011200  -0.284   0.7776  
-## statusunknown     -0.013622   0.007500  -1.816   0.0768 .
-## abs(phi)          -0.006369   0.019999  -0.318   0.7518  
-## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+##                        Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept)           -0.009284   0.013376  -0.694    0.492
+## statusunknown         -0.010437   0.010601  -0.985    0.331
+## statusnon-interacting  0.003184   0.011200   0.284    0.778
+## abs(phi)              -0.006369   0.019999  -0.318    0.752
 ## 
 ## Residual standard error: 0.02141 on 40 degrees of freedom
 ## Multiple R-squared:  0.08283,    Adjusted R-squared:  0.01405 
@@ -565,11 +563,11 @@ print(summary(mod1_over_w))</code></pre>
 ## -0.040862 -0.005200  0.005317  0.010354  0.018148 
 ## 
 ## Coefficients:
-##                     Estimate Std. Error t value Pr(&gt;|t|)
-## (Intercept)       -0.0054711  0.0038138  -1.435    0.159
-## statusinteracting -0.0009538  0.0091589  -0.104    0.918
-## statusunknown     -0.0050529  0.0054190  -0.932    0.357
-## abs(phi)          -0.0143397  0.0121546  -1.180    0.245
+##                         Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept)           -0.0064249  0.0087067  -0.738    0.465
+## statusunknown         -0.0040992  0.0078874  -0.520    0.606
+## statusnon-interacting  0.0009538  0.0091589   0.104    0.918
+## abs(phi)              -0.0143397  0.0121546  -1.180    0.245
 ## 
 ## Residual standard error: 0.01507 on 40 degrees of freedom
 ## Multiple R-squared:  0.09068,    Adjusted R-squared:  0.02248 

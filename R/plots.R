@@ -33,20 +33,20 @@ mypal <- pal_aaas(alpha=1.0)(5)
 mypal <- mypal[c(3,1,2, 5:4)]
 mypal2 <- mypal[c(5,4,3,1,2)]
 
-scale_color_sanguche <- function() {
-  scale_color_manual(values=mypal)
+scale_color_sanguche <- function(...) {
+  scale_color_manual(values=mypal, ...)
 }
 
-scale_color_sanguche2 <- function() {
-  scale_color_manual(values=mypal2)
+scale_color_sanguche2 <- function(...) {
+  scale_color_manual(values=mypal2, ...)
 }
 
-scale_fill_sanguche <- function() {
-  scale_fill_manual(values=mypal)
+scale_fill_sanguche <- function(...) {
+  scale_fill_manual(values=mypal, ...)
 }
 
-scale_fill_sanguche2 <- function() {
-  scale_fill_manual(values=mypal2)
+scale_fill_sanguche2 <- function(...) {
+  scale_fill_manual(values=mypal2, ...)
 }
 
 
@@ -87,6 +87,59 @@ dev.off()
 # Mean distance to neighbour
 #####
 
+distances_wals <- read.csv("../tmp/wals/neighbour_distances.csv")
+distances_gram <- read.csv("../tmp/grambank/neighbour_distances.csv")
+distances_wals$dataset <- "WALS"
+distances_gram$dataset <- "Grambank"
+
+distances <- rbind(distances_wals, distances_gram)
+distances$dataset <- factor(distances$dataset, levels=c("WALS", "Grambank"))
+
+distances1 <- distances[distances$eachindex <= 1, ]
+distances1$k <- 1
+distances10 <- distances[distances$eachindex <= 10, ]
+distances10$k <- 10
+distances27 <- distances[distances$eachindex <= 27, ]
+distances27$k <- 27
+distances36 <- distances[distances$eachindex <= 36, ]
+distances36$k <- 36
+distances50 <- distances[distances$eachindex <= 50, ]
+distances50$k <- 50
+distances75 <- distances[distances$eachindex <= 75, ]
+distances75$k <- 75
+
+g <- ggplot(distances10[distances10$dataset == "WALS", ], aes(x=distance, fill=factor(k))) + geom_density(alpha=0.3)
+g <- g + geom_density(data=distances1[distances1$dataset == "WALS", ], alpha=0.3)
+g <- g + geom_density(data=distances27[distances27$dataset == "WALS", ], alpha=0.3)
+g <- g + geom_density(data=distances50[distances50$dataset == "WALS", ], alpha=0.3)
+#g <- g + geom_density(data=distances75[distances75$dataset == "WALS", ], alpha=0.3)
+g <- g + scale_fill_sanguche2(name=expression(italic(k)))
+g <- g + xlab("Distance to neighbour (km)") + ylab("Density")
+g <- g + deftheme()
+g <- g + scale_x_log10(limits=c(1, 10000))
+g <- g + annotation_logticks(sides="b")
+g <- g + theme(legend.position=c(0.08, 0.65))
+g <- g + ggtitle("WALS")
+
+g1 <- g
+
+g <- ggplot(distances10[distances10$dataset == "Grambank", ], aes(x=distance, fill=factor(k))) + geom_density(alpha=0.3)
+g <- g + geom_density(data=distances1[distances1$dataset == "Grambank", ], alpha=0.3)
+g <- g + geom_density(data=distances36[distances36$dataset == "Grambank", ], alpha=0.3)
+g <- g + geom_density(data=distances50[distances50$dataset == "Grambank", ], alpha=0.3)
+#g <- g + geom_density(data=distances75[distances75$dataset == "Grambank", ], alpha=0.3)
+g <- g + scale_fill_sanguche2(name=expression(italic(k)))
+g <- g + xlab("Distance to neighbour (km)") + ylab("Density")
+g <- g + deftheme()
+g <- g + scale_x_log10(limits=c(1, 10000))
+g <- g + annotation_logticks(sides="b")
+g <- g + theme(legend.position=c(0.08, 0.65))
+g <- g + ggtitle("Grambank")
+
+g2 <- g
+
+
+if (1 == 0) {
 k_wals <- unique(wals$k)
 k_grambank <- unique(gram$k)
 
@@ -107,9 +160,10 @@ g <- g + guides(color=guide_legend("Dataset"), fill=guide_legend("Dataset"), lty
 g <- g + geom_vline(data=meanmeans, aes(xintercept=x, color=dataset, lty=dataset), alpha=0.9)
 g <- g + geom_text(data=meanmeans, inherit.aes=FALSE, aes(x=x, y=0.0045, label=pretty), angle=90, nudge_x=-40, alpha=0.8, family="serif")
 g <- g + xlim(0, 2000) + ylim(0, 0.005)
+}
 
-
-png("../results/plots/distances.png", res=glores, width=2000, height=1200)
+png("../results/plots/distances.png", res=glores, width=2000, height=2200)
+g <- grid.arrange(g1, g2, nrow=2)
 print(g)
 dev.off()
 

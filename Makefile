@@ -5,7 +5,7 @@ R=Rscript
 NPROCS=16
 
 
-.PHONY : preparations analysis posthoc deps preprocess data dicts sand pretty Jdeps Rdeps merge stats plots clean purge
+.PHONY : preparations analysis posthoc deps preprocess data dicts sand pretty Jdeps Rdeps distances merge stats plots clean purge
 
 deps : Jdeps Rdeps
 
@@ -13,7 +13,7 @@ preparations : preprocess data
 
 analysis : preprocess data dicts sand pretty
 
-posthoc : merge plots stats
+posthoc : distances merge plots stats
 
 clean :
 	rm -rf tmp/$(DATASET)
@@ -38,6 +38,12 @@ pretty : results/$(DATASET)/results.jls results/$(DATASET)/results.csv
 Rdeps : R/Rdeps.R
 	cd R; $R Rdeps.R
 
+distances : tmp/wals/neighbour_distances.csv tmp/grambank/neighbour_distances.csv
+
+tmp/wals/neighbour_distances.csv tmp/grambank/neighbour_distances.csv &: jl/neighbour_distances.jl tmp/wals/Ddists.jls tmp/grambank/Ddists.jls
+	cd jl; $J neighbour_distances.jl wals
+	cd jl; $J neighbour_distances.jl grambank
+
 merge : results/combined.RData
 	
 results/combined.RData : phylo/src/postprocess/combine.jl R/merge.R results/wals/results.jls results/grambank/results.jls
@@ -46,7 +52,7 @@ results/combined.RData : phylo/src/postprocess/combine.jl R/merge.R results/wals
 
 plots : results/plots/boxplot.png results/plots/distances.png results/plots/neighbourhood_dispref.png results/plots/kdiff.png
 	
-results/plots/boxplot.png results/plots/distances.png results/plots/neighbourhood_dispref.png results/plots/kdiff.png &: results/combined.RData R/plots.R R/load_data.R
+results/plots/boxplot.png results/plots/distances.png results/plots/neighbourhood_dispref.png results/plots/kdiff.png &: results/combined.RData R/plots.R R/load_data.R tmp/wals/Ddists.jls tmp/grambank/Ddists.jls
 	cd R; $R plots.R
 
 stats : results/tables/stats.pdf
