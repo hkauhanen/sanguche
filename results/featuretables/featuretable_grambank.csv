@@ -12,8 +12,8 @@ PN & Gen,1570,non-interacting,2.71,0.308,0.01,0.16
 PN & NNum,1375,unknown,2.52,0.383,-0.0,-0.16
 ND & Gen,1871,non-interacting,2.36,0.469,-0.02,0.15
 NG & Pas,1315,non-interacting,2.34,0.557,-0.01,0.2
-ND & NNum,1679,unknown,1.42,0.751,0.52,0.14
-VO & Pas,1413,non-interacting,1.29,0.967,0.09,0.15
+ND & NNum,1679,unknown,1.53,0.735,0.52,0.14
+VO & Pas,1413,non-interacting,1.29,0.951,0.09,0.15
 VS & ND,1786,unknown,0.16,1.0,0.0,0.12
 NA & NNum,496,unknown,-0.05,1.0,-0.13,-0.14
 PN & NRc,927,unknown,-0.22,1.0,0.61,-0.12
