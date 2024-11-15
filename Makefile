@@ -11,7 +11,7 @@ deps : Jdeps Rdeps
 
 preparations : preprocess data
 
-analysis : preparations dicts sand pretty
+analysis : dicts sand pretty
 
 posthoc : merge plots stats
 
