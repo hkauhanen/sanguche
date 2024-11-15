@@ -120,6 +120,11 @@ print(summary(mod1_over_g))
 
 # Model 2: model comparison between $\varphi$ and $\varphi_c$ as predictors
 
+```{r}
+# set up dataframe for exporting the values
+out <- data.frame(dataset=c("WALS", "Grambank"), under_phi=NA, under_phic=NA, over_phi=NA, over_phic=NA)
+```
+
 ## Under-represented types
 
 ```{r}
@@ -132,6 +137,9 @@ print(summary(mod_wc))
 print(AIC(mod_w))
 print(AIC(mod_wc))
 
+out[out$dataset == "WALS", ]$under_phi <- round(AIC(mod_w), 1)
+out[out$dataset == "WALS", ]$under_phic <- round(AIC(mod_wc), 1)
+
 mod_g <- lm(Delta_under ~ abs(phi), data=gram)
 mod_gc <- lm(Delta_under ~ abs(corrected_phi), data=gram)
 
@@ -140,6 +148,9 @@ print(summary(mod_gc))
 
 print(AIC(mod_g))
 print(AIC(mod_gc))
+
+out[out$dataset == "Grambank", ]$under_phi <- round(AIC(mod_g), 1)
+out[out$dataset == "Grambank", ]$under_phic <- round(AIC(mod_gc), 1)
 ```
 
 ## Over-represented types
@@ -154,6 +165,9 @@ print(summary(mod_wc))
 print(AIC(mod_w))
 print(AIC(mod_wc))
 
+out[out$dataset == "WALS", ]$over_phi <- round(AIC(mod_w), 1)
+out[out$dataset == "WALS", ]$over_phic <- round(AIC(mod_wc), 1)
+
 mod_g <- lm(Delta_over ~ abs(phi), data=gram)
 mod_gc <- lm(Delta_over ~ abs(corrected_phi), data=gram)
 
@@ -162,5 +176,10 @@ print(summary(mod_gc))
 
 print(AIC(mod_g))
 print(AIC(mod_gc))
+
+out[out$dataset == "Grambank", ]$over_phi <- round(AIC(mod_g), 1)
+out[out$dataset == "Grambank", ]$over_phic <- round(AIC(mod_gc), 1)
+
+write.table(out, file="../results/tables/AIC.csv", sep=",", quote=FALSE, row.names=FALSE, col.names=FALSE)
 ```
 
