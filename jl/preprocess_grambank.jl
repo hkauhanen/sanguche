@@ -79,6 +79,22 @@ data = unstack(
 ##
 
 
+# binarize GB193 properly
+#
+function NA_filter(a)
+  if ismissing(a)
+    return missing
+  else
+    if a == "1"
+      return "0"
+    elseif a == "2"
+      return "1"
+    else
+      return missing
+    end
+  end
+end
+
 
 # filter used to construct NRc and PN
 # 
@@ -120,6 +136,7 @@ end
 transform!(data, [:GB130, :GB131, :GB132, :GB133] => ((a,b,c,d) -> VO_filter.(a,b,c,d)) => :VO)
 transform!(data, [:GB327, :GB328] => ((a,b) -> feature_filter.(a,b)) => :NRc)
 transform!(data, [:GB074, :GB075] => ((a,b) -> feature_filter.(a,b)) => :PN)
+transform!(data, :GB193 => (a -> NA_filter.(a)) => :GB193)
 
 
 # add our new features to the values table
