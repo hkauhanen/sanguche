@@ -1,8 +1,8 @@
 #!/usr/bin/bash
 
-make data DATASET=grambank
+#make data DATASET=grambank
 
-wait
+#wait
 
 make revbayes DATASET=grambank NPROCS=8
 
