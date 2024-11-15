@@ -472,20 +472,20 @@ print(summary(mod1_under_w))</code></pre>
 ## 
 ## Residuals:
 ##       Min        1Q    Median        3Q       Max 
-## -0.081548 -0.037807 -0.000737  0.021974  0.123215 
+## -0.080692 -0.035192 -0.003314  0.021834  0.124434 
 ## 
 ## Coefficients:
 ##                   Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)        0.04789    0.01293   3.702 0.000644 ***
-## statusinteracting  0.05245    0.03119   1.682 0.100402    
-## statusunknown      0.04121    0.01863   2.213 0.032693 *  
-## abs(phi)          -0.09426    0.04192  -2.248 0.030132 *  
+## (Intercept)        0.04801    0.01283   3.743 0.000572 ***
+## statusinteracting  0.06510    0.03206   2.031 0.048969 *  
+## statusunknown      0.04024    0.01852   2.173 0.035767 *  
+## abs(phi)          -0.09663    0.04043  -2.390 0.021638 *  
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.051 on 40 degrees of freedom
-## Multiple R-squared:  0.1462, Adjusted R-squared:  0.08218 
-## F-statistic: 2.283 on 3 and 40 DF,  p-value: 0.09369</code></pre>
+## Residual standard error: 0.05062 on 40 degrees of freedom
+## Multiple R-squared:  0.1589, Adjusted R-squared:  0.09582 
+## F-statistic: 2.519 on 3 and 40 DF,  p-value: 0.0717</code></pre>
 </div>
 <div id="over-represented-types-delta" class="section level2">
 <h2>Over-represented types (<span class="math inline">\(\Delta^+\)</span>)</h2>
@@ -538,22 +538,24 @@ print(summary(mod1_over_w))</code></pre>
 ## 
 ## Residuals:
 ##       Min        1Q    Median        3Q       Max 
-## -0.062103 -0.005338  0.003815  0.009900  0.021075 
+## -0.063972 -0.004525  0.003709  0.010030  0.020468 
 ## 
 ## Coefficients:
 ##                    Estimate Std. Error t value Pr(&gt;|t|)
-## (Intercept)       -0.002809   0.004352  -0.645    0.522
-## statusinteracting  0.006601   0.010495   0.629    0.533
-## statusunknown     -0.006370   0.006268  -1.016    0.316
-## abs(phi)          -0.022645   0.014107  -1.605    0.116
+## (Intercept)       -0.002998   0.004413  -0.679    0.501
+## statusinteracting  0.002832   0.011029   0.257    0.799
+## statusunknown     -0.006216   0.006371  -0.976    0.335
+## abs(phi)          -0.018990   0.013910  -1.365    0.180
 ## 
-## Residual standard error: 0.01716 on 40 degrees of freedom
-## Multiple R-squared:  0.1421, Adjusted R-squared:  0.07779 
-## F-statistic: 2.209 on 3 and 40 DF,  p-value: 0.102</code></pre>
+## Residual standard error: 0.01742 on 40 degrees of freedom
+## Multiple R-squared:  0.1165, Adjusted R-squared:  0.05019 
+## F-statistic: 1.757 on 3 and 40 DF,  p-value: 0.1708</code></pre>
 </div>
 </div>
 <div id="model-2-model-comparison-between-varphi-and-varphi_c-as-predictors" class="section level1">
 <h1>Model 2: model comparison between <span class="math inline">\(\varphi\)</span> and <span class="math inline">\(\varphi_c\)</span> as predictors</h1>
+<pre class="r"><code># set up dataframe for exporting the values
+out &lt;- data.frame(dataset=c(&quot;WALS&quot;, &quot;Grambank&quot;), under_phi=NA, under_phic=NA, over_phi=NA, over_phic=NA)</code></pre>
 <div id="under-represented-types" class="section level2">
 <h2>Under-represented types</h2>
 <pre class="r"><code>mod_w &lt;- lm(Delta_under ~ abs(phi), data=wals)
@@ -601,7 +603,10 @@ print(summary(mod_w))</code></pre>
 <pre><code>## [1] -135.6677</code></pre>
 <pre class="r"><code>print(AIC(mod_wc))</code></pre>
 <pre><code>## [1] -141.5141</code></pre>
-<pre class="r"><code>mod_g &lt;- lm(Delta_under ~ abs(phi), data=gram)
+<pre class="r"><code>out[out$dataset == &quot;WALS&quot;, ]$under_phi &lt;- round(AIC(mod_w), 1)
+out[out$dataset == &quot;WALS&quot;, ]$under_phic &lt;- round(AIC(mod_wc), 1)
+
+mod_g &lt;- lm(Delta_under ~ abs(phi), data=gram)
 mod_gc &lt;- lm(Delta_under ~ abs(corrected_phi), data=gram)
 
 print(summary(mod_g))</code></pre>
@@ -630,22 +635,24 @@ print(summary(mod_g))</code></pre>
 ## 
 ## Residuals:
 ##      Min       1Q   Median       3Q      Max 
-## -0.06198 -0.04332 -0.01071  0.02712  0.14333 
+## -0.06327 -0.03730 -0.01495  0.02202  0.14733 
 ## 
 ## Coefficients:
-##                    Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)         0.05307    0.01118   4.748  2.4e-05 ***
-## abs(corrected_phi)  0.02189    0.05335   0.410    0.684    
+##                    Estimate Std. Error t value Pr(&gt;|t|)   
+## (Intercept)         0.04312    0.01326   3.250  0.00227 **
+## abs(corrected_phi)  0.10709    0.08651   1.238  0.22265   
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.05376 on 42 degrees of freedom
-## Multiple R-squared:  0.003994,   Adjusted R-squared:  -0.01972 
-## F-statistic: 0.1684 on 1 and 42 DF,  p-value: 0.6836</code></pre>
+## Residual standard error: 0.05291 on 42 degrees of freedom
+## Multiple R-squared:  0.0352, Adjusted R-squared:  0.01223 
+## F-statistic: 1.532 on 1 and 42 DF,  p-value: 0.2227</code></pre>
 <pre class="r"><code>print(AIC(mod_g))</code></pre>
 <pre><code>## [1] -129.7655</code></pre>
 <pre class="r"><code>print(AIC(mod_gc))</code></pre>
-<pre><code>## [1] -128.4256</code></pre>
+<pre><code>## [1] -129.8261</code></pre>
+<pre class="r"><code>out[out$dataset == &quot;Grambank&quot;, ]$under_phi &lt;- round(AIC(mod_g), 1)
+out[out$dataset == &quot;Grambank&quot;, ]$under_phic &lt;- round(AIC(mod_gc), 1)</code></pre>
 </div>
 <div id="over-represented-types" class="section level2">
 <h2>Over-represented types</h2>
@@ -694,7 +701,10 @@ print(summary(mod_w))</code></pre>
 <pre><code>## [1] -207.8521</code></pre>
 <pre class="r"><code>print(AIC(mod_wc))</code></pre>
 <pre><code>## [1] -207.8556</code></pre>
-<pre class="r"><code>mod_g &lt;- lm(Delta_over ~ abs(phi), data=gram)
+<pre class="r"><code>out[out$dataset == &quot;WALS&quot;, ]$over_phi &lt;- round(AIC(mod_w), 1)
+out[out$dataset == &quot;WALS&quot;, ]$over_phic &lt;- round(AIC(mod_wc), 1)
+
+mod_g &lt;- lm(Delta_over ~ abs(phi), data=gram)
 mod_gc &lt;- lm(Delta_over ~ abs(corrected_phi), data=gram)
 
 print(summary(mod_g))</code></pre>
@@ -723,22 +733,26 @@ print(summary(mod_g))</code></pre>
 ## 
 ## Residuals:
 ##       Min        1Q    Median        3Q       Max 
-## -0.073164 -0.001307  0.009243  0.010070  0.010420 
+## -0.071074 -0.002411  0.007812  0.010104  0.012980 
 ## 
 ## Coefficients:
 ##                     Estimate Std. Error t value Pr(&gt;|t|)   
-## (Intercept)        -0.010420   0.003759  -2.772  0.00827 **
-## abs(corrected_phi)  0.002977   0.017938   0.166  0.86900   
+## (Intercept)        -0.012980   0.004496  -2.887  0.00612 **
+## abs(corrected_phi)  0.024409   0.029326   0.832  0.40992   
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.01808 on 42 degrees of freedom
-## Multiple R-squared:  0.0006552,  Adjusted R-squared:  -0.02314 
-## F-statistic: 0.02754 on 1 and 42 DF,  p-value: 0.869</code></pre>
+## Residual standard error: 0.01794 on 42 degrees of freedom
+## Multiple R-squared:  0.01623,    Adjusted R-squared:  -0.007196 
+## F-statistic: 0.6928 on 1 and 42 DF,  p-value: 0.4099</code></pre>
 <pre class="r"><code>print(AIC(mod_g))</code></pre>
 <pre><code>## [1] -227.9608</code></pre>
 <pre class="r"><code>print(AIC(mod_gc))</code></pre>
-<pre><code>## [1] -224.3364</code></pre>
+<pre><code>## [1] -225.0274</code></pre>
+<pre class="r"><code>out[out$dataset == &quot;Grambank&quot;, ]$over_phi &lt;- round(AIC(mod_g), 1)
+out[out$dataset == &quot;Grambank&quot;, ]$over_phic &lt;- round(AIC(mod_gc), 1)
+
+write.table(out, file=&quot;../results/tables/AIC.csv&quot;, sep=&quot;,&quot;, quote=FALSE, row.names=FALSE, col.names=FALSE)</code></pre>
 </div>
 </div>
 
