@@ -26,7 +26,7 @@ purge_mrbayes :
 	rm -rf $(DATASET)/code/mrbayes/$(FAMILY).*
 
 data : 
-	#mkdir $(DATASET)
+	mkdir $(DATASET)
 	cp -R src/code $(DATASET)/code
 	cd $(DATASET)/code; $J createData_$(DATASET).jl
 	cd $(DATASET)/code; $J createFmList.jl $(DATASET)
