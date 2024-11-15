@@ -64,7 +64,7 @@ codes = CSV.read(codesF, DataFrame)
 
 
 features_original = features
-append!(features_original, ["GB130", "GB131", "GB132", "GB133", "GB074", "GB075", "GB327", "GB328"])
+append!(features_original, ["GB130", "GB131", "GB132", "GB133", "GB074", "GB075", "GB327", "GB328", "GB193"])
 
 
 data = unstack(
@@ -136,12 +136,12 @@ end
 transform!(data, [:GB130, :GB131, :GB132, :GB133] => ((a,b,c,d) -> VO_filter.(a,b,c,d)) => :VO)
 transform!(data, [:GB327, :GB328] => ((a,b) -> feature_filter.(a,b)) => :NRc)
 transform!(data, [:GB074, :GB075] => ((a,b) -> feature_filter.(a,b)) => :PN)
-transform!(data, :GB193 => (a -> NA_filter.(a)) => :GB193)
+transform!(data, :GB193 => (a -> NA_filter.(a)) => :NA)
 
 
 # add our new features to the values table
 #
-dd = stack(data[:, [:Language_ID, :VO, :NRc, :PN]], [:VO, :NRc, :PN])
+dd = stack(data[:, [:Language_ID, :VO, :NRc, :PN, :NA]], [:VO, :NRc, :PN, :NA])
 rename!(dd, [:Language_ID, :Parameter_ID, :Value])
 transform!(dd, [:Language_ID, :Parameter_ID] => ((a,b) -> b .* "-" .* a) => :ID)
 transform!(dd, [:Value, :Parameter_ID] => ((a,b) -> b .* "-" .* a) => :Code_ID)
@@ -162,6 +162,8 @@ push!(codes, ["NRc-0", "NRc", 0, "relative clauses prenominal"])
 push!(codes, ["NRc-1", "NRc", 1, "relative clauses postnominal"])
 push!(codes, ["PN-0", "PN", 0, "postpositions"])
 push!(codes, ["PN-1", "PN", 1, "prepositions"])
+push!(codes, ["NA-0", "NA", 0, "AdjN order"])
+push!(codes, ["NA-1", "NA", 1, "NAdj order"])
 
 
 # writeout
