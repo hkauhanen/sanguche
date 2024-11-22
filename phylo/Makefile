@@ -44,7 +44,6 @@ revbayes :
 	cd $(DATASET)/code/; $J --project=. -p $(NPROCS) runrevbayes.jl
 
 posterior :
-	rm -rf $(DATASET)/data/posteriorTrees
 	cd $(DATASET)/code; $R createPosterior.r
 
 model :
