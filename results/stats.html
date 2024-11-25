@@ -471,21 +471,21 @@ print(summary(mod1_under_w))</code></pre>
 ## lm(formula = Delta_under ~ status + abs(phi), data = gram)
 ## 
 ## Residuals:
-##       Min        1Q    Median        3Q       Max 
-## -0.042607 -0.024342 -0.011525  0.009522  0.150634 
+##      Min       1Q   Median       3Q      Max 
+## -0.04347 -0.02687 -0.01162  0.01488  0.14825 
 ## 
 ## Coefficients:
 ##                    Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)        0.048105   0.010850   4.434 7.05e-05 ***
-## statusinteracting  0.034732   0.027590   1.259    0.215    
-## statusunknown     -0.004287   0.017551  -0.244    0.808    
-## abs(phi)          -0.037476   0.036987  -1.013    0.317    
+## (Intercept)        0.048297   0.011142   4.335 9.58e-05 ***
+## statusinteracting  0.016887   0.027547   0.613    0.543    
+## statusunknown     -0.001531   0.017894  -0.086    0.932    
+## abs(phi)          -0.041175   0.039953  -1.031    0.309    
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.04272 on 40 degrees of freedom
-## Multiple R-squared:  0.09171,    Adjusted R-squared:  0.02358 
-## F-statistic: 1.346 on 3 and 40 DF,  p-value: 0.2731</code></pre>
+## Residual standard error: 0.04379 on 40 degrees of freedom
+## Multiple R-squared:  0.04544,    Adjusted R-squared:  -0.02615 
+## F-statistic: 0.6347 on 3 and 40 DF,  p-value: 0.597</code></pre>
 </div>
 <div id="over-represented-types-delta" class="section level2">
 <h2>Over-represented types (<span class="math inline">\(\Delta^+\)</span>)</h2>
@@ -538,20 +538,20 @@ print(summary(mod1_over_w))</code></pre>
 ## 
 ## Residuals:
 ##       Min        1Q    Median        3Q       Max 
-## -0.071243 -0.006604  0.007179  0.012458  0.021833 
+## -0.069214 -0.007471  0.006883  0.011999  0.024501 
 ## 
 ## Coefficients:
-##                    Estimate Std. Error t value Pr(&gt;|t|)  
-## (Intercept)       -0.007968   0.005525  -1.442   0.1570  
-## statusinteracting -0.003379   0.014050  -0.241   0.8112  
-## statusunknown     -0.017403   0.008938  -1.947   0.0586 .
-## abs(phi)           0.007751   0.018835   0.412   0.6829  
+##                     Estimate Std. Error t value Pr(&gt;|t|)  
+## (Intercept)       -0.0075578  0.0054524  -1.386   0.1734  
+## statusinteracting  0.0004578  0.0134802   0.034   0.9731  
+## statusunknown     -0.0166460  0.0087568  -1.901   0.0645 .
+## abs(phi)          -0.0001766  0.0195513  -0.009   0.9928  
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.02175 on 40 degrees of freedom
-## Multiple R-squared:  0.1185, Adjusted R-squared:  0.05242 
-## F-statistic: 1.793 on 3 and 40 DF,  p-value: 0.164</code></pre>
+## Residual standard error: 0.02143 on 40 degrees of freedom
+## Multiple R-squared:  0.1445, Adjusted R-squared:  0.08038 
+## F-statistic: 2.253 on 3 and 40 DF,  p-value: 0.097</code></pre>
 </div>
 </div>
 <div id="model-2-model-comparison-between-varphi-and-varphi_c-as-predictors" class="section level1">
@@ -637,22 +637,22 @@ print(summary(mod_g))</code></pre>
 ## 
 ## Residuals:
 ##      Min       1Q   Median       3Q      Max 
-## -0.05835 -0.02423 -0.01666  0.01610  0.15450 
+## -0.06622 -0.02756 -0.01707  0.01662  0.14985 
 ## 
 ## Coefficients:
-##                    Estimate Std. Error t value Pr(&gt;|t|)  
-## (Intercept)         0.02695    0.01069   2.522   0.0156 *
-## abs(corrected_phi)  0.10418    0.06969   1.495   0.1424  
+##                    Estimate Std. Error t value Pr(&gt;|t|)   
+## (Intercept)         0.03088    0.01141   2.707  0.00978 **
+## abs(corrected_phi)  0.06159    0.06524   0.944  0.35058   
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.04262 on 42 degrees of freedom
-## Multiple R-squared:  0.05051,    Adjusted R-squared:  0.02791 
-## F-statistic: 2.234 on 1 and 42 DF,  p-value: 0.1424</code></pre>
+## Residual standard error: 0.04329 on 42 degrees of freedom
+## Multiple R-squared:  0.02078,    Adjusted R-squared:  -0.002539 
+## F-statistic: 0.8911 on 1 and 42 DF,  p-value: 0.3506</code></pre>
 <pre class="r"><code>print(AIC(mod_g))</code></pre>
 <pre><code>## [1] -147.8066</code></pre>
 <pre class="r"><code>print(AIC(mod_gc))</code></pre>
-<pre><code>## [1] -148.8507</code></pre>
+<pre><code>## [1] -147.4938</code></pre>
 <pre class="r"><code>out[out$dataset == &quot;Grambank&quot;, ]$under_phi &lt;- round(AIC(mod_g), 1)
 out[out$dataset == &quot;Grambank&quot;, ]$under_phic &lt;- round(AIC(mod_gc), 1)</code></pre>
 </div>
@@ -735,22 +735,22 @@ print(summary(mod_g))</code></pre>
 ## 
 ## Residuals:
 ##       Min        1Q    Median        3Q       Max 
-## -0.076993 -0.007661  0.008035  0.013901  0.022082 
+## -0.078559 -0.003192  0.007603  0.014585  0.019832 
 ## 
 ## Coefficients:
-##                    Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)        -0.02208    0.00554  -3.986 0.000263 ***
-## abs(corrected_phi)  0.05078    0.03613   1.405 0.167267    
+##                     Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)        -0.020882   0.005884  -3.549 0.000967 ***
+## abs(corrected_phi)  0.035010   0.033650   1.040 0.304110    
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.0221 on 42 degrees of freedom
-## Multiple R-squared:  0.04491,    Adjusted R-squared:  0.02217 
-## F-statistic: 1.975 on 1 and 42 DF,  p-value: 0.1673</code></pre>
+## Residual standard error: 0.02233 on 42 degrees of freedom
+## Multiple R-squared:  0.02512,    Adjusted R-squared:  0.001913 
+## F-statistic: 1.082 on 1 and 42 DF,  p-value: 0.3041</code></pre>
 <pre class="r"><code>print(AIC(mod_g))</code></pre>
 <pre><code>## [1] -205.2491</code></pre>
 <pre class="r"><code>print(AIC(mod_gc))</code></pre>
-<pre><code>## [1] -206.6593</code></pre>
+<pre><code>## [1] -205.757</code></pre>
 <pre class="r"><code>out[out$dataset == &quot;Grambank&quot;, ]$over_phi &lt;- round(AIC(mod_g), 1)
 out[out$dataset == &quot;Grambank&quot;, ]$over_phic &lt;- round(AIC(mod_gc), 1)
 
