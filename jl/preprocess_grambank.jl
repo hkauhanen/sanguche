@@ -114,6 +114,24 @@ function feature_filter(a,b)
   end
 end
 
+
+# filter used to construct NRc and PN, disjunctive
+# 
+function feature_filter_OR(a,b)
+  if ismissing(a) || ismissing(b)
+    return missing
+  else
+    if a == "0" || b == "1"
+      return "0"
+    elseif a == "1" || b == "0"
+      return "1"
+    else
+      return missing
+    end
+  end
+end
+
+
 # Construct VO
 #
 # Logic:
@@ -136,7 +154,7 @@ function VO_filter(gb130, gb131, gb132, gb133)
 end
 
 transform!(data, [:GB130, :GB131, :GB132, :GB133] => ((a,b,c,d) -> VO_filter.(a,b,c,d)) => :VO)
-transform!(data, [:GB327, :GB328] => ((a,b) -> feature_filter.(a,b)) => :NRc)
+transform!(data, [:GB327, :GB328] => ((a,b) -> feature_filter_OR.(a,b)) => :NRc)
 transform!(data, [:GB074, :GB075] => ((a,b) -> feature_filter.(a,b)) => :PN)
 transform!(data, :GB193 => (a -> NA_filter.(a)) => :NA)
 
