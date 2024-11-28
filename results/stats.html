@@ -364,11 +364,28 @@ typological features to survive: geospatial evidence</h1>
 <div id="preliminaries" class="section level1">
 <h1>Preliminaries</h1>
 <pre class="r"><code># required packages
-require(tidyverse)
-require(broom)
-require(pixiedust)
-require(emmeans)
-source(&quot;pvalString_demo.R&quot;)
+require(tidyverse)</code></pre>
+<pre><code>## Loading required package: tidyverse</code></pre>
+<pre><code>## ── Attaching core tidyverse packages ─────────────────────────────────────────────────────────────────────────── tidyverse 2.0.0 ──
+## ✔ dplyr     1.1.4     ✔ readr     2.1.5
+## ✔ forcats   1.0.0     ✔ stringr   1.5.1
+## ✔ ggplot2   3.5.1     ✔ tibble    3.2.1
+## ✔ lubridate 1.9.3     ✔ tidyr     1.3.1
+## ✔ purrr     1.0.2     
+## ── Conflicts ───────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()
+## ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+<pre class="r"><code>require(broom)</code></pre>
+<pre><code>## Loading required package: broom</code></pre>
+<pre class="r"><code>require(pixiedust)</code></pre>
+<pre><code>## Loading required package: pixiedust</code></pre>
+<pre class="r"><code>require(emmeans)</code></pre>
+<pre><code>## Loading required package: emmeans
+## Welcome to emmeans.
+## Caution: You lose important information if you filter this package&#39;s results.
+## See &#39;? untidy&#39;</code></pre>
+<pre class="r"><code>source(&quot;pvalString_demo.R&quot;)
 
 # create results/tables, if it doesn&#39;t exist already
 try(dir.create(&quot;../results/tables&quot;, recursive=TRUE))</code></pre>
@@ -454,21 +471,21 @@ print(summary(mod1_under_w))</code></pre>
 ## lm(formula = Delta_under ~ status + abs(phi), data = gram)
 ## 
 ## Residuals:
-##      Min       1Q   Median       3Q      Max 
-## -0.04347 -0.02687 -0.01162  0.01488  0.14825 
+##       Min        1Q    Median        3Q       Max 
+## -0.042158 -0.024330 -0.011209  0.007742  0.150238 
 ## 
 ## Coefficients:
 ##                    Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)        0.048297   0.011142   4.335 9.58e-05 ***
-## statusinteracting  0.016887   0.027547   0.613    0.543    
-## statusunknown     -0.001531   0.017894  -0.086    0.932    
-## abs(phi)          -0.041175   0.039953  -1.031    0.309    
+## (Intercept)        0.045570   0.011042   4.127 0.000181 ***
+## statusinteracting  0.038964   0.024402   1.597 0.118196    
+## statusunknown     -0.001043   0.017414  -0.060 0.952549    
+## abs(phi)          -0.039527   0.035413  -1.116 0.271003    
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.04379 on 40 degrees of freedom
-## Multiple R-squared:  0.04544,    Adjusted R-squared:  -0.02615 
-## F-statistic: 0.6347 on 3 and 40 DF,  p-value: 0.597</code></pre>
+## Residual standard error: 0.04223 on 40 degrees of freedom
+## Multiple R-squared:  0.1123, Adjusted R-squared:  0.04573 
+## F-statistic: 1.687 on 3 and 40 DF,  p-value: 0.1852</code></pre>
 </div>
 <div id="over-represented-types-delta" class="section level2">
 <h2>Over-represented types (<span class="math inline">\(\Delta^+\)</span>)</h2>
@@ -521,20 +538,20 @@ print(summary(mod1_over_w))</code></pre>
 ## 
 ## Residuals:
 ##       Min        1Q    Median        3Q       Max 
-## -0.069214 -0.007471  0.006883  0.011999  0.024501 
+## -0.071113 -0.008082  0.007699  0.012134  0.021968 
 ## 
 ## Coefficients:
 ##                     Estimate Std. Error t value Pr(&gt;|t|)  
-## (Intercept)       -0.0075578  0.0054524  -1.386   0.1734  
-## statusinteracting  0.0004578  0.0134802   0.034   0.9731  
-## statusunknown     -0.0166460  0.0087568  -1.901   0.0645 .
-## abs(phi)          -0.0001766  0.0195513  -0.009   0.9928  
+## (Intercept)       -8.352e-03  5.692e-03  -1.467   0.1501  
+## statusinteracting -2.853e-05  1.258e-02  -0.002   0.9982  
+## statusunknown     -1.624e-02  8.977e-03  -1.809   0.0779 .
+## abs(phi)           5.501e-03  1.825e-02   0.301   0.7647  
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.02143 on 40 degrees of freedom
-## Multiple R-squared:  0.1445, Adjusted R-squared:  0.08038 
-## F-statistic: 2.253 on 3 and 40 DF,  p-value: 0.097</code></pre>
+## Residual standard error: 0.02177 on 40 degrees of freedom
+## Multiple R-squared:  0.1173, Adjusted R-squared:  0.05105 
+## F-statistic: 1.771 on 3 and 40 DF,  p-value: 0.1682</code></pre>
 </div>
 </div>
 <div id="model-2-model-comparison-between-varphi-and-varphi_c-as-predictors" class="section level1">
@@ -620,22 +637,22 @@ print(summary(mod_g))</code></pre>
 ## 
 ## Residuals:
 ##      Min       1Q   Median       3Q      Max 
-## -0.06622 -0.02756 -0.01707  0.01662  0.14985 
+## -0.05775 -0.02474 -0.01249  0.01103  0.14977 
 ## 
 ## Coefficients:
-##                    Estimate Std. Error t value Pr(&gt;|t|)   
-## (Intercept)         0.03088    0.01141   2.707  0.00978 **
-## abs(corrected_phi)  0.06159    0.06524   0.944  0.35058   
+##                    Estimate Std. Error t value Pr(&gt;|t|)  
+## (Intercept)         0.02386    0.01140   2.093   0.0424 *
+## abs(corrected_phi)  0.11619    0.06926   1.678   0.1009  
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.04329 on 42 degrees of freedom
-## Multiple R-squared:  0.02078,    Adjusted R-squared:  -0.002539 
-## F-statistic: 0.8911 on 1 and 42 DF,  p-value: 0.3506</code></pre>
+## Residual standard error: 0.04235 on 42 degrees of freedom
+## Multiple R-squared:  0.0628, Adjusted R-squared:  0.04048 
+## F-statistic: 2.814 on 1 and 42 DF,  p-value: 0.1009</code></pre>
 <pre class="r"><code>print(AIC(mod_g))</code></pre>
 <pre><code>## [1] -147.8066</code></pre>
 <pre class="r"><code>print(AIC(mod_gc))</code></pre>
-<pre><code>## [1] -147.4938</code></pre>
+<pre><code>## [1] -149.4237</code></pre>
 <pre class="r"><code>out[out$dataset == &quot;Grambank&quot;, ]$under_phi &lt;- round(AIC(mod_g), 1)
 out[out$dataset == &quot;Grambank&quot;, ]$under_phic &lt;- round(AIC(mod_gc), 1)</code></pre>
 </div>
@@ -718,22 +735,22 @@ print(summary(mod_g))</code></pre>
 ## 
 ## Residuals:
 ##       Min        1Q    Median        3Q       Max 
-## -0.078559 -0.003192  0.007603  0.014585  0.019832 
+## -0.076399 -0.004488  0.009092  0.013503  0.019886 
 ## 
 ## Coefficients:
 ##                     Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)        -0.020882   0.005884  -3.549 0.000967 ***
-## abs(corrected_phi)  0.035010   0.033650   1.040 0.304110    
+## (Intercept)        -0.022216   0.005971  -3.721 0.000584 ***
+## abs(corrected_phi)  0.046598   0.036277   1.284 0.206008    
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.02233 on 42 degrees of freedom
-## Multiple R-squared:  0.02512,    Adjusted R-squared:  0.001913 
-## F-statistic: 1.082 on 1 and 42 DF,  p-value: 0.3041</code></pre>
+## Residual standard error: 0.02218 on 42 degrees of freedom
+## Multiple R-squared:  0.0378, Adjusted R-squared:  0.01489 
+## F-statistic:  1.65 on 1 and 42 DF,  p-value: 0.206</code></pre>
 <pre class="r"><code>print(AIC(mod_g))</code></pre>
 <pre><code>## [1] -205.2491</code></pre>
 <pre class="r"><code>print(AIC(mod_gc))</code></pre>
-<pre><code>## [1] -205.757</code></pre>
+<pre><code>## [1] -206.3328</code></pre>
 <pre class="r"><code>out[out$dataset == &quot;Grambank&quot;, ]$over_phi &lt;- round(AIC(mod_g), 1)
 out[out$dataset == &quot;Grambank&quot;, ]$over_phic &lt;- round(AIC(mod_gc), 1)
 
