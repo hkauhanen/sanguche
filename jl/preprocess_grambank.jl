@@ -57,6 +57,8 @@ languages = CSV.read(languagesF, DataFrame)
 
 vals = CSV.read(valsF, DataFrame)
 
+subset!(vals, :Parameter_ID => (p -> p .∈ [["GB030", "GB302", "GB130", "GB131", "GB132", "GB133", "GB074", "GB075", "GB065", "GB193", "GB025", "GB024", "GB327", "GB328"]]))
+
 params = CSV.read(paramsF, DataFrame)
 
 codes = CSV.read(codesF, DataFrame)
