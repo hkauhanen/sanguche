@@ -150,7 +150,7 @@ function feature_filter_NRc(a,b)
   end
 end
 =#
-function feature_filter_NRc(a,b)
+function feature_filter_one(a,b)
   if ismissing(a) || ismissing(b)
     return missing
   else
@@ -188,9 +188,9 @@ function VO_filter(gb130, gb131, gb132, gb133)
 end
 
 transform!(data, [:GB130, :GB131, :GB132, :GB133] => ((a,b,c,d) -> VO_filter.(a,b,c,d)) => :VO)
-transform!(data, [:GB327, :GB328] => ((a,b) -> feature_filter_NRc.(a,b)) => :NRc)
+transform!(data, [:GB327, :GB328] => ((a,b) -> feature_filter_one.(a,b)) => :NRc)
 #transform!(data, [:GB074, :GB075] => ((a,b) -> feature_filter.(a,b)) => :PN)
-transform!(data, [:GB074, :GB075] => ((a,b) -> feature_filter_NRc.(b,a)) => :PN)
+transform!(data, [:GB074, :GB075] => ((a,b) -> feature_filter_one.(b,a)) => :PN)
 transform!(data, :GB193 => (a -> NA_filter.(a)) => :NA)
 
 
