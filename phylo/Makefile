@@ -3,7 +3,12 @@ JNEW=julia +1.10.4
 R=Rscript
 
 
-.PHONY : log purge data purge_mrbayes mrbayes_large mrbayes_problematic mrbayes_rest revbayes posterior model correlations
+.PHONY : log purge data purge_mrbayes mrbayes_large mrbayes_problematic mrbayes_rest revbayes posterior model correlations family_stats
+
+family_stats : family_statistics.txt
+
+family_statistics.txt : src/code/family_stats.R
+	cd src/code; $R family_stats.R
 
 log :
 	cd $(DATASET)/code; Rscript logvisuals.R $(DATASET)

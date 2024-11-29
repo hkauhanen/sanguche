@@ -307,3 +307,9 @@ Folded in GB Austronesian posterior trees from home machine to office machine. N
 
 Fri 29 Nov @ 18:30
 J&W analysis running again (from scratch) on both datasets, without controls, with corrected feature construction logic for Grambank. Running are fm_rest for both, fm_large for both, and fm_problematic for Grambank. Will set off fm_problematic for WALS next week, as more processor cores become available. Old J&W has been archived in phylo_BAK2 (local only, i.e. gitignored).
+
+Fri 29 Nov @ 18:50
+Siouan in Grambank has converged. Now launching problematic in WALS (Siouan and Chibchan).
+
+Fri 29 Nov @ 19:05
+Siouan and Chibchan in WALS have converged. I guess the problematic families aren't so problematic anymore, after removal of controls.
