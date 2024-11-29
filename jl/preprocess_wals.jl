@@ -139,8 +139,8 @@ function feature_filter_NegM(a)
 end
 
 
-transform!(data, "116A" => (a -> feature_filter_PolQ.(a)) => "116A")
-transform!(data, "112A" => (a -> feature_filter_PolQ.(a)) => "112A")
+#transform!(data, "116A" => (a -> feature_filter_PolQ.(a)) => "116A")
+#transform!(data, "112A" => (a -> feature_filter_PolQ.(a)) => "112A")
 
 
 #=

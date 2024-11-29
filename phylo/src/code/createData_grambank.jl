@@ -248,9 +248,9 @@ fDict = Dict(
     "GB065" => "NG",
     #"GB193" => "NA",
     "GB025" => "ND",
-    "GB024" => "NNum",
-    "GB030" => "Gen",
-    "GB302" => "Pas"
+    "GB024" => "NNum"
+    #"GB030" => "Gen",
+    #"GB302" => "Pas"
     #"GB059" => "AdPo",
     #"GB068" => "AdjPr"
 )
@@ -258,7 +258,7 @@ fDict = Dict(
 
 rename!(data, fDict)
 
-select!(data, [:longname, :glot_fam, :VS, :VO, :PN, :NG, :NA, :ND, :NNum, :NRc, :Gen, :Pas])
+select!(data, [:longname, :glot_fam, :VS, :VO, :PN, :NG, :NA, :ND, :NNum, :NRc])#, :Gen, :Pas])
 #select!(data, [:longname, :glot_fam, :VS, :VO, :PN, :NG, :NA, :ND, :NNum, :NRc, :AdPo, :AdjPr])
 
 
