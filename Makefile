@@ -64,6 +64,7 @@ results/tables/stats.pdf : results/combined.RData R/stats.R R/stats.Rmd R/load_d
 	cd R; $R stats.R
 
 tmp/$(DATASET)/codes.csv tmp/$(DATASET)/languages.csv tmp/$(DATASET)/parameters.csv tmp/$(DATASET)/values.csv &: jl/preprocess_$(DATASET).jl
+	rm -rf tmp/$(DATASET)*
 	cd jl; $J preprocess_$(DATASET).jl
 
 tmp/$(DATASET)/data.jls : jl/make_data.jl jl/params.jl tmp/$(DATASET)/codes.csv tmp/$(DATASET)/languages.csv tmp/$(DATASET)/values.csv
