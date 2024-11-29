@@ -304,3 +304,6 @@ Had wrong number of chains in runMrBayes.jl. Restarting.
 
 Mon 20 Oct @ 16:55
 Folded in GB Austronesian posterior trees from home machine to office machine. Now running CTMC models on office machine.
+
+Fri 29 Nov @ 18:30
+J&W analysis running again (from scratch) on both datasets, without controls, with corrected feature construction logic for Grambank. Running are fm_rest for both, fm_large for both, and fm_problematic for Grambank. Will set off fm_problematic for WALS next week, as more processor cores become available. Old J&W has been archived in phylo_BAK2 (local only, i.e. gitignored).
