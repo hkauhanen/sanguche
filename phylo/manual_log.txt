@@ -313,3 +313,6 @@ Siouan in Grambank has converged. Now launching problematic in WALS (Siouan and 
 
 Fri 29 Nov @ 19:05
 Siouan and Chibchan in WALS have converged. I guess the problematic families aren't so problematic anymore, after removal of controls.
+
+Fri 29 Nov @ 19:30
+Going home. Converged: 51/72 WALS, 43/76 Grambank.
