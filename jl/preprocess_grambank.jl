@@ -135,19 +135,35 @@ end
 
 # filter used to construct NRc
 # 
+#=
 function feature_filter_NRc(a,b)
   if ismissing(a) || ismissing(b)
     return missing
   else
-    if a == "0"
-      return "0"
-    elseif b == "0"
+    if a == "1" && (b == "0" || b == "?")
       return "1"
+    elseif b == "1" && (a == "0" || a == "?")
+      return "0"
     else
       return missing
     end
   end
 end
+=#
+function feature_filter_NRc(a,b)
+  if ismissing(a) || ismissing(b)
+    return missing
+  else
+    if b == "1"
+      return "1"
+    elseif b == "0"
+      return "0"
+    else
+      return missing
+    end
+  end
+end
+
 
 
 # Construct VO
@@ -172,8 +188,9 @@ function VO_filter(gb130, gb131, gb132, gb133)
 end
 
 transform!(data, [:GB130, :GB131, :GB132, :GB133] => ((a,b,c,d) -> VO_filter.(a,b,c,d)) => :VO)
-transform!(data, [:GB327, :GB328] => ((a,b) -> feature_filter.(a,b)) => :NRc)
-transform!(data, [:GB074, :GB075] => ((a,b) -> feature_filter.(a,b)) => :PN)
+transform!(data, [:GB327, :GB328] => ((a,b) -> feature_filter_NRc.(a,b)) => :NRc)
+#transform!(data, [:GB074, :GB075] => ((a,b) -> feature_filter.(a,b)) => :PN)
+transform!(data, [:GB074, :GB075] => ((a,b) -> feature_filter_NRc.(b,a)) => :PN)
 transform!(data, :GB193 => (a -> NA_filter.(a)) => :NA)
 
 
