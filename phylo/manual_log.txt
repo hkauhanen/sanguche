@@ -316,3 +316,6 @@ Siouan and Chibchan in WALS have converged. I guess the problematic families are
 
 Fri 29 Nov @ 19:30
 Going home. Converged: 51/72 WALS, 43/76 Grambank.
+
+Mon 02 Dec @ 15:20
+WALS has converged. Running CTMC model and correlations now. Grambank: Atlantic-Congo and Austronesian still to converge.
