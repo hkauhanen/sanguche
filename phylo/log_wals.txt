@@ -1,8 +1,8 @@
-Tue  3 Dec 18:00:05 CET 2024
+Wed  4 Dec 00:00:06 CET 2024
 ==================================================================
 Families converged: 72 / 72
 ==================================================================
-furioso                           Tue Dec  3 18:00:06 2024  560.28.03
-[0] NVIDIA GeForce RTX 2070 SUPER | 52°C, 100 % |  4013 /  8192 MB | hkauhanen(1768M) hkauhanen(1936M) root(197M) hkauhanen(56M) hkauhanen(?M)
+furioso                           Wed Dec  4 00:00:06 2024  560.28.03
+[0] NVIDIA GeForce RTX 2070 SUPER | 52°C,  99 % |  4013 /  8192 MB | hkauhanen(1768M) hkauhanen(1936M) root(197M) hkauhanen(56M) hkauhanen(?M)
 ==================================================================
-Tctl:         +50.0°C  
+Tctl:         +50.2°C  
