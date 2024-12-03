@@ -1,6 +1,6 @@
 dataset = ARGS[1]
 
-pvaluelimit = 0.05
+pvaluelimit = 0.01
 
 using CSV
 using DataFrames
@@ -118,6 +118,22 @@ CSV.write("../../../results/featuretables/featuretable_interacting_$dataset.csv"
 transform!(allresults, [:H, :H_pref] => ((a,b) -> b - a) => :Delta_over)
 transform!(allresults, [:H, :H_dispref] => ((a,b) -> b - a) => :Delta_under)
 
+
+
+
+log2_null(x) = log2(x) == -Inf ? 0.0 : log2(x)
+
+binentropy(x,y) = -(x*log2_null(x) + y*log2_null(y))
+
+transform!(allresults, [:freq11, :freq12, :freq21, :freq22] => ((f11, f12, f21, f22) -> 1.0 .- binentropy.(f11+f12, f21+f22)) => :skew1)
+transform!(allresults, [:freq11, :freq12, :freq21, :freq22] => ((f11, f12, f21, f22) -> 1.0 .- binentropy.(f11+f21, f12+f22)) => :skew2)
+
+transform!(allresults, [:skew1, :skew2, :Delta_under] => ((a,b,c) -> c ./ (1 .+ a .+ b)) => :D_under)
+transform!(allresults, [:skew1, :skew2, :Delta_over] => ((a,b,c) -> c ./ (1 .+ a .+ b)) => :D_over)
+
+
+
+
 allresults.dataset .= ""
 if dataset == "wals"
     allresults.dataset .= "WALS"
@@ -125,8 +141,8 @@ else
     allresults.dataset .= "Grambank"
 end
 
-results_towrite = select(allresults, [:pair_pretty, :logBayes, :cpp, :interacting, :control, :status, :phi, :corrected_phi, :hpd, :degree, :H, :H_pref, :H_dispref, :Delta_over, :Delta_under, :N, :mean_distance, :sd_distance, :dataset])
+results_towrite = select(allresults, [:pair_pretty, :logBayes, :cpp, :interacting, :control, :skew1, :skew2, :status, :phi, :corrected_phi, :hpd, :degree, :H, :H_pref, :H_dispref, :Delta_over, :Delta_under, :D_over, :D_under, :N, :mean_distance, :sd_distance, :dataset])
 
-rename!(results_towrite, [:pair, :LBF, :CPP, :interacting, :control, :status, :phi, :corrected_phi, :HPD, :k, :H, :H_over, :H_under, :Delta_over, :Delta_under, :N, :mean_distance, :sd_distance, :dataset])
+rename!(results_towrite, [:pair, :LBF, :CPP, :interacting, :control, :skew1, :skew2, :status, :phi, :corrected_phi, :HPD, :k, :H, :H_over, :H_under, :Delta_over, :Delta_under, :D_over, :D_under, :N, :mean_distance, :sd_distance, :dataset])
 
 CSV.write("../../../results/$dataset/results_combined.csv", results_towrite)
