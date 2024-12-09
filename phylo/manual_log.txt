@@ -319,3 +319,6 @@ Going home. Converged: 51/72 WALS, 43/76 Grambank.
 
 Mon 02 Dec @ 15:20
 WALS has converged. Running CTMC model and correlations now. Grambank: Atlantic-Congo and Austronesian still to converge.
+
+Mon 09 Dec @ 10:15
+Grambank has converged (actually, already last night).
