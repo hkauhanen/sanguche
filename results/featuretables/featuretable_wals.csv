@@ -8,8 +8,8 @@ NA & NNum,884,interacting,9.82,0.000162,0.57,0.45
 VO & NRc,627,interacting,8.87,0.000303,-0.63,0.38
 ND & NNum,823,interacting,8.14,0.000595,0.54,0.36
 NA & NRc,612,interacting,5.74,0.00381,-0.5,0.36
-PN & NRc,550,unknown,4.71,0.0127,-0.59,0.29
-NA & ND,870,unknown,4.23,0.027,0.58,0.25
+PN & NRc,550,interacting,4.71,0.0127,-0.59,0.29
+NA & ND,870,interacting,4.23,0.027,0.58,0.25
 NNum & NRc,586,unknown,3.51,0.0561,-0.18,0.28
 NG & NRc,587,unknown,3.1,0.0994,-0.54,0.25
 PN & NA,815,unknown,2.4,0.182,0.19,-0.2
