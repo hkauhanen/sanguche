@@ -118,7 +118,7 @@ end
   
   degree = r.degree
 
-  distsh = subset(distsh, :eachindex => i -> i .<= degree)
+  distsh = subset(distsh, :distance => i -> i .<= degree)
 
   out = DataFrame(pair=r.pair)
 
@@ -139,6 +139,8 @@ end
   out.N .= nrow(datah)
   out.mean_distance .= mean(distsh.distance)
   out.sd_distance .= std(distsh.distance)
+
+  out.mean_nsize .= nrow(distsh)/nrow(datah)
 
   # mean isogloss densities for preferred and dispreferred types
   #mid_pref = [isogloss_density(t, datah, distsh) for t in pref_types]

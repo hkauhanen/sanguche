@@ -1,7 +1,9 @@
 # neighbourhood sizes
 #degrees = Int.(unique(round.(exp.(range(log(1), stop=log(200), length=22)))))
 #degrees = [10]   ### uncomment for debugging purposes
-degrees = 1:500
+#degrees = 1:2:100
+degrees = 100:100:10000
+degrees = 1000
 
 # WALS features we are interested in
 wo_features = ["87A", "86A", "85A", "88A", "89A", "83A", "90A", "82A"]

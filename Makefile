@@ -73,8 +73,8 @@ tmp/$(DATASET)/data.jls : jl/make_data.jl jl/params.jl tmp/$(DATASET)/codes.csv 
 tmp/$(DATASET)/grid.jls tmp/$(DATASET)/Ddata.jls tmp/$(DATASET)/Ddists.jls &: jl/make_dicts.jl jl/params.jl tmp/$(DATASET)/data.jls
 	cd jl; $J make_dicts.jl $(DATASET)
 
-tmp/$(DATASET)/sand_results.jls : jl/sandwichness.jl tmp/$(DATASET)/grid.jls tmp/$(DATASET)/Ddata.jls tmp/$(DATASET)/Ddists.jls
-	cd jl; $J -p $(NPROCS) sandwichness.jl $(DATASET)
+tmp/$(DATASET)/sand_results.jls : jl/sandwichness_km.jl tmp/$(DATASET)/grid.jls tmp/$(DATASET)/Ddata.jls tmp/$(DATASET)/Ddists.jls
+	cd jl; $J -p $(NPROCS) sandwichness_km.jl $(DATASET)
 
 results/$(DATASET)/results.jls results/$(DATASET)/results.csv &: jl/prettyprint.jl tmp/$(DATASET)/sand_results.jls
 	cd jl; $J prettyprint.jl $(DATASET)

@@ -132,6 +132,13 @@ transform!(allresults, [:skew1, :skew2, :Delta_under] => ((a,b,c) -> c ./ (1 .+ 
 transform!(allresults, [:skew1, :skew2, :Delta_over] => ((a,b,c) -> c ./ (1 .+ a .+ b)) => :D_over)
 
 
+bernoulli_skewness(p, q) = (q-p)/sqrt(p*q)
+
+
+transform!(allresults, [:freq11, :freq12, :freq21, :freq22] => ((a,b,c,d) -> bernoulli_skewness.(a+b,c+d)) => :skewness1)
+transform!(allresults, [:freq11, :freq12, :freq21, :freq22] => ((a,b,c,d) -> bernoulli_skewness.(a+c,b+d)) => :skewness2)
+transform!(allresults, [:skewness1, :skewness2] => ((a,b) -> abs.(a) .+ abs.(b)) => :skewness)
+
 
 
 allresults.dataset .= ""
@@ -141,8 +148,8 @@ else
     allresults.dataset .= "Grambank"
 end
 
-results_towrite = select(allresults, [:pair_pretty, :logBayes, :cpp, :interacting, :control, :skew1, :skew2, :status, :phi, :corrected_phi, :hpd, :degree, :H, :H_pref, :H_dispref, :Delta_over, :Delta_under, :D_over, :D_under, :N, :mean_distance, :sd_distance, :dataset])
+results_towrite = select(allresults, [:pair_pretty, :logBayes, :cpp, :interacting, :control, :skew1, :skew2, :status, :phi, :corrected_phi, :hpd, :degree, :H, :H_pref, :H_dispref, :Delta_over, :Delta_under, :D_over, :D_under, :N, :mean_distance, :sd_distance, :dataset, :skewness1, :skewness2, :skewness, :mean_nsize])
 
-rename!(results_towrite, [:pair, :LBF, :CPP, :interacting, :control, :skew1, :skew2, :status, :phi, :corrected_phi, :HPD, :k, :H, :H_over, :H_under, :Delta_over, :Delta_under, :D_over, :D_under, :N, :mean_distance, :sd_distance, :dataset])
+rename!(results_towrite, [:pair, :LBF, :CPP, :interacting, :control, :skew1, :skew2, :status, :phi, :corrected_phi, :HPD, :k, :H, :H_over, :H_under, :Delta_over, :Delta_under, :D_over, :D_under, :N, :mean_distance, :sd_distance, :dataset, :skewness1, :skewness2, :skewness, :mean_nsize])
 
 CSV.write("../../../results/$dataset/results_combined.csv", results_towrite)
