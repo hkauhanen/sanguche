@@ -3,14 +3,13 @@
 #degrees = [10]   ### uncomment for debugging purposes
 #degrees = 1:2:100
 degrees = 100:100:10000
-degrees = 1000
 
 # WALS features we are interested in
 wo_features = ["87A", "86A", "85A", "88A", "89A", "83A", "90A", "82A"]
 #control_features_wals = ["10A", "129A"]
 control_features_wals = ["112A", "116A"]
-#features_wals = vcat(wo_features, control_features_wals)
-features_wals = wo_features
+features_wals = vcat(wo_features, control_features_wals)
+#features_wals = wo_features
 
 # Grambank features we are interested in
 wo_features = ["GB130", "GB065", "GB025", "GB024", "VO", "NRc", "PN", "NA"]
