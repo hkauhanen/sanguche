@@ -1,13 +1,14 @@
 # read in both datasets
 df1 <- read.csv("../results/wals/results_combined.csv")
-df2 <- read.csv("../results/grambank/results_combined.csv")
+#df2 <- read.csv("../results/grambank/results_combined.csv")
 
 # combine them
-combined <- rbind(df1, df2)
+#combined <- rbind(df1, df2)
+combined <- df1
 
 # change order of factor levels
 combined$status <- factor(combined$status, levels=c("interacting", "unknown", "non-interacting"))
-combined$dataset <- factor(combined$dataset, levels=c("WALS", "Grambank"))
+#combined$dataset <- factor(combined$dataset, levels=c("WALS", "Grambank"))
 
 # construct a long format version
 combined_long = reshape2::melt(combined, measure.vars=c("Delta_over", "Delta_under"))

@@ -45,7 +45,7 @@ scale_fill_sanguche2 <- function(...) {
 
 data <- read.csv("../results/wals/results_combined.csv", na.strings="missing")
 
-data_onek <- data[data$k == 1000, ]
+data_onek <- data[data$k == 850, ]
 
 
 data_onek$Typology <- factor(data_onek$status, levels=c("interacting", "unknown", "control"))
@@ -77,7 +77,7 @@ dev.off()
 
 
 
-g <- ggplot(data[data$k <= 2000, ], aes(x=k, group=k, y=mean_nsize)) + geom_boxplot(fill=mypal[2], alpha=0.5) + deftheme() + xlab(expression("Neighbourhood radius limit"~italic(R))) + ylab("Mean number of neighbours")
+g <- ggplot(data[data$k <= 2000, ], aes(x=k, group=k, y=round(mean_nsize))) + geom_boxplot(fill=mypal[2], alpha=0.5, outlier.shape=NA) + deftheme() + xlab(expression("Neighbourhood radius limit"~italic(R))) + ylab("Mean number of neighbours") + geom_hline(yintercept=27, lty=2)
 
 png("../results/plots/neighbourhoods.png", res=450, height=2200, width=2700)
 print(g)

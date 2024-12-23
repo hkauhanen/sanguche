@@ -38,25 +38,24 @@ pretty : results/$(DATASET)/results.jls results/$(DATASET)/results.csv
 Rdeps : R/Rdeps.R
 	cd R; $R Rdeps.R
 
-distances : merge tmp/wals/neighbour_distances.csv tmp/grambank/neighbour_distances.csv
+distances : tmp/wals/neighbour_distances.csv
 
-tmp/wals/neighbour_distances.csv tmp/grambank/neighbour_distances.csv &: jl/neighbour_distances.jl tmp/wals/Ddists.jls tmp/grambank/Ddists.jls
+tmp/wals/neighbour_distances.csv : jl/neighbour_distances.jl tmp/wals/Ddists.jls
 	cd jl; $J neighbour_distances.jl wals
-	cd jl; $J neighbour_distances.jl grambank
 
-merge : results/combined.RData results/featuretables/featuretable_withDelta_wals.csv results/featuretables/featuretable_withDelta_grambank.csv
+merge : results/combined.RData results/featuretables/featuretable_withDelta_wals.csv
 
-results/featuretables/featuretable_withDelta_wals.csv results/featuretables/featuretable_withDelta_grambank.csv &: R/featuretables.R
+results/featuretables/featuretable_withDelta_wals.csv : R/featuretables.R
 	cd R; $R featuretables.R
 	
-results/combined.RData : phylo/src/postprocess/combine.jl R/merge.R results/wals/results.jls results/grambank/results.jls
-	cd phylo/src/postprocess; $(JULIA) combine.jl wals; $(JULIA) combine.jl grambank
+results/combined.RData : phylo_wctrl/src/postprocess/combine.jl R/merge.R results/wals/results.jls
+	cd phylo_wctrl/src/postprocess; $(JULIA) combine.jl wals
 	cd R; $R merge.R
 
 plots : results/plots/boxplot.png results/plots/distances.png results/plots/neighbourhood_dispref.png results/plots/kdiff.png
 	
 results/plots/boxplot.png results/plots/distances.png results/plots/neighbourhood_dispref.png results/plots/kdiff.png &: results/combined.RData R/plots.R R/load_data.R tmp/wals/Ddists.jls tmp/grambank/Ddists.jls
-	cd R; $R plots.R
+	cd R; $R plots_wals.R
 
 stats : results/tables/stats.pdf
 

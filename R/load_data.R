@@ -12,8 +12,9 @@ data$status <- factor(data$status, levels=c("interacting", "unknown", "non-inter
 data$dataset <- factor(data$dataset, levels=c("WALS", "Grambank"))
 
 # neighbourhood sizes to use
-k_wals <- round(sqrt(round(mean(data[data$dataset == "WALS", ]$N))))
-k_grambank <- round(sqrt(round(mean(data[data$dataset == "Grambank", ]$N))))
+#k_wals <- round(sqrt(round(mean(data[data$dataset == "WALS", ]$N))))
+#k_grambank <- round(sqrt(round(mean(data[data$dataset == "Grambank", ]$N))))
+k_wals <- 750
 
 fulldata <- data
 

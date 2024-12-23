@@ -26,7 +26,7 @@ wals$status <- factor(wals$status)
 wals$status <- relevel(wals$status, ref="control")
 
 # restrict to one single neighbourhood size
-wals <- wals[wals$k == 1000, ]
+wals <- wals[wals$k == 850, ]
 ```
 
 # Descriptive statistics
