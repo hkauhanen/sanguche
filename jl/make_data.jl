@@ -103,7 +103,7 @@ else
 end
 
 
-#filter!(x -> x.Name ∈ [1,2], codes)
+filter!(x -> x.Name ∈ [1,2], codes)
 
 
 ##
@@ -124,7 +124,7 @@ data = innerjoin(
 
 unique!(data, :Glottocode)
 
-filter!(x -> x.nValues >= 5, data)
+filter!(x -> x.nValues >= 6, data)
 
 
 serialize("../tmp/$dataset/data.jls", data)
