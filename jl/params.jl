@@ -3,6 +3,7 @@
 #degrees = [10]   ### uncomment for debugging purposes
 #degrees = 1:2:100
 degrees = 100:50:2000
+degrees = 100
 
 # WALS features we are interested in
 wo_features = ["87A", "86A", "85A", "88A", "89A", "83A", "90A", "82A"]
