@@ -139,35 +139,9 @@ function feature_filter_NegM(a)
 end
 
 
-#transform!(data, "116A" => (a -> feature_filter_PolQ.(a)) => "116A")
-#transform!(data, "112A" => (a -> feature_filter_PolQ.(a)) => "112A")
+transform!(data, "116A" => (a -> feature_filter_PolQ.(a)) => "116A")
+transform!(data, "112A" => (a -> feature_filter_PolQ.(a)) => "112A")
 
-
-#=
-# add our new features to the values table
-#
-dd = stack(data[:, [:Language_ID, :VO, :NRc, :PN]], [:VO, :NRc, :PN])
-rename!(dd, [:Language_ID, :Parameter_ID, :Value])
-transform!(dd, [:Language_ID, :Parameter_ID] => ((a,b) -> b .* "-" .* a) => :ID)
-transform!(dd, [:Value, :Parameter_ID] => ((a,b) -> b .* "-" .* a) => :Code_ID)
-select!(dd, [:ID, :Language_ID, :Parameter_ID, :Value, :Code_ID])
-dd.Comment .= "Reconstructed from other features"
-dd.Source .= "the authors"
-dd.Source_comment .= missing
-dd.Coders .= missing
-vals = [vals; dd]
-
-
-
-# also need to add information about new features into codes table
-#
-push!(codes, ["VO-0", "VO", 0, "OV order"])
-push!(codes, ["VO-1", "VO", 1, "VO order"])
-push!(codes, ["NRc-0", "NRc", 0, "relative clauses prenominal"])
-push!(codes, ["NRc-1", "NRc", 1, "relative clauses postnominal"])
-push!(codes, ["PN-0", "PN", 0, "postpositions"])
-push!(codes, ["PN-1", "PN", 1, "prepositions"])
-=#
 
 # writeout
 #
