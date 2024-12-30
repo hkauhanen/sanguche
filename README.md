@@ -21,8 +21,8 @@ Requirements:
 The code is divided into four parts:
 
 1. **Preparations.** In this first part, the data (WALS and Grambank) are downloaded and prepared for later use.
-2. **Phylogenetic analysis.** This part first creates a set of posterior trees, then runs Jäger and Wahle's continuous time Markov chain model on those phylogenies to obtain "phylogenetically corrected" phi coefficients (along with other relevant summary statistics) for all feature pairs of interest.
-3. **"Sandwichness" analysis.** This part measures Delta (neighbourhood entropy differential) values from the actual empirical geographical distribution of languages.
+2. **"Sandwichness" analysis.** This part measures Delta (neighbourhood entropy differential) values from the actual empirical geographical distribution of languages.
+3. **Phylogenetic analysis.** This part first creates a set of posterior trees, then runs Jäger and Wahle's continuous time Markov chain model on those phylogenies to obtain "phylogenetically corrected" phi coefficients (along with other relevant summary statistics) for all feature pairs of interest.
 4. **Post-processing.** This part combines the output of parts 2 and 3 into the final combined dataset, plus runs statistics and produces plots.
 
 Each part needs to be run on our two datasets, WALS and Grambank, separately.
@@ -30,69 +30,65 @@ Each part needs to be run on our two datasets, WALS and Grambank, separately.
 
 ## Instructions, Part 1: Preparations
 
-Part 1 requires Julia version 1.10.4.
+Part 1 requires both Julia version 1.5.3 and Julia version 1.10.4.
 
-First, install Juliaup by following the instructions at <https://github.com/JuliaLang/juliaup>.
-
-Then, to reproduce the analysis from scratch, type the following on the command line, paying special attention to the capitalization:
+First, install Juliaup by following the instructions at <https://github.com/JuliaLang/juliaup>. Then type the following to add the required Julia versions and to install all required dependencies:
 
 ```
+juliaup add 1.5.3
 juliaup add 1.10.4
 make Jdeps
-make preparations DATASET=wals
-make preparations DATASET=grambank
 ```
 
-(For any subsequent reproductions of this analysis, you may omit the `make Jdeps` bit which simply installs all required Julia dependencies.)
+To download the two databases and prepare them for later use, type:
+
+```
+make data DATASET=wals
+make data DATASET=grambank
+```
 
 
-## Instructions, Part 2: Phylogenetic analysis
+## Instructions, Part 2: "Sandwichness" analysis
 
-This bit is (very) time-consuming, as estimating the posterior distributions for all language families takes considerable time. We have attempted to parallelize the code as much as feasible, but, in practice, on our system (AMD Ryzen 3950X, 128GB DDR4 RAM, and 2 x NVIDIA GeForce RTX 2070 Super), the wall clock time of Part 1 is FIXME.
-
-As configuring the system for all the dependencies of the Bayesian procedure is also tricky, we assume not all readers will be interested in reproducing Part 1. However, if you wish to do so, detailed instructions can be found in <phylo/README.md>. Part 1 requires Julia 1.5.3.
-
-The relevant output of Part 1 is four files:
-
-- `phylo/results/wals/bfCorr.csv`
-- `phylo/results/wals/correlations.csv`
-- `phylo/results/grambank/bfCorr.csv`
-- `phylo/results/grambank/correlations.csv`
-
-As long as these exist, the code in Part 3 will be able to combine the results of Part 1 and Part 2 into the final set of results.
-
-Part 1 is an adaptation of the code to Jäger and Wahle (FIXME), released under the MIT Licence.
-
-
-## Instructions, Part 3: "Sandwichness" analysis
-
-Part 3 requires Julia version 1.10.4.
+Part 2 requires Julia version 1.10.4.
 
 To reproduce the analysis from scratch, type the following on the command line, paying special attention to the capitalization:
 
 ```
-make analysis DATASET=wals
-make analysis DATASET=grambank
+make sandwich DATASET=wals
+make sandwich DATASET=grambank
 ```
 
-Results are saved in the `results/wals/` and `results/grambank/` directories, respectively. The `results.csv` files are in ordinary comma-separated values format; the `results.jls` files are serializations of Julia dataframes which can be loaded into a Julia session by `using Serialization, DataFrames; results = serialize("results.jls")`.
+Results are saved in the `results/wals` and `results/grambank` directories, respectively. The `*.csv` files are in ordinary comma-separated values format; the `*.jls` files are serializations of Julia dataframes which can be loaded into a Julia session using the tools provided by the Serialization package.
 
 To speed up processing, parts of the analysis are parallelized over processor cores. To control the number of worker processes, modify the `NPROCS` variable in the `Makefile` (it is generally best to set this equal to the number of physical cores in your processor, assuming this is the only task the computer is running).
 
-Temporary files are saved in `tmp/`. If you wish to delete these after the analysis has been run, type:
+Temporary files are saved in various subdirectories of `wals/` and `grambank/`. Since some of these are also needed by the phylogenetic analysis (Part 3, see below), it is best to leave them untouched for now.
 
-```
-make clean
-```
 
-If you also wish to delete results, type:
+## Instructions, Part 3: Phylogenetic analysis
 
-```
-make purge
-```
+This bit is (very) **time-consuming**, as estimating the posterior distributions for the largest language families takes considerable time. We have attempted to parallelize the code as much as is feasible, but, in practice, on our system (AMD Ryzen 3950X, 128GB DDR4 RAM, and an NVIDIA GeForce RTX 2070 Super), the wall clock time of Part 3 is on the order of 4 days for WALS and on the order of 10 days for Grambank.
+
+As configuring the system for all the dependencies of the Bayesian procedure is also tricky, we assume not all readers will be interested in reproducing Part 3. However, if you wish to do so, detailed instructions can be found in [README_Part3.md](README_Part3.md).
+
+Part 3 requires Julia 1.5.3 (already installed in Part 1).
+
+The relevant output (for further processing) of Part 3 consists of four files:
+
+- `results/wals/bfCorr.csv`
+- `results/wals/correlations.csv`
+- `results/grambank/bfCorr.csv`
+- `results/grambank/correlations.csv`
+
+As long as these exist, the code in Part 4 will be able to combine the results of Part 2 and Part 3 into the final set of results.
+
+Part 3 is an adaptation of the code to Jäger and Wahle (FIXME), released under the MIT Licence.
 
 
 ## Instructions, Part 4: Post-processing
+
+FIXME: bring Part 4 description up to date
 
 The final part, which combines the output of Parts 2 and 3, is quick. It depends on Julia version 1.10.4 and R version 4.4.2.
 
@@ -104,14 +100,16 @@ make posthoc
 The resulting statistics and plots will appear in `results/tables/` and `results/plots/` and `results/tables/`, respectively.
 
 
-## Postlude: Brief description of code logic of Part 3
+## Postlude: Brief description of code logic of Part 2
 
-The data analysis in Part 2 is broken down into four major phases. All source code is contained in the `jl/` directory; the relationships between the various phases can be examined in the `Makefile`.
+The data analysis in Part 2 is broken down into two major phases. All source code is contained in the `src/code/` directory; the relationship between the phases can be examined in the `Makefile`.
 
-1. **Data preparation.** Data (either WALS or Grambank) are first downloaded from the internet, then wrangled into a format suitable for our analysis. At this stage, we also construct features VO, PN and NRc for Grambank from pairs of features, as described in the paper.
-1. **Dictionary preparation.** We next obtain the subset of the data for every feature–feature pair of interest. These subsets are stored in a dictionary for later use. We also prepare a second dictionary which contains the nearest geographical neighbours table for each language, for each feature–feature pair. The latter are obtained from great-circle distance data which is downloaded from <https://github.com/hkauhanen/wals-distances> and <https://github.com/hkauhanen/grambank-distances>.
-1. **Neighbourhood entropy computation.** We then cycle through the dictionaries created in the previous step, calculating neighbourhood entropies in each case.
-1. **Pretty printing.** The resulting dataframes are pretty-printed for subsequent use in Part 3.
+The starting point for Part 2 is the output of Part 1, the prepared datasets. To produce these, Part 1 first downloads the databases from the internet, then wrangles them into a format suitable for our analysis. At this stage, we also construct features VO for Grambank from four original Grambank features, as described in the paper.
+
+After this, Part 2 proceeds as follows:
+
+1. **Phase 1: Dictionary preparation.** We obtain the subset of the data for every feature–feature pair of interest. These subsets are stored in a dictionary for later use. We also prepare a second dictionary which contains the nearest geographical neighbours table for each language, for each feature–feature pair. The latter are obtained from great-circle distance data which are downloaded from <https://github.com/hkauhanen/wals-distances> and <https://github.com/hkauhanen/grambank-distances>.
+1. **Phase 2: Neighbourhood entropy computation.** We next cycle through the dictionaries created in the previous step, calculating neighbourhood entropies in each case.
 
 
 ## Acknowledgements
