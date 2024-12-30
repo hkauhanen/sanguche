@@ -1,5 +1,6 @@
 cd(@__DIR__)
 
+include("features_grambank.jl")
 include("params.jl")
 
 using Pkg
@@ -18,37 +19,31 @@ using Random
 Random.seed!(2002261988307380348)
 
 ##
-#=
-using Conda
-Conda.pip_interop(true)
-Conda.pip("install", "ete3")
-
-
-ENV["PYTHON"] = ""
-Pkg.build("PyCall")
-using PyCall
-
-ete3 = pyimport("ete3")
-=#
-##
 
 try
-    mkdir("../data")
+    mkdir("../../grambank")
+catch e
+end
+
+cd("../../grambank")
+
+try
+    mkdir("./data")
 catch e
 end
 
 try
-    mkdir("../data/database")
+    mkdir("./data/database")
 catch e
 end
 
 
 
-languagesF = "../data/database/languages.csv"
-valsF = "../data/database/values.csv"
-paramsF = "../data/database/parameters.csv"
-codesF = "../data/database/codes.csv"
-dataF = "../data/database/data_preprocessed.csv"
+languagesF = "./data/database/languages.csv"
+valsF = "./data/database/values.csv"
+paramsF = "./data/database/parameters.csv"
+codesF = "./data/database/codes.csv"
+dataF = "./data/database/data_preprocessed.csv"
 
 
 !(isfile(languagesF) && isfile(valsF) && isfile(paramsF)) && begin
@@ -83,9 +78,9 @@ params = CSV.read(paramsF, DataFrame)
 codes = CSV.read(codesF, DataFrame)
 ##
 
-woFeatures = features_grambank
+woFeatures = features
 
-neededFeatures = features_grambank_pre_preprocessing
+neededFeatures = features_pre_preprocessing
 
 data = unstack(
                (@pipe vals |>
@@ -159,10 +154,6 @@ function VO_filter_classical(gb130, gb131, gb132, gb133)
     end
 end
 
-
-# The following three functions, combined, would seem to me to be the more
-# logical way of doing this. However, they yield inferior results. Still,
-# recorded here for posterity.
 
 function OV_prefilter(gb130, gb132, gb133)
     if ismissing(gb130) || ismissing(gb132) || ismissing(gb133)

@@ -2,6 +2,7 @@ cd(@__DIR__)
 
 dataset = ARGS[1]
 
+include("features_$dataset.jl")
 include("params.jl")
 
 using Pkg
@@ -20,40 +21,17 @@ using Random
 Random.seed!(2002261988307380348)
 
 ##
-#=
-using Conda
-Conda.pip_interop(true)
-Conda.pip("install", "ete3")
 
 
-ENV["PYTHON"] = ""
-Pkg.build("PyCall")
-using PyCall
-
-ete3 = pyimport("ete3")
-=#
+cd("../../$dataset")
 
 
-##
-
-try
-    mkdir("../data")
-catch e
-end
-
-try
-    mkdir("../data/database")
-catch e
-end
-
-
-
-languagesF = "../data/database/languages.csv"
-valsF = "../data/database/values.csv"
-paramsF = "../data/database/parameters.csv"
-codesF = "../data/database/codes.csv"
-datainF = "../data/database/data_preprocessed.csv"
-dataoutF = "../data/data.csv"
+languagesF = "./data/database/languages.csv"
+valsF = "./data/database/values.csv"
+paramsF = "./data/database/parameters.csv"
+codesF = "./data/database/codes.csv"
+datainF = "./data/database/data_preprocessed.csv"
+dataoutF = "./data/data.csv"
 
 
 ##
@@ -68,11 +46,7 @@ codes = CSV.read(codesF, DataFrame)
 ##
 
 
-if dataset == "wals"
-    woFeatures = features_wals
-else
-    woFeatures = features_grambank
-end
+woFeatures = features
 
 
 data = CSV.read(datainF, DataFrame)
@@ -121,10 +95,11 @@ filter!(x -> x.nValues >= 6, data)
 
 
 if dataset == "wals"
-    rename!(data, fDict_wals)
-else
-    rename!(data, fDict_grambank)
+    fDict = Dict(fPairs)
 end
+
+rename!(data, fDict)
+
 
 CSV.write(dataoutF, data)
 

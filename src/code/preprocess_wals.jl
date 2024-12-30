@@ -1,5 +1,6 @@
 cd(@__DIR__)
 
+include("features_wals.jl")
 include("params.jl")
 
 using Pkg
@@ -19,38 +20,30 @@ Random.seed!(2002261988307380348)
 
 ##
 
-#=
-using Conda
-Conda.pip_interop(true)
-Conda.pip("install", "ete3")
+try
+    mkdir("../../wals")
+catch e
+end
 
-
-ENV["PYTHON"] = ""
-Pkg.build("PyCall")
-using PyCall
-
-ete3 = pyimport("ete3")
-=#
-
-##
+cd("../../wals")
 
 try
-    mkdir("../data")
+    mkdir("./data")
 catch e
 end
 
 try
-    mkdir("../data/database")
+    mkdir("./data/database")
 catch e
 end
 
 
 
-languagesF = "../data/database/languages.csv"
-valsF = "../data/database/values.csv"
-paramsF = "../data/database/parameters.csv"
-codesF = "../data/database/codes.csv"
-dataF = "../data/database/data_preprocessed.csv"
+languagesF = "./data/database/languages.csv"
+valsF = "./data/database/values.csv"
+paramsF = "./data/database/parameters.csv"
+codesF = "./data/database/codes.csv"
+dataF = "./data/database/data_preprocessed.csv"
 
 
 !(isfile(languagesF) && isfile(valsF) && isfile(paramsF)) && begin
@@ -83,9 +76,9 @@ params = CSV.read(paramsF, DataFrame)
 codes = CSV.read(codesF, DataFrame)
 ##
 
-woFeatures = features_wals
+woFeatures = features
 
-neededFeatures = features_wals_pre_preprocessing
+neededFeatures = features_pre_preprocessing
 
 data = unstack(
                (@pipe vals |>

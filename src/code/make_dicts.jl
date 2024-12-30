@@ -20,24 +20,23 @@ using StatsBase
 
 dataset = ARGS[1]
 
+include("features_$dataset.jl")
 include("params.jl")
 
+
 if dataset == "wals"
-  features = features_wals_pretty
-  control_features = control_features_wals
+    cd("../../wals")
 else
-  features = features_grambank_pretty
-  control_features = control_features_grambank
+    cd("../../grambank")
 end
 
-
 try
-    mkdir("../dicts/")
+    mkdir("./dicts/")
 catch e
 end
 
 
-pairs = combinations(features, 2)
+pairs = combinations(features_pretty, 2)
 
 results = DataFrame(pair=[v[1] * " & " * v[2] for v in pairs],
                     f1=[v[1] for v in pairs], 
@@ -52,8 +51,7 @@ results.class = ifelse.(f1s .+ f2s .> 0, "control", "target")
 
 
 
-#data = deserialize("../tmp/$dataset/data.jls")
-data = CSV.read("../data/data.csv", DataFrame)
+data = CSV.read("./data/data.csv", DataFrame)
 
 
 # function to calculate phi coefficient for a matrix/contingency table
@@ -103,15 +101,15 @@ for r in 1:nrow(results)
   end
 end
 
-if !isfile("../dicts/dists.csv")
+if !isfile("./dicts/dists.csv")
   if dataset == "wals"
-    download("https://raw.githubusercontent.com/hkauhanen/wals-distances/master/wals-distances-under5000km.csv", "../dicts/dists.csv")
+    download("https://raw.githubusercontent.com/hkauhanen/wals-distances/master/wals-distances-under5000km.csv", "./dicts/dists.csv")
   elseif dataset == "grambank"
-    download("https://raw.githubusercontent.com/hkauhanen/grambank-distances/main/grambank-distances-under5000km.csv", "../dicts/dists.csv")
+    download("https://raw.githubusercontent.com/hkauhanen/grambank-distances/main/grambank-distances-under5000km.csv", "./dicts/dists.csv")
   end
 end
 
-dists = CSV.read("../dicts/dists.csv", DataFrame)
+dists = CSV.read("./dicts/dists.csv", DataFrame)
 
 Ddata = Dict()
 Ddists = Dict()
@@ -145,9 +143,9 @@ end
 
 
 
-serialize("../dicts/grid.jls", grid)
-serialize("../dicts/Ddata.jls", Ddata)
-serialize("../dicts/Ddists.jls", Ddists)
+serialize("./dicts/grid.jls", grid)
+serialize("./dicts/Ddata.jls", Ddata)
+serialize("./dicts/Ddists.jls", Ddists)
 
 
 

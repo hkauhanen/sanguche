@@ -1,12 +1,6 @@
 include("deps.jl")
 
 
-try
-    mkdir("../results/")
-catch e
-end
-
-
 using Distributed
 
 
@@ -18,9 +12,33 @@ using Distributed
 @everywhere using Serialization
 @everywhere using Statistics
 
-@everywhere results = deserialize("../dicts/grid.jls")
-@everywhere Ddata = deserialize("../dicts/Ddata.jls")
-@everywhere Ddists = deserialize("../dicts/Ddists.jls")
+
+# for a mysterious reason, we need to do the following to pass the 
+# command-line argument to all worker processes; cf.
+# https://discourse.julialang.org/t/how-to-pass-args-to-multiple-processes/80075/3
+@everywhere myargfunc(x) = x
+@everywhere dataset = myargfunc($ARGS)[1]
+
+
+@everywhere cd("../../$dataset")
+
+
+@everywhere results = deserialize("./dicts/grid.jls")
+@everywhere Ddata = deserialize("./dicts/Ddata.jls")
+@everywhere Ddists = deserialize("./dicts/Ddists.jls")
+
+
+
+try
+    mkdir("../results")
+catch e
+end
+
+
+try
+    mkdir("../results/$dataset")
+catch e
+end
 
 
 
@@ -144,7 +162,7 @@ transform!(merged, :pair => (p -> stringtonumber.(p)) => :pair_ID)
 
 
 # serialize results to file, and to a CSV also (why not)
-serialize("../results/sand_results.jls", merged)
-CSV.write("../results/sand_results.csv", merged)
+serialize("../results/$dataset/sand_results.jls", merged)
+CSV.write("../results/$dataset/sand_results.csv", merged)
 
 
