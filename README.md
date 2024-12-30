@@ -59,11 +59,11 @@ make sandwich DATASET=wals
 make sandwich DATASET=grambank
 ```
 
-Results are saved in the `results/wals` and `results/grambank` directories, respectively. The `*.csv` files are in ordinary comma-separated values format; the `*.jls` files are serializations of Julia dataframes which can be loaded into a Julia session using the tools provided by the Serialization package.
+Results are saved in the `results/wals/` and `results/grambank/` directories, respectively. The `*.csv` files are in ordinary comma-separated values format; the `*.jls` files are serializations of Julia dataframes which can be loaded into a Julia session using the tools provided by the Serialization package.
 
 To speed up processing, parts of the analysis are parallelized over processor cores. To control the number of worker processes, modify the `NPROCS` variable in the `Makefile` (it is generally best to set this equal to the number of physical cores in your processor, assuming this is the only task the computer is running).
 
-Temporary files are saved in various subdirectories of `wals/` and `grambank/`. Since some of these are also needed by the phylogenetic analysis (Part 3, see below), it is best to leave them untouched for now.
+Temporary files are saved in various subdirectories of `wals/` and `grambank/` (.gitignored by default). Since some of these are also needed by the phylogenetic analysis (Part 3, see below), it is best to leave them untouched for now.
 
 
 ## Instructions, Part 3: Phylogenetic analysis
