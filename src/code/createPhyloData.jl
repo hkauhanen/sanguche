@@ -416,7 +416,7 @@ END;
     end
 rb = """
 family = "$fm"
-source("./phylogeny.Rev")
+source("../../src/code/phylogeny_$dataset.Rev")
 """
     open("revbayes/$(fm).Rev", "w") do file
         write(file, rb)

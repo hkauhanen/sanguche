@@ -5,7 +5,10 @@ Pkg.instantiate()
 using Distributed
 using Glob
 
-@everywhere cd("revbayes")
+@everywhere myargfunc(x) = x
+@everywhere dataset = myargfunc($ARGS)[1]
+
+@everywhere cd("../../$dataset/revbayes")
 
 @sync @distributed for fm in glob("*.Rev", ".")
   command = `rb $fm`

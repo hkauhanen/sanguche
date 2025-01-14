@@ -1,6 +1,6 @@
 dataset = ARGS[1]
 
-all_fams = open("../data/glot3.txt", "r") do file
+all_fams = open("../../$dataset/data/glot3.txt", "r") do file
   readlines(file)
 end
 

@@ -96,17 +96,20 @@ This step was necessary for mysterious reasons.
 
 ## Running the analysis
 
-Executing the following scripts runs the analysis.
+Executing the following scripts runs the analysis for WALS (repeat with `grambank` in place of `wals` to run it for Grambank). The lines commented with `TIME-CONSUMING` take a long time; be prepared for runtimes on the order of one week for `mrbayes` and one day for `model`, depending on the dataset and the hardware used.
 
 ```
 make phyloprep DATASET=wals
-make phyloprep DATASET=grambank
-
-FIXME: add the remaining steps
+make familyprep DATASET=wals
+make revbayes DATASET=wals
+make mrbayes DATASET=wals       # TIME-CONSUMING (~1 week)
+wait
+make posterior DATASET=wals
+make model DATASET=wals         # TIME-CONSUMING (~1 day)
 ```
 
-This is fine-tuned for the hardware listed above. Your mileage may vary; in particular, you may find it necessary to tune the numbers of parallel processes used in `Makefile` and `run.sh`.
+The order of the above operations is important.
+```
 
-N.B. **This takes time.** For us, about 4 days for WALS and about 10 days for Grambank.
-
+This is fine-tuned for the hardware listed above. Your mileage may vary; in particular, you may find it necessary to tune the numbers of parallel processes used in `Makefile`.
 

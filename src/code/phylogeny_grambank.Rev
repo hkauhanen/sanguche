@@ -1,6 +1,6 @@
 seed(93798823)
 
-data <- readDiscreteCharacterData("../../data/asjpNex/"+family+".nex")
+data <- readDiscreteCharacterData("../../grambank/data/asjpNex/"+family+".nex")
 
 taxa = data.taxa()
 
@@ -36,7 +36,7 @@ seq.clamp(data)
 
 mymodel = model(seq)
 
-monitors[++mni] = mnFile(filename="output/"+family+".p",
+monitors[++mni] = mnFile(filename="../../grambank/revbayes/output/"+family+".p",
                           printgen = 1000, separator = TAB)
 monitors[mni].addVariable(pi)
 monitors[mni].addVariable(rootAge)
@@ -44,7 +44,7 @@ monitors[mni].addVariable(alpha)
 
 
 
-monitors[++mni] = mnFile(filename="output/"+family+".t",
+monitors[++mni] = mnFile(filename="../../grambank/revbayes/output/"+family+".t",
                          printgen=1000, separator = TAB, tree)
 
 monitors[++mni] = mnScreen(printgen=1000)

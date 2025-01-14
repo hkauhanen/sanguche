@@ -6,7 +6,8 @@ using Distributed
   return args
 end
 
-@everywhere fm_file = argfunc($ARGS[1])
+@everywhere dataset = argfunc($ARGS[1])
+@everywhere fm_file = argfunc($ARGS[2])
 
 @everywhere families = open(fm_file) do file
   readlines(file)
@@ -29,17 +30,17 @@ end
 
 
 try
-  mkdir("mrbayes/")
+  mkdir("../../$dataset/mrbayes/")
 catch e
 end
 
 try
-  mkdir("mrbayes/logs/")
+  mkdir("../../$dataset/mrbayes/logs/")
 catch e
 end
 
 try
-  mkdir("mrbayes/converged/")
+  mkdir("../../$dataset/mrbayes/converged/")
 catch e
 end
 
@@ -59,10 +60,10 @@ Pkg.build("PyCall")
 
 
 ##
-@everywhere data = CSV.read("../data/charMtx.csv", DataFrame)
+@everywhere data = CSV.read("../../$dataset/data/charMtx.csv", DataFrame)
 
 ##
-@everywhere worldGlotF = download("https://osf.io/jyvgt/download", "../data/world_fullGlot.tre")
+@everywhere worldGlotF = download("https://osf.io/jyvgt/download", "../../$dataset/data/world_fullGlot.tre")
 
 @everywhere glot = ete3.Tree(worldGlotF)
 
@@ -75,7 +76,7 @@ Pkg.build("PyCall")
   fams_to_remove = []
 
   for fm in fams
-    if isfile("mrbayes/converged/$fm.txt")
+    if isfile("../../$dataset/mrbayes/converged/$fm.txt")
       push!(fams_to_remove, fm)
       if verbose
         println("Removed $fm as it has already converged in a previous analysis")
@@ -99,7 +100,7 @@ end
 \tBegin MrBayes;
 \t\tset seed=6789580436154794230;
 \t\tset swapseed = 614090213;
-\t\texecute ../data/asjpNex/$fm.nex;
+\t\texecute ../../$dataset/data/asjpNex/$fm.nex;
 \t\tlset rates=gamma coding=all;
 """
 
@@ -130,7 +131,7 @@ end
 \t\tprset shapepr=Exponential(10);
 \t\tset beagleprecision=double;
 \t\tmcmcp Burninfrac=0.5 stoprule=no stopval=0.01;
-\t\tmcmcp filename=../data/asjpNex/output/$fm;
+\t\tmcmcp filename=../../$dataset/data/asjpNex/output/$fm;
 \t\tmcmcp samplefreq=1000 printfreq=5000 append=$append;
 \t\tmcmc ngen=$ngen nchains=$nchains nruns=2 temp=$temp;
 \t\tsump;
@@ -155,9 +156,9 @@ end
 @sync @distributed for fm in families
   println("Executing $fm")
   
-  mbFile = "mrbayes/$(fm).mb.nex"
-  convFile = "mrbayes/converged/$(fm).txt"
-  logFile = "mrbayes/logs/$(fm).csv"
+  mbFile = "../../$dataset/mrbayes/$(fm).mb.nex"
+  convFile = "../../$dataset/mrbayes/converged/$(fm).txt"
+  logFile = "../../$dataset/mrbayes/logs/$(fm).csv"
 
   nrun = 1000000
 
@@ -167,9 +168,9 @@ end
   end
 
   try
-    if isfile("../data/asjpNex/output/$(fm).ckp")
+    if isfile("../../$dataset/data/asjpNex/output/$(fm).ckp")
       # set nrun to current number in checkpointing file, plus some
-      open("../data/asjpNex/output/$(fm).ckp") do f
+      open("../../$dataset/data/asjpNex/output/$(fm).ckp") do f
         ckplines = readlines(f)
         nrun = parse(Int, ckplines[3][14:(end-1)]) + nrun
       end
@@ -187,7 +188,7 @@ end
 
   function converged()
     pstat = CSV.read(
-      "../data/asjpNex/output/$fm.pstat",
+      "../../$dataset/data/asjpNex/output/$fm.pstat",
       DataFrame,
       header = 2,
       datarow = 3,
@@ -198,7 +199,7 @@ end
     maxPSRF = maximum(pstat.PSRF)
 
     tstat = CSV.read(
-      "../data/asjpNex/output/$fm.tstat",
+      "../../$dataset/data/asjpNex/output/$fm.tstat",
       DataFrame,
       header = 2,
       datarow = 3,
@@ -209,7 +210,7 @@ end
     meanStdev = mean(tstat[:,4])
 
     vstat = CSV.read(
-      "../data/asjpNex/output/$fm.vstat",
+      "../../$dataset/data/asjpNex/output/$fm.vstat",
       DataFrame,
       header = 2,
       datarow = 3,

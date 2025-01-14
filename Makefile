@@ -4,7 +4,7 @@ R=Rscript
 NPROC=16
 
 
-.PHONY : Jdeps preprocess data dicts sandwich phyloprep
+.PHONY : Jdeps preprocess data dicts sandwich phyloprep familyprep revbayes
 
 
 Jdeps :
@@ -34,4 +34,12 @@ $(DATASET)/results/sand_results.csv $(DATASET)/results/sand_results.jls &: src/c
 phyloprep : src/code/createPhyloData.jl src/code/params.jl $(DATASET)/data/data.csv $(DATASET)/data/database/*.csv
 	cd src/code; $J createPhyloData.jl $(DATASET)
 
+familyprep : src/code/createFmList.jl src/code/family_stats.R src/code/fm_large_$(DATASET).txt src/code/fm_problematic_$(DATASET).txt
+	cd src/code; $J createFmList.jl $(DATASET)
+	cd src/code; $R family_stats.R $(DATASET)
 
+revbayes : src/code/runrevbayes.jl
+	cd src/code; $J -p $(NPROC) runrevbayes.jl $(DATASET)
+
+mrbayes : src/code/runMrBayes.jl src/code/fm_large_$(DATASET).txt src/code/fm_problematic_$(DATASET).txt src/code/fm_rest_$(DATASET).txt
+	cd src/code; $J -p 3 runMrBayes.jl $(DATASET) fm_large_$(DATASET).txt & $J -p 1 runMrBayes.jl $(DATASET) fm_problematic_$(DATASET).txt & $J -p 12 runMrBayes.jl $(DATASET) fm_rest_$(DATASET).txt

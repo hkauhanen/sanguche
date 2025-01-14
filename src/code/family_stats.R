@@ -1,24 +1,14 @@
-sink("../../family_statistics.txt")
+args <- commandArgs(trailingOnly=TRUE)
+dataset <- args[1]
 
-wals <- read.csv("../../wals/data/famFrequencies.csv")
-gram <- read.csv("../../grambank/data/famFrequencies.csv")
+sink(paste0("../../", dataset, "/family_statistics.txt"))
 
-cat("WALS\n====\n")
+data <- read.csv(paste0("../../", dataset, "/data/famFrequencies.csv"))
 
-cat(paste("Languages:", sum(wals$nrow), "\n"))
-cat(paste("Phylogenies:", nrow(wals), "\n"))
-cat(paste("Non-isolates:", nrow(wals[wals$nrow > 1, ]), "\n"))
-cat(paste("Isolates:", nrow(wals[wals$nrow == 1, ]), "\n"))
-
-cat("\n\n")
-
-cat("Grambank\n========\n")
-
-cat(paste("Languages:", sum(gram$nrow), "\n"))
-cat(paste("Phylogenies:", nrow(gram), "\n"))
-cat(paste("Non-isolates:", nrow(gram[gram$nrow > 1, ]), "\n"))
-cat(paste("Isolates:", nrow(gram[gram$nrow == 1, ]), "\n"))
+cat(paste("Languages:", sum(data$nrow), "\n"))
+cat(paste("Phylogenies:", nrow(data), "\n"))
+cat(paste("Non-isolates:", nrow(data[data$nrow > 1, ]), "\n"))
+cat(paste("Isolates:", nrow(data[data$nrow == 1, ]), "\n"))
 
 sink()
-
 
