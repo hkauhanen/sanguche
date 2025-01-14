@@ -1,7 +1,7 @@
 J=julia +1.5.3
 JNEW=julia +1.10.4
 R=Rscript
-NPROC=2
+NPROC=16
 
 
 .PHONY : Jdeps preprocess data dicts sandwich phyloprep
