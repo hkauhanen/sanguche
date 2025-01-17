@@ -2,10 +2,11 @@ require(ggplot2)
 require(reshape2)
 require(ggsci)
 
-dataset = commandArgs(trailingOnly=TRUE)
+args <- commandArgs(trailingOnly=TRUE)
+dataset <- args[1]
 
 tryCatch(expr = {
-         files <- list.files(path="mrbayes/logs/", pattern="*.csv", full.names=TRUE)
+         files <- list.files(path=paste0("../../", dataset, "/mrbayes/logs/"), pattern="*.csv", full.names=TRUE)
 
          read_one <- function(X) {
            df <- read.csv(X, header=FALSE)
@@ -20,7 +21,7 @@ tryCatch(expr = {
 
          for (i in 1:nrow(df)) {
            famhere = df[i, ]$family
-           if (file.exists(paste0("mrbayes/converged/", famhere, ".txt"))) {
+           if (file.exists(paste0("../../", dataset, "/mrbayes/converged/", famhere, ".txt"))) {
              df[i, ]$converged <- TRUE
            }
          }
@@ -46,3 +47,4 @@ tryCatch(expr = {
 error = function(e) {
   print("nothing to do... no family has converged")
 })
+
