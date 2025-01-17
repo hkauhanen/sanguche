@@ -4,7 +4,7 @@ R=Rscript
 NPROC=16
 
 
-.PHONY : Jdeps preprocess data dicts sandwich phyloprep familyprep revbayes
+.PHONY : Jdeps preprocess data dicts sandwich phyloprep familyprep revbayes treelog
 
 
 Jdeps :
@@ -43,3 +43,6 @@ revbayes : src/code/runrevbayes.jl
 
 mrbayes : src/code/runMrBayes.jl src/code/fm_large_$(DATASET).txt src/code/fm_problematic_$(DATASET).txt src/code/fm_rest_$(DATASET).txt
 	cd src/code; $J -p 3 runMrBayes.jl $(DATASET) fm_large_$(DATASET).txt & $J -p 1 runMrBayes.jl $(DATASET) fm_problematic_$(DATASET).txt & $J -p 12 runMrBayes.jl $(DATASET) fm_rest_$(DATASET).txt
+
+treelog : src/code/logvisuals.R
+	cd src/code; $R logvisuals.R $(DATASET)
