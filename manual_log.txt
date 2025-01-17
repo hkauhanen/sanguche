@@ -4,3 +4,5 @@ Set (overhauled) MrBayes in motion for Grambank, with 3 processors for the 3 lar
 17/01/2025 @ 11:55
 80 out of 89 families have converged. However, 5 families had not even started (i.e. they do not appear in mrbayes/logs) for some reason, so I've started them separately now. These are Afro-Asiatic, Austroasiatic, Indo-European, Arawakan and Chocoan.
 
+17/01/2025 @ 14:00
+The following families are doing poorly in Grambank, and thus ought to be moved to the problematic set: Nakh-Daghestanian, Siouan.
