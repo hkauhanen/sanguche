@@ -1,4 +1,6 @@
 14/01/2025 @ 16:10
 Set (overhauled) MrBayes in motion for Grambank, with 3 processors for the 3 large families and 12 processors for the remaining families.
 
+17/01/2025 @ 11:55
+80 out of 89 families have converged. However, 5 families had not even started (i.e. they do not appear in mrbayes/logs) for some reason, so I've started them separately now. These are Afro-Asiatic, Austroasiatic, Indo-European, Arawakan and Chocoan.
 
