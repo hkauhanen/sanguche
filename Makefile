@@ -44,5 +44,11 @@ revbayes : src/code/runrevbayes.jl
 mrbayes : src/code/runMrBayes.jl src/code/fm_large_$(DATASET).txt src/code/fm_problematic_$(DATASET).txt src/code/fm_rest_$(DATASET).txt
 	cd src/code; $J -p 3 runMrBayes.jl $(DATASET) fm_large_$(DATASET).txt & $J -p 1 runMrBayes.jl $(DATASET) fm_problematic_$(DATASET).txt & $J -p 12 runMrBayes.jl $(DATASET) fm_rest_$(DATASET).txt
 
+purge_mrbayes :
+	rm -rf $(DATASET)/data/asjpNex/output/$(FAMILY).*
+	rm -rf $(DATASET)/mrbayes/converged/$(FAMILY).*
+	rm -rf $(DATASET)/mrbayes/logs/$(FAMILY).*
+	rm -rf $(DATASET)/mrbayes/$(FAMILY).*
+
 treelog : src/code/logvisuals.R
 	cd src/code; $R logvisuals.R $(DATASET)
