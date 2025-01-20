@@ -6,3 +6,8 @@ Set (overhauled) MrBayes in motion for Grambank, with 3 processors for the 3 lar
 
 17/01/2025 @ 14:00
 The following families are doing poorly in Grambank, and thus ought to be moved to the problematic set: Nakh-Daghestanian, Siouan.
+
+20/01/2025 @ 13:10
+Nakh-Daghestanian has converged. Siouan not going anywhere, so moved it over to the problematic set and relaunched. Out of 89 families, 87 have now converged; the other remaining family is Austronesian, which is already very close (ASDSF=0.0086, PSRF=1.34).
+
+
