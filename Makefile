@@ -4,7 +4,7 @@ R=Rscript
 NPROC=16
 
 
-.PHONY : Jdeps preprocess data dicts sandwich phyloprep familyprep revbayes treelog
+.PHONY : Jdeps preprocess data dicts sandwich phyloprep familyprep revbayes treelog posterior model
 
 
 Jdeps :
@@ -52,3 +52,9 @@ purge_mrbayes :
 
 treelog : src/code/logvisuals.R
 	cd src/code; $R logvisuals.R $(DATASET)
+
+posterior : src/code/createPosterior.r
+	cd src/code; $R createPosterior.r $(DATASET)
+
+model : src/code/models.sh src/code/model_1.sh src/code/model_2.sh src/code/model_3.sh src/code/model_4.sh src/code/model_5.sh src/code/modelFitting/universal.jl src/code/modelFitting/loadData.jl
+	cd src/code; bash models.sh $(DATASET)
