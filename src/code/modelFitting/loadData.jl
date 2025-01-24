@@ -1,7 +1,7 @@
 ##
 
-wals = CSV.read("../../data/charMtx.csv", DataFrame)
-d = CSV.read("../../data/fpairMtx.csv", DataFrame)
+wals = CSV.read("$prefix/data/charMtx.csv", DataFrame)
+d = CSV.read("$prefix/data/fpairMtx.csv", DataFrame)
 
 famFreqs = combine(groupby(wals, :glot_fam), nrow)
 sort!(famFreqs, :nrow, rev=true)
@@ -12,9 +12,10 @@ isolates = filter(x -> x.nrow==1, famFreqs).glot_fam
 
 
 ##### Restrict analysis to those families only for which posterior trees actually exist
-postfam = glob("*.posterior.tree", "../../data/posteriorTrees")
+postfam = glob("*.posterior.tree", "$prefix/data/posteriorTrees")
 postfam = [split(split(fam, "/")[end], ".")[1] for fam in postfam]
 families = families[families .∈ [postfam]]
+
 
 
 isoDict = @pipe wals |>
@@ -26,7 +27,7 @@ isoDict = @pipe wals |>
 
 fm2trees = Dict()
 @showprogress for fm in families
-      fm2trees[fm] = MCPhylo.ParseNewick("../../data/posteriorTrees/$fm.posterior.tree")
+      fm2trees[fm] = MCPhylo.ParseNewick("$prefix/data/posteriorTrees/$fm.posterior.tree")
 end
 
 for fm in isolates

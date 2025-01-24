@@ -1,4 +1,7 @@
-global charNum = parse(Int, ARGS[1])
+global charNum = parse(Int, ARGS[2])
+
+dataset = ARGS[1]
+prefix = "../../../$dataset/"
 
 
 cd(@__DIR__)
@@ -111,7 +114,7 @@ if charNum > 0 && charNum <= 45
   ##
 
   try
-    mkdir("output")
+    mkdir("$prefix/modeloutput")
   catch e
   end
 
@@ -130,8 +133,8 @@ if charNum > 0 && charNum <= 45
   bi = 1 + size(sim)[1] ÷ 2
   gd = gelmandiag(sim[bi:end,:,:])
   psrf = maximum(gd.value[:,1])
-  write("output/universal_$(lpad((charNum), 2, "0")).jls", sim[bi:end,:,:])
-  write("output/universal_$(lpad((charNum), 2, "0")).log", string(psrf)*"\n")
+  write("$prefix/modeloutput/universal_$(lpad((charNum), 2, "0")).jls", sim[bi:end,:,:])
+  write("$prefix/modeloutput/universal_$(lpad((charNum), 2, "0")).log", string(psrf)*"\n")
   while psrf > 1.1
     global sim, psrf, bi, gd
     @show psrf
@@ -139,8 +142,8 @@ if charNum > 0 && charNum <= 45
     bi = 1 + size(sim)[1] ÷ 2
     gd = gelmandiag(sim[bi:end,:,:])
     psrf = maximum(gd.value[:,1])
-    write("output/universal_$(lpad((charNum), 2, "0")).jls", sim[bi:end,:,:])
-    write("output/universal_$(lpad((charNum), 2, "0")).log", string(psrf)*"\n")
+    write("$prefix/modeloutput/universal_$(lpad((charNum), 2, "0")).jls", sim[bi:end,:,:])
+    write("$prefix/modeloutput/universal_$(lpad((charNum), 2, "0")).log", string(psrf)*"\n")
   end
 
 end
