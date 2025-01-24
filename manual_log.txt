@@ -12,3 +12,6 @@ Nakh-Daghestanian has converged. Siouan not going anywhere, so moved it over to 
 
 24/01/2025 @ 17:50
 Remaining families converged this morning. Sampling posterior trees now and launching CTMC model. (All this for Grambank.)
+
+24/01/2025 @ 19:15
+Now running CTMC model on Grambank, all families included. 45 feature pairs in total, divided into 5 script files each running 9 pairs in series; i.e. we run (up to) 5 pairs in parallel at any given time. Expect this to take on the order of 1 day, so should be done when I'm back in the office on Monday, at which point all that remains to do is to run the correlations.
