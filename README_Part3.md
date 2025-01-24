@@ -103,9 +103,9 @@ make phyloprep DATASET=wals
 make familyprep DATASET=wals
 make revbayes DATASET=wals
 make mrbayes DATASET=wals       # TIME-CONSUMING (~1 week)
-wait
 make posterior DATASET=wals
 make model DATASET=wals         # TIME-CONSUMING (~1 day)
+make correlations DATASET=wals
 ```
 
 The order of the above operations is important.
