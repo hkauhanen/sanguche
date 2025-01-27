@@ -6,7 +6,7 @@ prefix = "../../../$dataset/"
 
 cd(@__DIR__)
 using Pkg
-Pkg.activate("..")
+Pkg.activate("../JW")
 Pkg.instantiate()
 
 ##

@@ -1,5 +1,5 @@
 using Pkg
-Pkg.activate(".")
+Pkg.activate("JW")
 Pkg.instantiate()
 
 using Distributed
