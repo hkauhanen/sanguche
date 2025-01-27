@@ -4,7 +4,7 @@ R=Rscript
 NPROC=16
 
 
-.PHONY : Jdeps preprocess data dicts sandwich phyloprep familyprep revbayes treelog posterior model
+.PHONY : Jdeps preprocess data dicts sandwich phyloprep familyprep revbayes treelog posterior model correlations
 
 
 Jdeps :
@@ -58,3 +58,6 @@ posterior : src/code/createPosterior.r
 
 model : src/code/models.sh src/code/model_1.sh src/code/model_2.sh src/code/model_3.sh src/code/model_4.sh src/code/model_5.sh src/code/modelFitting/universal.jl src/code/modelFitting/loadData.jl
 	cd src/code; bash models.sh $(DATASET)
+
+correlations : src/code/correlations.jl src/code/savage_dickey.R
+	cd src/code; $J correlations.jl $(DATASET)

@@ -1,6 +1,5 @@
 dataset = ARGS[1]
-#no_feature_pairs = 45
-no_feature_pairs = 28
+no_feature_pairs = 45
 
 cd(@__DIR__)
 
@@ -17,7 +16,7 @@ end
 
 
 using Pkg
-Pkg.activate(".")
+Pkg.activate("JW")
 Pkg.instantiate()
 ##
 
@@ -37,7 +36,7 @@ Random.seed!(818480685100856001)
 
 ##
 
-fpairs = CSV.read("../data/fpairs.txt", DataFrame, header=false)[:,1]
+fpairs = CSV.read("../../$dataset/data/fpairs.txt", DataFrame, header=false)[:,1]
 fpairs = fpairs[1:no_feature_pairs]
 
 
@@ -81,7 +80,7 @@ nrc = findall(occursin.("NRc",fpairs))
 eqs_ = []
 
 for charNum = 1:no_feature_pairs
-      sim = read("modelFitting/output/universal_$(lpad(charNum,2,"0")).jls", ModelChains)
+      sim = read("../../$dataset/modeloutput/universal_$(lpad(charNum,2,"0")).jls", ModelChains)
       s_rates = vcat([sim[:, :s_rates, :].value[:, :, k] for k = 1:2]...)
       posteriorEq = mapslices(getEqulibirium, exp.(s_rates), dims = 2)
       if charNum ∈ nrc
@@ -102,7 +101,7 @@ insertcols!(eqs, 1, :fpair => fpairs)
 cors_ = []
 
 for charNum = 1:no_feature_pairs
-      sim = read("modelFitting/output/universal_$(lpad(charNum,2,"0")).jls", ModelChains)
+      sim = read("../../$dataset/modeloutput/universal_$(lpad(charNum,2,"0")).jls", ModelChains)
       s_rates = vcat([sim[:, :s_rates, :].value[:, :, k] for k = 1:2]...)
       posteriorEq = mapslices(getEqulibirium, exp.(s_rates), dims = 2)
       if charNum ∈ nrc
@@ -281,12 +280,12 @@ output = DataFrame(
       )[:,1],
 )
 
-try
-      mkdir("../data/tables/")
-catch e
-end
+#try
+#      mkdir("../data/tables/")
+#catch e
+#end
 
-CSV.write("../data/tables/correlations.tex", output, newline="\\\\\n", delim="&")
+#CSV.write("../data/tables/correlations.tex", output, newline="\\\\\n", delim="&")
 CSV.write("../../results/$dataset/correlations.csv", output, delim=",")
 
 
@@ -303,7 +302,7 @@ bf_ = []
 
 for charNum = 1:no_feature_pairs
       sim = read(
-            "modelFitting/output/universal_$(lpad(charNum, 2, "0")).jls",
+            "../../$dataset/modeloutput/universal_$(lpad(charNum, 2, "0")).jls",
             ModelChains,
       )
       s_rates = vcat([sim[:, :s_rates, :].value[:, :, k] for k = 1:2]...)
@@ -318,10 +317,16 @@ for charNum = 1:no_feature_pairs
         mkdir("tmp")
       catch e
       end
-      CSV.write("tmp/corr_prior.csv", DataFrame(priorCor=priorCor))
-      CSV.write("tmp/corr_posterior.csv", DataFrame(posteriorCor=posteriorCor))
-      run(`Rscript savage_dickey.R`)
-      bfc = CSV.read("tmp/result.csv", DataFrame).result[1]
+
+      try
+        mkdir("tmp/$dataset")
+      catch e
+      end
+
+      CSV.write("tmp/$dataset/corr_prior.csv", DataFrame(priorCor=priorCor))
+      CSV.write("tmp/$dataset/corr_posterior.csv", DataFrame(posteriorCor=posteriorCor))
+      run(`Rscript savage_dickey.R $dataset`)
+      bfc = CSV.read("tmp/$dataset/result.csv", DataFrame).result[1]
 
       #=
       bfc = convert(Float64, read(run(`Rscript savage_dickey.R`)))
@@ -354,7 +359,7 @@ output = DataFrame(
             rpad.(round.(bf.cum_pv, sigdigits = 3), 5, "0"),
 )
 
-CSV.write("../data/tables/bfCorr.tex", output, delim="&", newline="\\\\\n")
+#CSV.write("../data/tables/bfCorr.tex", output, delim="&", newline="\\\\\n")
 CSV.write("../../results/$dataset/bfCorr.csv", output, delim=",")
 
 ##
