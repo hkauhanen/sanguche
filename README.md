@@ -88,16 +88,17 @@ Part 3 is an adaptation of the code to Jäger and Wahle (FIXME), released under 
 
 ## Instructions, Part 4: Post-processing
 
-FIXME: bring Part 4 description up to date
-
 The final part, which combines the output of Parts 2 and 3, is quick. It depends on Julia version 1.10.4 and R version 4.4.2.
 
 ```
 make Rdeps
-make posthoc
+make postprocess DATASET=wals
+make stats DATASET=wals
 ```
 
-The resulting statistics and plots will appear in `results/tables/` and `results/plots/` and `results/tables/`, respectively.
+Replace `wals` with `grambank` to produce the same for Grambank.
+
+The resulting statistics and plots will appear in `results/`, `results/tables/` and `results/plots/`.
 
 
 ## Postlude: Brief description of code logic of Part 2
