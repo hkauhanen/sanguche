@@ -1,4 +1,4 @@
-intercept,0.001,0.004,0.212,0.83
-interacting (vs. control),0.004,0.007,0.541,0.59
-unknown (vs. control),-0.001,0.004,-0.294,0.77
-TAS,-0.002,0.003,-0.823,0.42
+intercept,0.012,0.013,0.969,0.34
+interacting (vs. control),0.03,0.014,2.074,0.045*
+unknown (vs. control),-0.002,0.014,-0.17,0.87
+TAS,0,0.007,-0.058,0.95
