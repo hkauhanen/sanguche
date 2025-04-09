@@ -1,6 +1,6 @@
 # Detailed instructions, Part 3: Phylogenetic analysis
 
-This documents details how Part 3 of the analysis (see [README.md](README.md) for overall summary) is set up and run. It is divided into two major sections:
+This document details how Part 3 of the analysis (see [README.md](README.md) for overall summary) is set up and run. It is divided into two major sections:
 
 1. Installing dependencies
 1. Running the analysis
@@ -109,7 +109,6 @@ make correlations DATASET=wals
 ```
 
 The order of the above operations is important.
-```
 
 This is fine-tuned for the hardware listed above. Your mileage may vary; in particular, you may find it necessary to tune the numbers of parallel processes used in `Makefile`.
 
