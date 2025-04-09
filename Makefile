@@ -2,9 +2,11 @@ J=julia +1.5.3
 JNEW=julia +1.10.4
 R=Rscript
 NPROC=16
+#DICTS=make_dicts.jl
+DICTS=make_dicts_neoattestation.jl
 
 
-.PHONY : Jdeps preprocess data dicts sandwich phyloprep familyprep revbayes treelog posterior model correlations postprocess
+.PHONY : Jdeps preprocess data dicts sandwich phyloprep familyprep revbayes treelog posterior model correlations postprocess stats plots
 
 
 Jdeps :
@@ -23,8 +25,8 @@ $(DATASET)/data/data.csv : src/code/createData.jl src/code/params.jl $(DATASET)/
 
 dicts : $(DATASET)/dicts/*.jls
 
-$(DATASET)/dicts/*.jls : src/code/make_dicts.jl src/code/params.jl src/code/deps.jl $(DATASET)/data/data.csv
-	cd src/code; $(JNEW) make_dicts.jl $(DATASET)
+$(DATASET)/dicts/*.jls : src/code/$(DICTS) src/code/params.jl src/code/deps.jl $(DATASET)/data/data.csv
+	cd src/code; $(JNEW) $(DICTS) $(DATASET)
 
 sandwich : $(DATASET)/results/sand_results.csv $(DATASET)/results/sand_results.jls
 
@@ -59,12 +61,14 @@ posterior : src/code/createPosterior.r
 model : src/code/models.sh src/code/model_1.sh src/code/model_2.sh src/code/model_3.sh src/code/model_4.sh src/code/model_5.sh src/code/modelFitting/universal.jl src/code/modelFitting/loadData.jl
 	cd src/code; bash models.sh $(DATASET)
 
-correlations : src/code/correlations.jl src/code/savage_dickey.R
+correlations : results/$(DATASET)/correlations.csv results/$(DATASET)/bfCorr.csv
+	
+results/$(DATASET)/correlations.csv results/$(DATASET)/bfCorr.csv &: src/code/correlations.jl src/code/savage_dickey.R
 	cd src/code; $J correlations.jl $(DATASET)
 
 postprocess : results/$(DATASET)/results_combined.csv
 	
-results/$(DATASET)/results_combined.csv : src/code/postprocess.jl
+results/$(DATASET)/results_combined.csv : src/code/postprocess.jl results/$(DATASET)/correlations.csv results/$(DATASET)/bfCorr.csv results/$(DATASET)/sand_results.csv
 	cd src/code; $(JNEW) postprocess.jl $(DATASET)
 
 stats : results/stats_$(DATASET).html
@@ -72,4 +76,7 @@ stats : results/stats_$(DATASET).html
 results/stats_$(DATASET).html : src/stats/stats.Rmd results/$(DATASET)/results_combined.csv
 	cd src/stats; $R runstats.R $(DATASET)
 
+plots : results/plots/*.png
 
+results/plots/*.png : src/stats/plots.R src/stats/kloop.R
+	cd src/stats; $R plots.R $(DATASET)
