@@ -1,5 +1,4 @@
-#dataset <- commandArgs(trailingOnly=TRUE)[1]
-dataset <- "grambank"
+dataset <- commandArgs(trailingOnly=TRUE)[1]
 
 require(tidyverse)
 require(ggrepel)
