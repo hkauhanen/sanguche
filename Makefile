@@ -2,8 +2,8 @@ J=julia +1.5.3
 JNEW=julia +1.10.4
 R=Rscript
 NPROC=16
-#DICTS=make_dicts.jl
-DICTS=make_dicts_neoattestation.jl
+DICTS=make_dicts.jl
+#DICTS=make_dicts_neoattestation.jl
 
 
 .PHONY : Jdeps preprocess data dicts sandwich phyloprep familyprep revbayes treelog posterior model correlations postprocess stats plots
@@ -78,5 +78,5 @@ results/stats_$(DATASET).html : src/stats/stats.Rmd results/$(DATASET)/results_c
 
 plots : results/plots/*.png
 
-results/plots/*.png : src/stats/plots.R src/stats/kloop.R
+results/plots/*.png : src/stats/plots.R src/stats/kloop.R results/$(DATASET)/results_combined.csv
 	cd src/stats; $R plots.R $(DATASET)
