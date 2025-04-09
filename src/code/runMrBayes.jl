@@ -63,7 +63,8 @@ Pkg.build("PyCall")
 @everywhere data = CSV.read("../../$dataset/data/charMtx.csv", DataFrame)
 
 ##
-@everywhere worldGlotF = download("https://osf.io/jyvgt/download", "../../$dataset/data/world_fullGlot.tre")
+#@everywhere worldGlotF = download("https://osf.io/jyvgt/download", "../../$dataset/data/world_fullGlot.tre")
+@everywhere worldGlotF = download("https://osf.io/download/jyvgt/", "../../$dataset/data/world_fullGlot.tre")
 
 @everywhere glot = ete3.Tree(worldGlotF)
 
