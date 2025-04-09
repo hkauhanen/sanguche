@@ -94,6 +94,7 @@ The final part, which combines the output of Parts 2 and 3, is quick. It depends
 make Rdeps
 make postprocess DATASET=wals
 make stats DATASET=wals
+make plots DATASET=wals
 ```
 
 Replace `wals` with `grambank` to produce the same for Grambank.
