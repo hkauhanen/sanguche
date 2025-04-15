@@ -51,7 +51,8 @@ scale_fill_sanguche2 <- function(...) {
 data <- read.csv(paste0("../../results/", dataset, "/results_combined.csv"), na.strings="missing")
 data$k <- data$degree
 
-data_onek <- data[data$k == 850, ]
+#data_onek <- data[data$k == 850, ]
+data_onek <- data[data$k == 1500, ]
 
 
 data_onek$Typology <- factor(data_onek$status, levels=c("interacting", "unknown", "non-interacting"))
@@ -60,6 +61,7 @@ data_onek$Typology <- factor(data_onek$status, levels=c("interacting", "unknown"
 
 g <- ggplot(data_onek, aes(x=Typology, fill=Typology, y=Delta_under))
 g <- g + geom_boxplot(alpha=0.5)
+g <- g + geom_jitter()
 g <- g + deftheme()
 g <- g + scale_fill_sanguche2()
 g <- g + theme(legend.position="none")
@@ -69,6 +71,7 @@ g1 <- g
 
 g <- ggplot(data_onek, aes(x=Typology, fill=Typology, y=Delta_over))
 g <- g + geom_boxplot(alpha=0.5)
+g <- g + geom_jitter()
 g <- g + deftheme()
 g <- g + scale_fill_sanguche2()
 g <- g + theme(legend.position="none")

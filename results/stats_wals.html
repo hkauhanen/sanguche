@@ -477,21 +477,20 @@ print(summary(mod1_under_w))</code></pre>
 ## lm(formula = Delta_under ~ status + skewness, data = wals)
 ## 
 ## Residuals:
-##       Min        1Q    Median        3Q       Max 
-## -0.094279 -0.033051 -0.005241  0.028882  0.119135 
+##      Min       1Q   Median       3Q      Max 
+## -0.08880 -0.02334 -0.01166  0.02047  0.10312 
 ## 
 ## Coefficients:
-##                    Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)       -0.022174   0.015944  -1.391   0.1720    
-## statusinteracting  0.041353   0.018278   2.263   0.0292 *  
-## statusunknown      0.011039   0.017542   0.629   0.5327    
-## skewness           0.061262   0.008863   6.912 2.49e-08 ***
-## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+##                     Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept)        0.0206908  0.0178020   1.162    0.255
+## statusinteracting  0.0272130  0.0187403   1.452    0.157
+## statusunknown     -0.0008955  0.0198461  -0.045    0.964
+## skewness          -0.0045284  0.0095804  -0.473    0.640
 ## 
-## Residual standard error: 0.04873 on 40 degrees of freedom
-## Multiple R-squared:  0.5856, Adjusted R-squared:  0.5545 
-## F-statistic: 18.84 on 3 and 40 DF,  p-value: 8.928e-08</code></pre>
+## Residual standard error: 0.0443 on 29 degrees of freedom
+##   (11 observations deleted due to missingness)
+## Multiple R-squared:  0.0981, Adjusted R-squared:  0.004804 
+## F-statistic: 1.051 on 3 and 29 DF,  p-value: 0.3848</code></pre>
 </div>
 <div id="over-represented-types-delta" class="section level2">
 <h2>Over-represented types (<span class="math inline">\(\Delta^+\)</span>)</h2>
@@ -513,20 +512,20 @@ print(summary(mod1_over_w))</code></pre>
 ## 
 ## Residuals:
 ##       Min        1Q    Median        3Q       Max 
-## -0.164144 -0.003287  0.012859  0.024770  0.066825 
+## -0.048059 -0.003654  0.001173  0.004853  0.082403 
 ## 
 ## Coefficients:
 ##                    Estimate Std. Error t value Pr(&gt;|t|)  
-## (Intercept)       -0.003366   0.015097  -0.223   0.8247  
-## statusinteracting -0.009428   0.017306  -0.545   0.5889  
-## statusunknown     -0.027194   0.016609  -1.637   0.1094  
-## skewness          -0.018877   0.008392  -2.249   0.0301 *
+## (Intercept)       -0.003511   0.005926  -0.592   0.5569  
+## statusinteracting -0.012612   0.006794  -1.857   0.0708 .
+## statusunknown     -0.004647   0.006520  -0.713   0.4801  
+## skewness           0.002202   0.003294   0.668   0.5078  
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.04614 on 40 degrees of freedom
-## Multiple R-squared:   0.17,  Adjusted R-squared:  0.1077 
-## F-statistic: 2.731 on 3 and 40 DF,  p-value: 0.05645</code></pre>
+## Residual standard error: 0.01811 on 40 degrees of freedom
+## Multiple R-squared:  0.08519,    Adjusted R-squared:  0.01658 
+## F-statistic: 1.242 on 3 and 40 DF,  p-value: 0.3074</code></pre>
 </div>
 </div>
 <div id="model-2-continuous-predictor" class="section level1">
@@ -553,20 +552,19 @@ print(summary(mod1_under_w))</code></pre>
 ## lm(formula = Delta_under ~ abs_corrected_phi + skewness, data = wals)
 ## 
 ## Residuals:
-##       Min        1Q    Median        3Q       Max 
-## -0.098193 -0.027321 -0.003687  0.023048  0.098904 
+##      Min       1Q   Median       3Q      Max 
+## -0.09926 -0.02435 -0.01055  0.01711  0.10906 
 ## 
 ## Coefficients:
-##                    Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)       -0.027944   0.015045  -1.857   0.0705 .  
-## abs_corrected_phi  0.111005   0.043351   2.561   0.0142 *  
-## skewness           0.061506   0.008638   7.120 1.12e-08 ***
-## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+##                    Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept)        0.021164   0.017582   1.204    0.238
+## abs_corrected_phi  0.038664   0.046367   0.834    0.411
+## skewness          -0.003831   0.009776  -0.392    0.698
 ## 
-## Residual standard error: 0.04759 on 41 degrees of freedom
-## Multiple R-squared:  0.5949, Adjusted R-squared:  0.5751 
-## F-statistic:  30.1 on 2 and 41 DF,  p-value: 9.028e-09</code></pre>
+## Residual standard error: 0.04526 on 30 degrees of freedom
+##   (11 observations deleted due to missingness)
+## Multiple R-squared:  0.02581,    Adjusted R-squared:  -0.03914 
+## F-statistic: 0.3974 on 2 and 30 DF,  p-value: 0.6756</code></pre>
 </div>
 <div id="under-represented-types-delta--only-interacting-typologies" class="section level2">
 <h2>Under-represented types (<span class="math inline">\(\Delta^-\)</span>), only interacting
@@ -593,19 +591,17 @@ print(summary(mod1_under_w))</code></pre>
 ## 
 ## Residuals:
 ##      Min       1Q   Median       3Q      Max 
-## -0.06274 -0.04171 -0.01606  0.03757  0.10474 
+## -0.05194 -0.03794 -0.02719  0.02512  0.11989 
 ## 
 ## Coefficients:
-##                   Estimate Std. Error t value Pr(&gt;|t|)   
-## (Intercept)       -0.04311    0.08861  -0.486  0.63712   
-## abs_corrected_phi  0.10275    0.17032   0.603  0.55978   
-## skewness           0.07548    0.02168   3.481  0.00591 **
-## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+##                    Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept)        0.060338   0.087799   0.687    0.508
+## abs_corrected_phi -0.063752   0.168756  -0.378    0.713
+## skewness           0.005973   0.021484   0.278    0.787
 ## 
-## Residual standard error: 0.05728 on 10 degrees of freedom
-## Multiple R-squared:  0.5618, Adjusted R-squared:  0.4742 
-## F-statistic: 6.411 on 2 and 10 DF,  p-value: 0.01615</code></pre>
+## Residual standard error: 0.05675 on 10 degrees of freedom
+## Multiple R-squared:  0.03464,    Adjusted R-squared:  -0.1584 
+## F-statistic: 0.1794 on 2 and 10 DF,  p-value: 0.8384</code></pre>
 </div>
 <div id="over-represented-types-delta-1" class="section level2">
 <h2>Over-represented types (<span class="math inline">\(\Delta^+\)</span>)</h2>
@@ -625,20 +621,18 @@ print(summary(mod1_over_w))</code></pre>
 ## lm(formula = Delta_over ~ abs_corrected_phi + skewness, data = wals)
 ## 
 ## Residuals:
-##      Min       1Q   Median       3Q      Max 
-## -0.17750 -0.01125  0.01448  0.03028  0.05540 
+##       Min        1Q    Median        3Q       Max 
+## -0.047304 -0.006682  0.002009  0.005732  0.083357 
 ## 
 ## Coefficients:
-##                    Estimate Std. Error t value Pr(&gt;|t|)  
-## (Intercept)       -0.018231   0.014852  -1.228   0.2266  
-## abs_corrected_phi  0.020501   0.042795   0.479   0.6345  
-## skewness          -0.019793   0.008528  -2.321   0.0253 *
-## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+##                    Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept)       -0.004811   0.005808  -0.828    0.412
+## abs_corrected_phi -0.018796   0.016735  -1.123    0.268
+## skewness           0.001900   0.003335   0.570    0.572
 ## 
-## Residual standard error: 0.04698 on 41 degrees of freedom
-## Multiple R-squared:  0.118,  Adjusted R-squared:  0.07497 
-## F-statistic: 2.742 on 2 and 41 DF,  p-value: 0.07624</code></pre>
+## Residual standard error: 0.01837 on 41 degrees of freedom
+## Multiple R-squared:  0.03533,    Adjusted R-squared:  -0.01173 
+## F-statistic: 0.7507 on 2 and 41 DF,  p-value: 0.4784</code></pre>
 </div>
 <div id="over-represented-types-delta-interacting-typologies-only" class="section level2">
 <h2>Over-represented types (<span class="math inline">\(\Delta^+\)</span>), interacting typologies
@@ -661,19 +655,17 @@ print(summary(mod1_over_w))</code></pre>
 ## 
 ## Residuals:
 ##       Min        1Q    Median        3Q       Max 
-## -0.070422 -0.017107  0.004242  0.029349  0.043864 
+## -0.015218 -0.004623  0.003480  0.005236  0.016459 
 ## 
 ## Coefficients:
-##                   Estimate Std. Error t value Pr(&gt;|t|)  
-## (Intercept)       -0.04275    0.05805  -0.736   0.4784  
-## abs_corrected_phi  0.10855    0.11158   0.973   0.3536  
-## skewness          -0.03028    0.01420  -2.132   0.0589 .
-## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+##                    Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept)       -0.021064   0.015389  -1.369    0.201
+## abs_corrected_phi  0.034958   0.029580   1.182    0.265
+## skewness          -0.004941   0.003766  -1.312    0.219
 ## 
-## Residual standard error: 0.03752 on 10 degrees of freedom
-## Multiple R-squared:  0.4578, Adjusted R-squared:  0.3493 
-## F-statistic: 4.221 on 2 and 10 DF,  p-value: 0.04687</code></pre>
+## Residual standard error: 0.009947 on 10 degrees of freedom
+## Multiple R-squared:  0.3397, Adjusted R-squared:  0.2076 
+## F-statistic: 2.572 on 2 and 10 DF,  p-value: 0.1255</code></pre>
 </div>
 </div>
 

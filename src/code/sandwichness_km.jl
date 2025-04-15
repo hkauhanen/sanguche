@@ -69,14 +69,14 @@ end
   datat = subset(data, :type => (t -> t .∈ [typeset]))
 
   # their neighbours
-  neighbours = subset(dists, :language_ID => a -> a .∈ [datat.Language_ID]).neighbour_ID
+  neighbours = subset(dists, :language_ID => (a -> a .∈ [datat.Language_ID])).neighbour_ID
 
   if length(neighbours) == 0
     println("WARNING: empty neighbourhood (this shouldn't happen)")
   end
 
   # those neighbours' data
-  datan = subset(data, :Language_ID => a -> a .∈ [neighbours])
+  datan = subset(data, :Language_ID => (a -> a .∈ [neighbours]))
 
   # counts of different types among those neighbours
   cnts = levelcounter(["11", "12", "21", "22"], datan.type)
@@ -98,13 +98,13 @@ end
 
 # computes the various "sandwichness" metrics
 @everywhere function sandwichness(r, results, Ddata, Ddists)
-  resultsh = subset(results, :pair => (p -> p .== r.pair))
+  #resultsh = subset(results, :pair => (p -> p .== r.pair))
   datah = Ddata[r.pair]
   distsh = Ddists[r.pair]
   
   degree = r.degree
 
-  distsh = subset(distsh, :distance => i -> i .<= degree)
+  distsh = subset(distsh, :distance => (i -> i .<= degree))
 
   out = DataFrame(pair=r.pair)
 
@@ -112,7 +112,8 @@ end
   pref_types = []
   dispref_types = []
   for type in types
-    if resultsh[1, "pref"*type] == 0
+    #if resultsh[1, "pref"*type] == 0
+    if r["pref"*type] == 0
       push!(dispref_types, type)
     else
       push!(pref_types, type)
@@ -120,8 +121,8 @@ end
   end
 
   out.H .= NE(types, datah, distsh)
-  out.H_pref .= NE(pref_types, datah, distsh)
-  out.H_dispref .= NE(dispref_types, datah, distsh)
+  out.H_pref .= length(pref_types) == 0 ? missing : NE(pref_types, datah, distsh)
+  out.H_dispref .= length(dispref_types) == 0 ? missing : NE(dispref_types, datah, distsh)
   out.N .= nrow(datah)
   out.mean_distance .= mean(distsh.distance)
   out.sd_distance .= std(distsh.distance)
@@ -164,5 +165,4 @@ transform!(merged, :pair => (p -> stringtonumber.(p)) => :pair_ID)
 # serialize results to file, and to a CSV also (why not)
 serialize("../results/$dataset/sand_results.jls", merged)
 CSV.write("../results/$dataset/sand_results.csv", merged)
-
 

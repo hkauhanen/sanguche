@@ -2,8 +2,8 @@ J=julia +1.5.3
 JNEW=julia +1.10.4
 R=Rscript
 NPROC=2
-DICTS=make_dicts.jl
-#DICTS=make_dicts_neoattestation.jl
+#DICTSCRIPT=make_dicts.jl
+DICTSCRIPT=make_dicts_neoattestation_better.jl
 
 
 .PHONY : Jdeps preprocess data dicts sandwich phyloprep familyprep revbayes treelog posterior model correlations postprocess stats plots
@@ -23,14 +23,14 @@ $(DATASET)/data/database/*.csv : src/code/preprocess_$(DATASET).jl src/code/para
 $(DATASET)/data/data.csv : src/code/createData.jl src/code/params.jl $(DATASET)/data/database/*.csv
 	cd src/code; $J createData.jl $(DATASET)
 
-dicts : $(DATASET)/dicts/*.jls
+dicts : $(DATASET)/dicts/Ddata.jls $(DATASET)/dicts/Ddists.jls $(DATASET)/dicts/grid.jls $(DATASET)/dists.csv
 
-$(DATASET)/dicts/*.jls : src/code/$(DICTS) src/code/params.jl src/code/deps.jl $(DATASET)/data/data.csv
-	cd src/code; $(JNEW) $(DICTS) $(DATASET)
+$(DATASET)/dicts/Ddata.jls $(DATASET)/dicts/Ddists.jls $(DATASET)/dicts/grid.jls $(DATASET)/dists.csv &: src/code/$(DICTSCRIPT) src/code/params.jl src/code/deps.jl $(DATASET)/data/data.csv
+	cd src/code; $(JNEW) $(DICTSCRIPT) $(DATASET)
 
-sandwich : $(DATASET)/results/sand_results.csv $(DATASET)/results/sand_results.jls
+sandwich : results/$(DATASET)/sand_results.csv results/$(DATASET)/sand_results.jls
 
-$(DATASET)/results/sand_results.csv $(DATASET)/results/sand_results.jls &: src/code/sandwichness_km.jl src/code/params.jl src/code/deps.jl $(DATASET)/dicts/*.jls
+results/$(DATASET)/sand_results.csv results/$(DATASET)/sand_results.jls &: src/code/sandwichness_km.jl src/code/params.jl src/code/deps.jl $(DATASET)/dicts/Ddata.jls $(DATASET)/dicts/Ddists.jls $(DATASET)/dicts/grid.jls
 	cd src/code; $(JNEW) -p $(NPROC) sandwichness_km.jl $(DATASET)
 
 phyloprep : src/code/createPhyloData.jl src/code/params.jl $(DATASET)/data/data.csv $(DATASET)/data/database/*.csv
