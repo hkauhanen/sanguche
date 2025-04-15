@@ -2,7 +2,7 @@
 include_controls = true
 
 # neighbourhood sizes 
-degrees = 100:50:2000
+degrees = 100:100:7500
 #degrees = [650, 850]
 
 # features

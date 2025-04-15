@@ -111,10 +111,10 @@ dev.off()
 
 
 
-kl1 <- kloop(data, unique(data$dataset), variable="Delta_under", indvariable="status", klim=2000)
+kl1 <- kloop(data, unique(data$dataset), variable="Delta_under", indvariable="status", klim=10000)
 kl1$predictor <- "categorical"
 
-kl2 <- kloop(data, unique(data$dataset), variable="Delta_under", indvariable="abs_corrected_phi", klim=2000)
+kl2 <- kloop(data, unique(data$dataset), variable="Delta_under", indvariable="abs_corrected_phi", klim=10000)
 kl2$predictor <- "continuous"
 
 kl <- rbind(kl1, kl2)
@@ -146,10 +146,10 @@ dev.off()
 
 
 
-kl1 <- kloop(data, unique(data$dataset), variable="Delta_over", indvariable="status", klim=2000)
+kl1 <- kloop(data, unique(data$dataset), variable="Delta_over", indvariable="status", klim=10000)
 kl1$predictor <- "categorical"
 
-kl2 <- kloop(data, unique(data$dataset), variable="Delta_over", indvariable="abs_corrected_phi", klim=2000)
+kl2 <- kloop(data, unique(data$dataset), variable="Delta_over", indvariable="abs_corrected_phi", klim=10000)
 kl2$predictor <- "continuous"
 
 kl <- rbind(kl1, kl2)
