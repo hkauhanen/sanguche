@@ -1,4 +1,8 @@
 kloop <- function(data, dataset, variable = "Delta_under", indvariable = "status", klim = 2000) {
+  data$k <- data$degree
+
+  data <- data[data$status != "unknown", ]
+
   data$status <- factor(data$status)
   data$status <- relevel(data$status, ref="non-interacting")
 

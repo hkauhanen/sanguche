@@ -2,7 +2,7 @@
 include_controls = true
 
 # neighbourhood sizes 
-degrees = 100:100:7500
+degrees = 50:50:2000
 #degrees = [650, 850]
 
 # features
@@ -25,3 +25,5 @@ fDict = Dict(fPairsc)
 features_pretty = copy(features)
 [replace!(features_pretty, p) for p in fPairs]
 
+# alpha level for deciding underattested/overattested
+alpha = 0.5

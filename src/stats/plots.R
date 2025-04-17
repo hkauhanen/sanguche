@@ -52,7 +52,7 @@ data <- read.csv(paste0("../../results/", dataset, "/results_combined.csv"), na.
 data$k <- data$degree
 
 #data_onek <- data[data$k == 850, ]
-data_onek <- data[data$k == 1500, ]
+data_onek <- data[data$k == 500, ]
 
 
 data_onek$Typology <- factor(data_onek$status, levels=c("interacting", "unknown", "non-interacting"))

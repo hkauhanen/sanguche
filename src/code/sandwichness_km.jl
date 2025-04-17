@@ -44,102 +44,103 @@ end
 
 # count number of times each element of 'x' occurs in 'y'
 @everywhere function levelcounter(x, y)
-  out = Dict{Any,Int}()
+    out = Dict{Any,Int}()
 
-  for elx in x
-    out[elx] = 0
-  end
-
-  for elx in x
-    for ely in y
-      if ely == elx
-        out[elx] = out[elx] + 1
-      end
+    for elx in x
+        out[elx] = 0
     end
-  end
 
-  out
+    for elx in x
+        for ely in y
+            if ely == elx
+                out[elx] = out[elx] + 1
+            end
+        end
+    end
+
+    out
 end
 
 
 # compute neighbourhood entropy for types in 'typeset'
 @everywhere function NE(typeset, data, dists)
-  # cycle through types
-  # languages in typeset
-  datat = subset(data, :type => (t -> t .∈ [typeset]))
+    # cycle through types
+    # languages in typeset
+    datat = subset(data, :type => (t -> t .∈ [typeset]))
 
-  # their neighbours
-  neighbours = subset(dists, :language_ID => (a -> a .∈ [datat.Language_ID])).neighbour_ID
+    # their neighbours
+    neighbours = subset(dists, :language_ID => (a -> a .∈ [datat.Language_ID])).neighbour_ID
 
-  if length(neighbours) == 0
-    println("WARNING: empty neighbourhood (this shouldn't happen)")
-  end
-
-  # those neighbours' data
-  datan = subset(data, :Language_ID => (a -> a .∈ [neighbours]))
-
-  # counts of different types among those neighbours
-  cnts = levelcounter(["11", "12", "21", "22"], datan.type)
-
-  # total number of neighbours
-  total = sum(values(cnts))
-
-  # entropy
-  entropy = 0
-  for k in keys(cnts)
-    if cnts[k] > 0
-      entropy = entropy - (cnts[k]/total)*log2(cnts[k]/total)
+    if length(neighbours) == 0
+        println("WARNING: empty neighbourhood (this shouldn't happen)")
     end
-  end
 
-  return entropy
+    # those neighbours' data
+    datan = subset(data, :Language_ID => (a -> a .∈ [neighbours]))
+
+    # counts of different types among those neighbours
+    cnts = levelcounter(["11", "12", "21", "22"], datan.type)
+
+    # total number of neighbours
+    total = sum(values(cnts))
+
+    # entropy
+    entropy = 0
+    for k in keys(cnts)
+        if cnts[k] > 0
+            entropy = entropy - (cnts[k]/total)*log2(cnts[k]/total)
+        end
+    end
+
+    return entropy
 end
 
 
 # computes the various "sandwichness" metrics
 @everywhere function sandwichness(r, results, Ddata, Ddists)
-  #resultsh = subset(results, :pair => (p -> p .== r.pair))
-  datah = Ddata[r.pair]
-  distsh = Ddists[r.pair]
-  
-  degree = r.degree
+    #resultsh = subset(results, :pair => (p -> p .== r.pair))
+    datah = Ddata[r.pair]
+    distsh = Ddists[r.pair]
 
-  distsh = subset(distsh, :distance => (i -> i .<= degree))
+    degree = r.degree
 
-  out = DataFrame(pair=r.pair)
+    distsh = subset(distsh, :distance => (i -> i .<= degree))
 
-  types = ["11", "12", "21", "22"]
-  pref_types = []
-  dispref_types = []
-  for type in types
-    #if resultsh[1, "pref"*type] == 0
-    if r["pref"*type] == 0
-      push!(dispref_types, type)
-    else
-      push!(pref_types, type)
+    out = DataFrame(pair=r.pair)
+
+    types = ["11", "12", "21", "22"]
+    pref_types = []
+    dispref_types = []
+    for type in types
+        #if resultsh[1, "pref"*type] == 0
+        if r["pref"*type] == 1
+            push!(pref_types, type)
+        end
+        if r["dispref"*type] == 1
+            push!(dispref_types, type)
+        end
     end
-  end
 
-  out.H .= NE(types, datah, distsh)
-  out.H_pref .= length(pref_types) == 0 ? missing : NE(pref_types, datah, distsh)
-  out.H_dispref .= length(dispref_types) == 0 ? missing : NE(dispref_types, datah, distsh)
-  out.N .= nrow(datah)
-  out.mean_distance .= mean(distsh.distance)
-  out.sd_distance .= std(distsh.distance)
+    out.H .= NE(types, datah, distsh)
+    out.H_pref .= length(pref_types) == 0 ? missing : NE(pref_types, datah, distsh)
+    out.H_dispref .= length(dispref_types) == 0 ? missing : NE(dispref_types, datah, distsh)
+    out.N .= nrow(datah)
+    out.mean_distance .= mean(distsh.distance)
+    out.sd_distance .= std(distsh.distance)
 
-  out.mean_nsize .= nrow(distsh)/nrow(datah)
+    out.mean_nsize .= nrow(distsh)/nrow(datah)
 
-  return out
+    return out
 end
 
 
 sand = @distributed (vcat) for r in eachrow(results)
-  out = DataFrame(r)
-  out = out[:, Between(:pair, :class)]
-  out.degree .= r.degree
+    out = DataFrame(r)
+    out = out[:, Between(:pair, :class)]
+    out.degree .= r.degree
 
-  geo_results = sandwichness(r, results, Ddata, Ddists)
-  innerjoin(out, geo_results, on=:pair)
+    geo_results = sandwichness(r, results, Ddata, Ddists)
+    innerjoin(out, geo_results, on=:pair)
 end
 
 

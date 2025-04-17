@@ -7,7 +7,6 @@
 include("deps.jl")
 
 
-dispref_alpha = 0.01
 
 
 using CodecZlib
@@ -26,6 +25,11 @@ dataset = ARGS[1]
 
 include("features_$dataset.jl")
 include("params.jl")
+
+
+# alpha is defined in params.jl
+dispref_alpha = alpha
+pref_alpha = alpha
 
 
 if dataset == "wals"
@@ -77,11 +81,21 @@ results.freq12 .= 0.0
 results.freq21 .= 0.0
 results.freq22 .= 0.0
 
-# 0 means dispreferred, 1 means not dispreferred
-results.pref11 .= 1
-results.pref12 .= 1
-results.pref21 .= 1
-results.pref22 .= 1
+results.pref11 .= 0
+results.pref12 .= 0
+results.pref21 .= 0
+results.pref22 .= 0
+
+results.dispref11 .= 0
+results.dispref12 .= 0
+results.dispref21 .= 0
+results.dispref22 .= 0
+
+results.pref11_pval .= 1.0
+results.pref12_pval .= 1.0
+results.pref21_pval .= 1.0
+results.pref22_pval .= 1.0
+
 results.dispref11_pval .= 1.0
 results.dispref12_pval .= 1.0
 results.dispref21_pval .= 1.0
@@ -123,10 +137,17 @@ for r in 1:nrow(results)
       dis = Distributions.Hypergeometric(Ni, N - Ni, Nj)
       local pval = sum([Distributions.pdf(dis, y) for y in 0:X])
 
+      # probability of more than X languages in off-off state
+      local pval2 = sum([Distributions.pdf(dis, y) for y in X:N])
+
       results[r, "dispref" * string(x) * string(y) * "_pval"] = pval
+      results[r, "pref" * string(x) * string(y) * "_pval"] = pval2
 
       if pval < dispref_alpha
-          results[r, "pref" * string(x) * string(y)] = 0
+          results[r, "dispref" * string(x) * string(y)] = 1
+      end
+      if pval2 < pref_alpha
+          results[r, "pref" * string(x) * string(y)] = 1
       end
     end
   end
@@ -136,7 +157,8 @@ if !isfile("./dicts/dists.csv")
   if dataset == "wals"
     download("https://raw.githubusercontent.com/hkauhanen/wals-distances/master/wals-distances-under5000km.csv", "./dicts/dists.csv")
   elseif dataset == "grambank"
-    download("https://raw.githubusercontent.com/hkauhanen/grambank-distances/main/grambank-distances-under5000km.csv", "./dicts/dists.csv")
+    #download("https://raw.githubusercontent.com/hkauhanen/grambank-distances/main/grambank-distances-under5000km.csv", "./dicts/dists.csv")
+    cp("/home/hkauhanen/Work/grambank-distances-random/grambank-distances-under5000km.csv", "./dicts/dists.csv")
   end
 end
 
