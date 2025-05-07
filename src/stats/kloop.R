@@ -1,14 +1,18 @@
-kloop <- function(data, dataset, variable = "Delta_under", indvariable = "status", klim = 2000) {
+require(emmeans)
+require(reshape2)
+
+
+kloop <- function(data, dataset, var, klim = 2000) {
+  data <- data[data$dataset == dataset, ]
+
   data$k <- data$degree
+
+  data <- data[data$k <= klim, ]
 
   data <- data[data$status != "unknown", ]
 
   data$status <- factor(data$status)
   data$status <- relevel(data$status, ref="non-interacting")
-
-  data <- data[data$k <= klim, ]
-
-  data <- data[data$dataset == dataset, ]
 
   ks <- unique(data$k)
 
@@ -17,14 +21,15 @@ kloop <- function(data, dataset, variable = "Delta_under", indvariable = "status
   for (k in ks) {
     datah <- data[data$k == k, ]
 
-    mod1 <- summary(lm(eval(parse(text=variable))~eval(parse(text=indvariable))+skewness, datah))
+    datah <- melt(datah, id.vars=c("pair", "status", "skewness"), measure.vars=c("Delta_over", "Delta_under"))
 
-    if (k == 1000) {
-      print(mod1)
-    }
-    
-    df[df$k == k, ]$estimate <- mod1$coefficients[2, "Estimate"]
-    df[df$k == k, ]$pvalue <- mod1$coefficients[2, "Pr(>|t|)"]
+    mod <- lm(value ~ variable*status + skewness, datah)
+
+    con <- emmeans(mod, specs = pairwise ~ variable:status)$contrasts
+    con <- as.data.frame(con)
+
+    df[df$k == k, ]$estimate = con[con$contrast == paste0("(", var, " non-interacting) - ", var, " interacting"), ]$estimate
+    df[df$k == k, ]$pvalue = con[con$contrast == paste0("(", var, " non-interacting) - ", var, " interacting"), ]$p.value
   }
 
   df

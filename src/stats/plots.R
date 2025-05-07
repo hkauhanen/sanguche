@@ -111,13 +111,14 @@ dev.off()
 
 
 
-kl1 <- kloop(data, unique(data$dataset), variable="Delta_under", indvariable="status", klim=10000)
+kl1 <- kloop(data, unique(data$dataset), var="Delta_under", klim=2000)
 kl1$predictor <- "categorical"
 
-kl2 <- kloop(data, unique(data$dataset), variable="Delta_under", indvariable="abs_corrected_phi", klim=10000)
-kl2$predictor <- "continuous"
+#kl2 <- kloop(data, unique(data$dataset), variable="Delta_under", indvariable="abs_corrected_phi", klim=10000)
+#kl2$predictor <- "continuous"
 
-kl <- rbind(kl1, kl2)
+#kl <- rbind(kl1, kl2)
+kl <- kl1
 
 g1 <- ggplot(kl, aes(x=k, y=estimate, pch=predictor, color=predictor)) + geom_point() + geom_line()
 g1 <- g1 + deftheme()
@@ -146,13 +147,14 @@ dev.off()
 
 
 
-kl1 <- kloop(data, unique(data$dataset), variable="Delta_over", indvariable="status", klim=10000)
+kl1 <- kloop(data, unique(data$dataset), var="Delta_over", klim=2000)
 kl1$predictor <- "categorical"
 
-kl2 <- kloop(data, unique(data$dataset), variable="Delta_over", indvariable="abs_corrected_phi", klim=10000)
-kl2$predictor <- "continuous"
+#kl2 <- kloop(data, unique(data$dataset), variable="Delta_over", indvariable="abs_corrected_phi", klim=10000)
+#kl2$predictor <- "continuous"
 
-kl <- rbind(kl1, kl2)
+#kl <- rbind(kl1, kl2)
+kl <- kl1
 
 g1 <- ggplot(kl, aes(x=k, y=estimate, pch=predictor, color=predictor)) + geom_point() + geom_line()
 g1 <- g1 + deftheme()

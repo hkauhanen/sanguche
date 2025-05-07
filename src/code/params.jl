@@ -26,4 +26,4 @@ features_pretty = copy(features)
 [replace!(features_pretty, p) for p in fPairs]
 
 # alpha level for deciding underattested/overattested
-alpha = 0.5
+alpha = 0.05
