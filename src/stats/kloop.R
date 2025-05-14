@@ -28,7 +28,7 @@ kloop <- function(data, dataset, var, klim = 2000) {
     con <- emmeans(mod, specs = pairwise ~ variable:status)$contrasts
     con <- as.data.frame(con)
 
-    df[df$k == k, ]$estimate = con[con$contrast == paste0("(", var, " non-interacting) - ", var, " interacting"), ]$estimate
+    df[df$k == k, ]$estimate = -con[con$contrast == paste0("(", var, " non-interacting) - ", var, " interacting"), ]$estimate
     df[df$k == k, ]$pvalue = con[con$contrast == paste0("(", var, " non-interacting) - ", var, " interacting"), ]$p.value
     #df[df$k == k, ]$estimate = con[con$contrast == paste0(var, " interacting - (", var, " non-interacting)"), ]$estimate
     #df[df$k == k, ]$pvalue = con[con$contrast == paste0(var, " interacting - (", var, " non-interacting)"), ]$p.value
