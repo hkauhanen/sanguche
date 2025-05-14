@@ -111,7 +111,7 @@ dev.off()
 
 
 
-kl1 <- kloop(data, unique(data$dataset), var="Delta_under", klim=2000)
+kl1 <- kloop(data, unique(data$dataset), var="Delta_under", klim=4000)
 kl1$predictor <- "categorical"
 
 #kl2 <- kloop(data, unique(data$dataset), variable="Delta_under", indvariable="abs_corrected_phi", klim=10000)
@@ -128,6 +128,16 @@ g1 <- g1 + xlab(expression("Neighbourhood radius limit"~italic(R)))
 g1 <- g1 + ylab("Estimate")
 g1 <- g1 + ggtitle("(a)")
 
+g0 <- g1
+
+g1 <- ggplot(kl, aes(x=k, y=effect.size, pch=predictor, color=predictor)) + geom_point() + geom_line()
+g1 <- g1 + deftheme()
+g1 <- g1 + scale_color_sanguche()
+g1 <- g1 + theme(legend.position="none")
+g1 <- g1 + xlab(expression("Neighbourhood radius limit"~italic(R)))
+g1 <- g1 + ylab("Effect size")
+g1 <- g1 + ggtitle("Delta-difference for UNDERrepresented types")
+
 g2 <- ggplot(kl, aes(x=k, y=pvalue, pch=predictor, color=predictor)) + geom_point() + geom_line()
 g2 <- g2 + deftheme()
 g2 <- g2 + scale_color_sanguche()
@@ -137,17 +147,17 @@ g2 <- g2 + ylab(expression(italic(p)*"-value"))
 g2 <- g2 + scale_y_log10() + annotation_logticks(sides="l")
 g2 <- g2 + geom_hline(yintercept=0.01, lty=2)
 g2 <- g2 + annotate("text", x=1850, y=0.006, label=expression(italic(p)==0.01), family="serif", parse=TRUE)
-g2 <- g2 + ggtitle("(b)")
+#g2 <- g2 + ggtitle("(b) p-value")
 
 
-png("../../results/plots/kloop_under.png", res=400, height=1500, width=2700)
-print(grid.arrange(g1, g2, nrow=1))
+png("../../results/plots/kloop_under.png", res=400, height=2700, width=2700)
+print(grid.arrange(g1, g2, nrow=2))
 dev.off()
 
 
 
 
-kl1 <- kloop(data, unique(data$dataset), var="Delta_over", klim=2000)
+kl1 <- kloop(data, unique(data$dataset), var="Delta_over", klim=4000)
 kl1$predictor <- "categorical"
 
 #kl2 <- kloop(data, unique(data$dataset), variable="Delta_over", indvariable="abs_corrected_phi", klim=10000)
@@ -159,10 +169,20 @@ kl <- kl1
 g1 <- ggplot(kl, aes(x=k, y=estimate, pch=predictor, color=predictor)) + geom_point() + geom_line()
 g1 <- g1 + deftheme()
 g1 <- g1 + scale_color_sanguche()
-g1 <- g1 + theme(legend.position=c(0.7, 0.22))
+g1 <- g1 + theme(legend.position="none")
 g1 <- g1 + xlab(expression("Neighbourhood radius limit"~italic(R)))
 g1 <- g1 + ylab("Estimate")
 g1 <- g1 + ggtitle("(a)")
+
+g0 <- g1
+
+g1 <- ggplot(kl, aes(x=k, y=effect.size, pch=predictor, color=predictor)) + geom_point() + geom_line()
+g1 <- g1 + deftheme()
+g1 <- g1 + scale_color_sanguche()
+g1 <- g1 + theme(legend.position="none")
+g1 <- g1 + xlab(expression("Neighbourhood radius limit"~italic(R)))
+g1 <- g1 + ylab("Effect size")
+g1 <- g1 + ggtitle("Delta-difference for OVERrepresented types")
 
 g2 <- ggplot(kl, aes(x=k, y=pvalue, pch=predictor, color=predictor)) + geom_point() + geom_line()
 g2 <- g2 + deftheme()
@@ -173,11 +193,11 @@ g2 <- g2 + ylab(expression(italic(p)*"-value"))
 g2 <- g2 + scale_y_log10() + annotation_logticks(sides="l")
 g2 <- g2 + geom_hline(yintercept=0.01, lty=2)
 g2 <- g2 + annotate("text", x=1850, y=0.007, label=expression(italic(p)==0.01), family="serif", parse=TRUE)
-g2 <- g2 + ggtitle("(b)")
+#g2 <- g2 + ggtitle("(b) p-value")
 
 
-png("../../results/plots/kloop_over.png", res=400, height=1500, width=2700)
-print(grid.arrange(g1, g2, nrow=1))
+png("../../results/plots/kloop_over.png", res=400, height=2700, width=2700)
+print(grid.arrange(g1, g2, nrow=2))
 dev.off()
 
 

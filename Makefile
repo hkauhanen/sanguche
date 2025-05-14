@@ -1,7 +1,7 @@
 J=julia +1.5.3
 JNEW=julia +1.10.4
 R=Rscript
-NPROC=2
+NPROC=12
 #DICTSCRIPT=make_dicts.jl
 DICTSCRIPT=make_dicts_neoattestation_better.jl
 

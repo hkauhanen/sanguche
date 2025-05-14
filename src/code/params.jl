@@ -2,9 +2,7 @@
 include_controls = true
 
 # neighbourhood sizes 
-#degrees = 50:10:2000
-degrees = 100:100:10000
-#degrees = [650, 850]
+degrees = 100:50:4000
 
 # features
 features = vcat(first.(fPairs), construct)
