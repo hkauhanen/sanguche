@@ -22,6 +22,7 @@ using Distributions
 
 
 dataset = ARGS[1]
+limtype = ARGS[2]
 
 include("features_$dataset.jl")
 include("params.jl")
@@ -178,8 +179,14 @@ for r in eachrow(results)
   tmp = subset(tmp, :Language_ID => (a -> a .∈ [tmp2.language_ID]))
 
   tmp2 = combine(groupby(tmp2, :language_ID), :neighbour_ID, :distance, eachindex)
-  #tmp2 = subset(tmp2, :eachindex => i -> i .<= maximum(degrees))
-  tmp2 = subset(tmp2, :distance => i -> i .<= maximum(degrees))
+  
+  if limtype == "rank"
+    tmp2 = subset(tmp2, :eachindex => i -> i .<= maximum(degrees))
+  elseif limtype == "km"
+    tmp2 = subset(tmp2, :distance => i -> i .<= maximum(degrees))
+  else
+    println("invalid limtype!")
+  end
 
   Ddata[r.pair] = tmp
   Ddists[r.pair] = tmp2

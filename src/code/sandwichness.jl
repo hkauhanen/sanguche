@@ -18,6 +18,7 @@ using Distributed
 # https://discourse.julialang.org/t/how-to-pass-args-to-multiple-processes/80075/3
 @everywhere myargfunc(x) = x
 @everywhere dataset = myargfunc($ARGS)[1]
+@everywhere limtype = myargfunc($ARGS)[2]
 
 
 @everywhere cd("../../$dataset")
@@ -97,14 +98,20 @@ end
 
 
 # computes the various "sandwichness" metrics
-@everywhere function sandwichness(r, results, Ddata, Ddists)
+@everywhere function sandwichness(r, results, Ddata, Ddists; limtype = "km")
     #resultsh = subset(results, :pair => (p -> p .== r.pair))
     datah = Ddata[r.pair]
     distsh = Ddists[r.pair]
 
     degree = r.degree
 
-    distsh = subset(distsh, :distance => (i -> i .<= degree))
+    if limtype == "km"
+      distsh = subset(distsh, :distance => (i -> i .<= degree))
+    elseif limtype == "rank"
+      distsh = subset(distsh, :eachindex => (i -> i .<= degree))
+    else
+      println("invalid limtype!")
+    end
 
     out = DataFrame(pair=r.pair)
 
@@ -139,7 +146,7 @@ sand = @distributed (vcat) for r in eachrow(results)
     out = out[:, Between(:pair, :class)]
     out.degree .= r.degree
 
-    geo_results = sandwichness(r, results, Ddata, Ddists)
+    geo_results = sandwichness(r, results, Ddata, Ddists; limtype=limtype)
     innerjoin(out, geo_results, on=:pair)
 end
 
