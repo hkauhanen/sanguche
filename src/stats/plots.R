@@ -1,4 +1,5 @@
 dataset <- commandArgs(trailingOnly=TRUE)[1]
+limtype <- commandArgs(trailingOnly=TRUE)[2]
 
 require(tidyverse)
 require(ggrepel)
@@ -111,6 +112,16 @@ dev.off()
 
 
 
+
+
+#### sweeps
+
+if (limtype == "rank") {
+  xaxistitle <- expression("Neighbourhood size"~italic(k))
+} else {
+  xaxistitle <- expression("Neighbourhood radius limit"~italic(R))
+}
+
 kl1 <- kloop(data, unique(data$dataset), var="Delta_under", klim=4000)
 kl1$predictor <- "categorical"
 
@@ -120,33 +131,39 @@ kl1$predictor <- "categorical"
 #kl <- rbind(kl1, kl2)
 kl <- kl1
 
-g1 <- ggplot(kl, aes(x=k, y=estimate, pch=predictor, color=predictor)) + geom_point() + geom_line()
+g1 <- ggplot(kl, aes(x=k, y=estimate, pch=predictor, color=predictor)) 
+#g1 <- g1 + geom_point() 
+g1 <- g1 + geom_line()
 g1 <- g1 + deftheme()
 g1 <- g1 + scale_color_sanguche()
 g1 <- g1 + theme(legend.position=c(0.7, 0.82))
-g1 <- g1 + xlab(expression("Neighbourhood radius limit"~italic(R)))
+g1 <- g1 + xlab(xaxistitle)
 g1 <- g1 + ylab("Estimate")
 g1 <- g1 + ggtitle("(a)")
 
 g0 <- g1
 
-g1 <- ggplot(kl, aes(x=k, y=effect.size, pch=predictor, color=predictor)) + geom_point() + geom_line()
+g1 <- ggplot(kl, aes(x=k, y=effect.size, pch=predictor, color=predictor)) 
+#g1 <- g1 + geom_point() 
+g1 <- g1 + geom_line()
 g1 <- g1 + deftheme()
 g1 <- g1 + scale_color_sanguche()
 g1 <- g1 + theme(legend.position="none")
-g1 <- g1 + xlab(expression("Neighbourhood radius limit"~italic(R)))
+g1 <- g1 + xlab(xaxistitle)
 g1 <- g1 + ylab("Effect size")
 g1 <- g1 + ggtitle("Delta-difference for UNDERrepresented types")
 
-g2 <- ggplot(kl, aes(x=k, y=pvalue, pch=predictor, color=predictor)) + geom_point() + geom_line()
+g2 <- ggplot(kl, aes(x=k, y=pvalue, pch=predictor, color=predictor)) 
+#g1 <- g1 + geom_point() 
+g2 <- g2 + geom_line()
 g2 <- g2 + deftheme()
 g2 <- g2 + scale_color_sanguche()
 g2 <- g2 + theme(legend.position="none")
-g2 <- g2 + xlab(expression("Neighbourhood radius limit"~italic(R)))
+g2 <- g2 + xlab(xaxistitle)
 g2 <- g2 + ylab(expression(italic(p)*"-value"))
 g2 <- g2 + scale_y_log10() + annotation_logticks(sides="l")
 g2 <- g2 + geom_hline(yintercept=0.01, lty=2)
-g2 <- g2 + annotate("text", x=1850, y=0.006, label=expression(italic(p)==0.01), family="serif", parse=TRUE)
+#g2 <- g2 + annotate("text", x=1850, y=0.006, label=expression(italic(p)==0.01), family="serif", parse=TRUE)
 #g2 <- g2 + ggtitle("(b) p-value")
 
 
@@ -166,33 +183,39 @@ kl1$predictor <- "categorical"
 #kl <- rbind(kl1, kl2)
 kl <- kl1
 
-g1 <- ggplot(kl, aes(x=k, y=estimate, pch=predictor, color=predictor)) + geom_point() + geom_line()
+g1 <- ggplot(kl, aes(x=k, y=estimate, pch=predictor, color=predictor)) 
+#g1 <- g1 + geom_point() 
+g1 <- g1 + geom_line()
 g1 <- g1 + deftheme()
 g1 <- g1 + scale_color_sanguche()
 g1 <- g1 + theme(legend.position="none")
-g1 <- g1 + xlab(expression("Neighbourhood radius limit"~italic(R)))
+g1 <- g1 + xlab(xaxistitle)
 g1 <- g1 + ylab("Estimate")
 g1 <- g1 + ggtitle("(a)")
 
 g0 <- g1
 
-g1 <- ggplot(kl, aes(x=k, y=effect.size, pch=predictor, color=predictor)) + geom_point() + geom_line()
+g1 <- ggplot(kl, aes(x=k, y=effect.size, pch=predictor, color=predictor)) 
+#g1 <- g1 + geom_point() 
+g1 <- g1 + geom_line()
 g1 <- g1 + deftheme()
 g1 <- g1 + scale_color_sanguche()
 g1 <- g1 + theme(legend.position="none")
-g1 <- g1 + xlab(expression("Neighbourhood radius limit"~italic(R)))
+g1 <- g1 + xlab(xaxistitle)
 g1 <- g1 + ylab("Effect size")
 g1 <- g1 + ggtitle("Delta-difference for OVERrepresented types")
 
-g2 <- ggplot(kl, aes(x=k, y=pvalue, pch=predictor, color=predictor)) + geom_point() + geom_line()
+g2 <- ggplot(kl, aes(x=k, y=pvalue, pch=predictor, color=predictor)) 
+#g1 <- g1 + geom_point() 
+g2 <- g2 + geom_line()
 g2 <- g2 + deftheme()
 g2 <- g2 + scale_color_sanguche()
 g2 <- g2 + theme(legend.position="none")
-g2 <- g2 + xlab(expression("Neighbourhood radius limit"~italic(R)))
+g2 <- g2 + xlab(xaxistitle)
 g2 <- g2 + ylab(expression(italic(p)*"-value"))
 g2 <- g2 + scale_y_log10() + annotation_logticks(sides="l")
 g2 <- g2 + geom_hline(yintercept=0.01, lty=2)
-g2 <- g2 + annotate("text", x=1850, y=0.007, label=expression(italic(p)==0.01), family="serif", parse=TRUE)
+#g2 <- g2 + annotate("text", x=1850, y=0.007, label=expression(italic(p)==0.01), family="serif", parse=TRUE)
 #g2 <- g2 + ggtitle("(b) p-value")
 
 

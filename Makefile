@@ -79,4 +79,4 @@ results/stats_$(DATASET).html : src/stats/stats.Rmd results/$(DATASET)/results_c
 plots : results/plots/*.png
 
 results/plots/*.png : src/stats/plots.R src/stats/kloop.R results/$(DATASET)/results_combined.csv
-	cd src/stats; $R plots.R $(DATASET)
+	cd src/stats; $R plots.R $(DATASET) $(LIMTYPE)

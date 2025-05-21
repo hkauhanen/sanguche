@@ -18,6 +18,7 @@ using HypothesisTests
 using Statistics
 using Serialization
 using StatsBase
+using Tar
 using Distributions
 
 
@@ -156,7 +157,10 @@ end
 
 if !isfile("./dicts/dists.csv")
   if dataset == "wals"
-    download("https://raw.githubusercontent.com/hkauhanen/wals-distances/master/wals-distances-under5000km.csv", "./dicts/dists.csv")
+    download("https://raw.githubusercontent.com/hkauhanen/wals-distances/master/wals-distances.csv.gz", "./dicts/dists.csv.gz")
+    open(GzipDecompressorStream, "./dicts/dists.csv.gz") do io
+      Tar.extract(io, ".dicts/dists.csv")
+    end
   elseif dataset == "grambank"
     #download("https://raw.githubusercontent.com/hkauhanen/grambank-distances/main/grambank-distances-under5000km.csv", "./dicts/dists.csv")
     cp("/home/hkauhanen/Work/grambank-distances-random/grambank-distances-under5000km.csv", "./dicts/dists.csv")
