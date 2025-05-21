@@ -2,7 +2,7 @@
 
 julia_version = "1.10.4"
 manifest_format = "2.0"
-project_hash = "d5fde2e4084293de55a960479b83a8d080bd3b01"
+project_hash = "ef2494555f6bbebe31cdd604b609be48fe32010f"
 
 [[deps.Accessors]]
 deps = ["CompositionsBase", "ConstructionBase", "InverseFunctions", "LinearAlgebra", "MacroTools", "Markdown"]
@@ -226,6 +226,12 @@ version = "0.4.6"
 [[deps.Future]]
 deps = ["Random"]
 uuid = "9fa8497b-333b-5362-9e8d-4d0656e87820"
+
+[[deps.GZip]]
+deps = ["Libdl", "Zlib_jll"]
+git-tree-sha1 = "0085ccd5ec327c077ec5b91a5f937b759810ba62"
+uuid = "92fee26a-97fe-5a0c-ad85-20a5f3185b63"
+version = "0.6.2"
 
 [[deps.HypergeometricFunctions]]
 deps = ["LinearAlgebra", "OpenLibm_jll", "SpecialFunctions"]

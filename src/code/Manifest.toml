@@ -66,6 +66,12 @@ version = "1.6.0"
 [[FileWatching]]
 uuid = "7b1f6079-737a-58dc-b8bc-7a2ca5c1b5ee"
 
+[[GZip]]
+deps = ["Libdl", "Zlib_jll"]
+git-tree-sha1 = "0085ccd5ec327c077ec5b91a5f937b759810ba62"
+uuid = "92fee26a-97fe-5a0c-ad85-20a5f3185b63"
+version = "0.6.2"
+
 [[InteractiveUtils]]
 deps = ["Markdown"]
 uuid = "b77e0a4c-d291-57a0-90e8-8db25a27a240"
