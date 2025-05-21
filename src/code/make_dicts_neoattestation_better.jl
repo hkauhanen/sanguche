@@ -178,7 +178,8 @@ for r in eachrow(results)
   tmp = subset(tmp, :Language_ID => (a -> a .∈ [tmp2.language_ID]))
 
   tmp2 = combine(groupby(tmp2, :language_ID), :neighbour_ID, :distance, eachindex)
-  tmp2 = subset(tmp2, :eachindex => i -> i .<= maximum(degrees))
+  #tmp2 = subset(tmp2, :eachindex => i -> i .<= maximum(degrees))
+  tmp2 = subset(tmp2, :distance => i -> i .<= maximum(degrees))
 
   Ddata[r.pair] = tmp
   Ddists[r.pair] = tmp2
