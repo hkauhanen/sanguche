@@ -1,7 +1,11 @@
 include("deps.jl")
 
-
 using Distributed
+
+
+@everywhere using Pkg
+@everywhere Pkg.activate("Sanguche")
+#@everywhere Pkg.instantiate()
 
 
 # all processors need access to the following

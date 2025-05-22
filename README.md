@@ -55,11 +55,13 @@ Part 2 requires Julia version 1.10.4.
 To reproduce the analysis from scratch, type the following on the command line, paying special attention to the capitalization:
 
 ```
-make sandwich DATASET=wals LIMTYPE=km
-make sandwich DATASET=grambank LIMTYPE=km
+make sandwich DATASET=wals LIMTYPE=rank NPROC=8
+make sandwich DATASET=grambank LIMTYPE=rank NPROC=8
 ```
 
-`LIMTYPE` can be either `km` (distance-limited neighbourhoods) or `rank` (neighbourhoods limited by number of neighbours).
+`LIMTYPE` can be either `km` (distance-limited neighbourhoods) or `rank` (neighbourhoods limited by number of neighbours). `NPROC` specifies the number of parallel processes to use (best set to the number of physical cores in your processor).
+
+Note that each argument, `DATASET`, `LIMTYPE` and `NPROC`, are mandatory.
 
 Results are saved in the `results/wals/` and `results/grambank/` directories, respectively. The `*.csv` files are in ordinary comma-separated values format; the `*.jls` files are serializations of Julia dataframes which can be loaded into a Julia session using the tools provided by the Serialization package.
 

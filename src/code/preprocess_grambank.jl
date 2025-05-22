@@ -5,7 +5,7 @@ include("params.jl")
 
 using Pkg
 Pkg.activate("JW")
-Pkg.instantiate()
+#Pkg.instantiate()
 
 ##
 using CSV
