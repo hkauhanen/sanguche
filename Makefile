@@ -4,6 +4,7 @@ R=Rscript
 NPROC=12
 #DICTSCRIPT=make_dicts.jl
 DICTSCRIPT=make_dicts_neoattestation_better.jl
+MRBSCRIPT=runMrBayes_strict.jl
 
 
 .PHONY : Jdeps preprocess data dicts sandwich phyloprep familyprep revbayes treelog posterior model correlations postprocess stats plots
@@ -43,8 +44,8 @@ familyprep : src/code/createFmList.jl src/code/family_stats.R src/code/fm_large_
 revbayes : src/code/runrevbayes.jl
 	cd src/code; $J -p $(NPROC) runrevbayes.jl $(DATASET)
 
-mrbayes : src/code/runMrBayes.jl src/code/fm_large_$(DATASET).txt src/code/fm_problematic_$(DATASET).txt src/code/fm_rest_$(DATASET).txt
-	cd src/code; $J -p 3 runMrBayes.jl $(DATASET) fm_large_$(DATASET).txt & $J -p 1 runMrBayes.jl $(DATASET) fm_problematic_$(DATASET).txt & $J -p 12 runMrBayes.jl $(DATASET) fm_rest_$(DATASET).txt; wait
+mrbayes : src/code/$(MRBSCRIPT) src/code/fm_large_$(DATASET).txt src/code/fm_problematic_$(DATASET).txt src/code/fm_rest_$(DATASET).txt
+	cd src/code; $J -p 3 $(MRBSCRIPT) $(DATASET) fm_large_$(DATASET).txt & $J -p 1 $(MRBSCRIPT) $(DATASET) fm_problematic_$(DATASET).txt & $J -p 12 $(MRBSCRIPT) $(DATASET) fm_rest_$(DATASET).txt; wait
 
 purge_mrbayes :
 	rm -rf $(DATASET)/data/asjpNex/output/$(FAMILY).*
