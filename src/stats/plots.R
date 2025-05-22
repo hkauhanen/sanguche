@@ -10,6 +10,7 @@ source("kloop.R")
 
 
 dir.create("../../results/plots")
+dir.create(paste0("../../results/plots/", dataset))
 
 
 # default theme
@@ -167,7 +168,7 @@ g2 <- g2 + geom_hline(yintercept=0.01, lty=2)
 #g2 <- g2 + ggtitle("(b) p-value")
 
 
-png("../../results/plots/kloop_under.png", res=400, height=2700, width=2700)
+png(paste0("../../results/plots/", dataset, "/kloop_under.png"), res=400, height=2700, width=2700)
 print(grid.arrange(g1, g2, nrow=2))
 dev.off()
 
@@ -219,7 +220,7 @@ g2 <- g2 + geom_hline(yintercept=0.01, lty=2)
 #g2 <- g2 + ggtitle("(b) p-value")
 
 
-png("../../results/plots/kloop_over.png", res=400, height=2700, width=2700)
+png(paste0("../../results/plots/", dataset, "/kloop_over.png"), res=400, height=2700, width=2700)
 print(grid.arrange(g1, g2, nrow=2))
 dev.off()
 
