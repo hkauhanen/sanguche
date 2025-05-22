@@ -1,8 +1,7 @@
 J=julia +1.5.3
 JNEW=julia +1.10.4
 R=Rscript
-#DICTSCRIPT=make_dicts.jl
-DICTSCRIPT=make_dicts_neoattestation_better.jl
+DICTSCRIPT=make_dicts.jl
 MRBSCRIPT=runMrBayes_strict.jl
 
 
@@ -11,21 +10,22 @@ MRBSCRIPT=runMrBayes_strict.jl
 
 Jdeps :
 	cd src/code; $J deps_JW.jl
+	cd src/code; $J deps_MrB.jl
 	cd src/code; $(JNEW) deps.jl
 
-preprocess : $(DATASET)/data/database/*.csv 
+preprocess : $(DATASET)/data/database/codes.csv $(DATASET)/data/database/values.csv
 
 data : $(DATASET)/data/data.csv
 
-$(DATASET)/data/database/*.csv : src/code/preprocess_$(DATASET).jl src/code/params.jl
+$(DATASET)/data/database/codes.csv $(DATASET)/data/database/values.csv &: src/code/preprocess_$(DATASET).jl src/code/params.jl
 	cd src/code; $J preprocess_$(DATASET).jl
 
-$(DATASET)/data/data.csv : src/code/createData.jl src/code/params.jl $(DATASET)/data/database/*.csv
+$(DATASET)/data/data.csv : src/code/createData.jl src/code/params.jl $(DATASET)/data/database/codes.csv $(DATASET)/data/database/values.csv
 	cd src/code; $J createData.jl $(DATASET)
 
-dicts : $(DATASET)/dicts/Ddata.jls $(DATASET)/dicts/Ddists.jls $(DATASET)/dicts/grid.jls $(DATASET)/dists.csv
+dicts : $(DATASET)/dicts/Ddata.jls $(DATASET)/dicts/Ddists.jls $(DATASET)/dicts/grid.jls
 
-$(DATASET)/dicts/Ddata.jls $(DATASET)/dicts/Ddists.jls $(DATASET)/dicts/grid.jls $(DATASET)/dists.csv &: src/code/$(DICTSCRIPT) src/code/params.jl src/code/deps.jl $(DATASET)/data/data.csv
+$(DATASET)/dicts/Ddata.jls $(DATASET)/dicts/Ddists.jls $(DATASET)/dicts/grid.jls &: src/code/$(DICTSCRIPT) src/code/params.jl src/code/deps.jl $(DATASET)/data/data.csv
 	cd src/code; $(JNEW) $(DICTSCRIPT) $(DATASET) $(LIMTYPE)
 
 sandwich : results/$(DATASET)/sand_results.csv results/$(DATASET)/sand_results.jls
@@ -43,8 +43,14 @@ familyprep : src/code/createFmList.jl src/code/family_stats.R src/code/fm_large_
 revbayes : src/code/runrevbayes.jl
 	cd src/code; $J -p $(NPROC) runrevbayes.jl $(DATASET)
 
-mrbayes : src/code/$(MRBSCRIPT) src/code/fm_large_$(DATASET).txt src/code/fm_problematic_$(DATASET).txt src/code/fm_rest_$(DATASET).txt
-	cd src/code; $J -p 3 $(MRBSCRIPT) $(DATASET) fm_large_$(DATASET).txt & $J -p 1 $(MRBSCRIPT) $(DATASET) fm_problematic_$(DATASET).txt & $J -p 12 $(MRBSCRIPT) $(DATASET) fm_rest_$(DATASET).txt; wait
+mrbayes_large : src/code/$(MRBSCRIPT) src/code/fm_large_$(DATASET).txt
+	cd src/code; $J -p $(NPROC) $(MRBSCRIPT) $(DATASET) fm_large_$(DATASET).txt
+
+mrbayes_problematic : src/code/$(MRBSCRIPT) src/code/fm_problematic_$(DATASET).txt
+	cd src/code; $J -p $(NPROC) $(MRBSCRIPT) $(DATASET) fm_problematic_$(DATASET).txt
+
+mrbayes_small : src/code/$(MRBSCRIPT) src/code/fm_rest_$(DATASET).txt
+	cd src/code; $J -p $(NPROC) $(MRBSCRIPT) $(DATASET) fm_rest_$(DATASET).txt
 
 purge_mrbayes :
 	rm -rf $(DATASET)/data/asjpNex/output/$(FAMILY).*

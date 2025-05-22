@@ -23,7 +23,7 @@ Random.seed!(2002261988307380348)
 ##
 using Conda
 Conda.pip_interop(true)
-Conda.pip("install", "ete3")
+#Conda.pip("install", "ete3")
 
 
 ENV["PYTHON"] = ""

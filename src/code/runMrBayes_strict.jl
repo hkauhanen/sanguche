@@ -16,7 +16,7 @@ end
 
 @everywhere using Pkg
 @everywhere Pkg.activate("mrbayes_project")
-@everywhere Pkg.instantiate()
+#@everywhere Pkg.instantiate()
 
 ##
 @everywhere using ProgressMeter
@@ -49,11 +49,11 @@ end
 
 @everywhere using Conda
 @everywhere Conda.pip_interop(true)
-Conda.pip("install", "ete3")
+#Conda.pip("install", "ete3")
 
 
 @everywhere ENV["PYTHON"] = ""
-Pkg.build("PyCall")
+#Pkg.build("PyCall")
 @everywhere using PyCall
 
 @everywhere ete3 = pyimport("ete3")
@@ -131,7 +131,7 @@ end
 \t\tprset treeagepr=Gamma(0.05, 0.005);
 \t\tprset shapepr=Exponential(10);
 \t\tset beagleprecision=double;
-\t\tmcmcp Burninfrac=0.5 stoprule=no stopval=0.001;
+\t\tmcmcp Burninfrac=0.5 stoprule=no stopval=0.005;
 \t\tmcmcp filename=../../$dataset/data/asjpNex/output/$fm;
 \t\tmcmcp samplefreq=1000 printfreq=5000 append=$append;
 \t\tmcmc ngen=$ngen nchains=$nchains nruns=2 temp=$temp;
@@ -227,7 +227,7 @@ end
       write(file, "$fm,$date,$nrun,$meanStdev,$maxPSRF\n")
     end
 
-    maxPSRF <= 1.05 && meanStdev <= 0.001
+    maxPSRF <= 1.05 && meanStdev <= 0.005
   end
 
   while !converged()

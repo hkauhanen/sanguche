@@ -16,7 +16,7 @@ end
 
 @everywhere using Pkg
 @everywhere Pkg.activate("mrbayes_project")
-@everywhere Pkg.instantiate()
+#@everywhere Pkg.instantiate()
 
 ##
 @everywhere using ProgressMeter
@@ -53,7 +53,7 @@ Conda.pip("install", "ete3")
 
 
 @everywhere ENV["PYTHON"] = ""
-Pkg.build("PyCall")
+#Pkg.build("PyCall")
 @everywhere using PyCall
 
 @everywhere ete3 = pyimport("ete3")

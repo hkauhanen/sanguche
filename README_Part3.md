@@ -7,9 +7,9 @@ This document details how Part 3 of the analysis (see [README.md](README.md) for
 
 We employed the following system:
 
-- AMD Ryzen 9 3950X (16 cores @ 3.5 GHz)
-- 128GB of DDR4 RAM
-- NVIDIA GeForce RTX 2070 SUPER GPU
+- Intel i5-13600KF processor
+- 64 GB of DDR4 RAM
+- NVIDIA GeForce RTX 3080 GPU
 - Debian 12 ("bookworm")
 - Julia version 1.5.3
 - R version 4.4.2
@@ -21,11 +21,13 @@ We assume that you have super-user rights; if not, please configure this first.
 
 ## Installing dependencies
 
-### 1. Install CUDA (version 12.6)
+### 1. Install CUDA
 
 Follow the instructions at <https://docs.nvidia.com/cuda/cuda-installation-guide-linux>.
 
 Run the deviceQuery sample to verify that installation was successful.
+
+Alternatively, if on Debian, you can install CUDA directly from the Debian repository.
 
 
 ### 2. Install other dependencies
@@ -48,12 +50,24 @@ curl
 
 ### 3. Install BEAGLE (version 4.0.1)
 
+Important: BEAGLE will not work with GCC versions later than 11. Make sure that gcc <= 11 is installed and then switch to using it with the following commands:
+
 ```
-git clone --depth=1 https://github.com/beagle-dev/beagle-lib.git
+sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-11 60
+sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-11 60
+```
+
+(assuming you're downgrading for example from version 12 to version 11).
+
+Then, to build BEAGLE:
+
+```
+git clone --branch v4.0.1 --depth=1 https://github.com/beagle-dev/beagle-lib.git
 cd beagle-lib
 mkdir build
 cd build
-cmake -DCMAKE_INSTALL_PREFIX:PATH=$HOME -DBUILD_OPENCL=ON -DBUILD_JNI=OFF ..
+cmake -DCMAKE_INSTALL_PREFIX:PATH=$HOME -DBUILD_OPENCL=OFF -DBUILD_JNI=OFF ..
+make
 sudo make install
 ```
 
@@ -61,11 +75,21 @@ sudo make install
 
 Then add `$HOME/lib` to path (e.g. `fish_add_path $HOME/lib` if using fish).
 
+Then:
+
+```
+export LD_LIBRARY_PATH=$HOME/lib:$LD_LIBRARY_PATH
+export PKG_CONFIG_PATH=$HOME/lib/pkgconfig:$PKG_CONFIG_PATH
+export PATH=/usr/local/cuda-12.9/bin:$PATH
+```
+
+NB: put exports also in .bashrc so they get loaded when new shells are started
+
 
 ### 4. Install MrBayes
 
 ```
-git clone --depth=1 https://github.com/NBISweden/MrBayes
+git clone --branch v3.2.7 --depth=1 https://github.com/NBISweden/MrBayes
 cd MrBayes
 ./configure --with-beagle=$HOME --with-mpi
 make
@@ -101,14 +125,25 @@ Executing the following scripts runs the analysis for WALS (repeat with `gramban
 ```
 make phyloprep DATASET=wals
 make familyprep DATASET=wals
-make revbayes DATASET=wals
-make mrbayes DATASET=wals       # TIME-CONSUMING (~1 week)
+make revbayes DATASET=wals NPROC=8  # adjust NPROC if necessary
+make mrbayes_small DATASET=wals NPROC=8
+make mrbayes_large DATASET=wals NPROC=3 & \
+    make mrbayes_problematic DATASET=wals NPROC=1           # TIME-CONSUMING (~1 week)
 make posterior DATASET=wals
-make model DATASET=wals         # TIME-CONSUMING (~1 day)
+make model DATASET=wals             # TIME-CONSUMING (~1 day)
 make correlations DATASET=wals
 ```
 
 The order of the above operations is important.
 
 This is fine-tuned for the hardware listed above. Your mileage may vary; in particular, you may find it necessary to tune the numbers of parallel processes used in `Makefile`.
+
+While MrBayes is running, a trace of the convergence can be produced with the following command. Output goes to the `log/` directory.
+
+```
+make treelog DATASET=wals
+```
+
+This assumes that R is installed and the following packages are available: ggplot2, ggsci, reshape2.
+
 
