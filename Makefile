@@ -36,21 +36,18 @@ results/$(DATASET)/sand_results.csv results/$(DATASET)/sand_results.jls &: src/c
 phyloprep : src/code/createPhyloData.jl src/code/params.jl $(DATASET)/data/data.csv $(DATASET)/data/database/*.csv
 	cd src/code; $J createPhyloData.jl $(DATASET)
 
-familyprep : src/code/createFmList.jl src/code/family_stats.R src/code/fm_large_$(DATASET).txt src/code/fm_problematic_$(DATASET).txt
+familyprep : src/code/createFmList.jl src/code/family_stats.R
 	cd src/code; $J createFmList.jl $(DATASET)
 	cd src/code; $R family_stats.R $(DATASET)
 
 revbayes : src/code/runrevbayes.jl
 	cd src/code; $J -p $(NPROC) runrevbayes.jl $(DATASET)
 
-mrbayes_large : src/code/$(MRBSCRIPT) src/code/fm_large_$(DATASET).txt
-	cd src/code; $J -p $(NPROC) $(MRBSCRIPT) $(DATASET) fm_large_$(DATASET).txt $(BEAGLERES)
+mrbayes_large : src/code/$(MRBSCRIPT) $(DATASET)/data/fm_large.txt
+	cd src/code; $J -p $(NPROC) $(MRBSCRIPT) $(DATASET) ../../$(DATASET)/data/fm_large.txt $(BEAGLERES)
 
-mrbayes_problematic : src/code/$(MRBSCRIPT) src/code/fm_problematic_$(DATASET).txt
-	cd src/code; $J -p $(NPROC) $(MRBSCRIPT) $(DATASET) fm_problematic_$(DATASET).txt $(BEAGLERES)
-
-mrbayes_small : src/code/$(MRBSCRIPT) src/code/fm_rest_$(DATASET).txt
-	cd src/code; $J -p $(NPROC) $(MRBSCRIPT) $(DATASET) fm_rest_$(DATASET).txt $(BEAGLERES)
+mrbayes_small : src/code/$(MRBSCRIPT) $(DATASET)/data/fm_small.txt
+	cd src/code; $J -p $(NPROC) $(MRBSCRIPT) $(DATASET) ../../$(DATASET)/data/fm_small.txt $(BEAGLERES)
 
 purge_mrbayes :
 	rm -rf $(DATASET)/data/asjpNex/output/$(FAMILY).*

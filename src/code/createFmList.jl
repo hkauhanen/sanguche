@@ -1,20 +1,38 @@
+using Pkg
+Pkg.activate("JW")
+
+using CSV
+using DataFrames
+
 dataset = ARGS[1]
 
-all_fams = open("../../$dataset/data/glot3.txt", "r") do file
-  readlines(file)
+fam_freqs = CSV.read("../../$dataset/data/famFrequencies.csv", DataFrame)
+
+# families with fewer than 3 members are done in RevBayes
+subset!(fam_freqs, :nrow => (n -> n .> 2))
+
+# excluded families (these ones refuse to converge no matter what we do)
+excludes = open("fm_exclude_$dataset.txt", "r") do file
+	readlines(file)
 end
 
-large_fams = open("fm_large_$dataset.txt", "r") do file
-  readlines(file)
+# remove exludes
+subset!(fam_freqs, :glot_fam => (g -> g .∉ [excludes]))
+
+# divide into large and small
+large_fams = subset(fam_freqs, :nrow => (n -> n .>= 50))
+small_fams = subset(fam_freqs, :nrow => (n -> n .< 50))
+
+# order small families in increasing order
+sort!(small_fams, :nrow, rev=false)
+
+# write out
+open("../../$dataset/data/fm_small.txt", "w") do file
+  [println(file, fm) for fm in small_fams.glot_fam]
 end
 
-prob_fams = open("fm_problematic_$dataset.txt", "r") do file
-  readlines(file)
+open("../../$dataset/data/fm_large.txt", "w") do file
+  [println(file, fm) for fm in large_fams.glot_fam]
 end
 
-normal_fams = all_fams[all_fams .∉ [vcat(large_fams, prob_fams)]]
-reverse!(normal_fams)
 
-open("fm_rest_$dataset.txt", "w") do file
-  [println(file, fm) for fm in normal_fams]
-end
