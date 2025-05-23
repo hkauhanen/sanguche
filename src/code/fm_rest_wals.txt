@@ -3,12 +3,10 @@ Nadahup
 Peba-Yagua
 Totonacan
 Tangkic
-Anson_Bay
 Ndu
 Abkhaz-Adyge
 Kuliak
 Maban
-Senagi
 Muskogean
 Barbacoan
 Gumuz
@@ -20,13 +18,11 @@ Koiarian
 Algic
 Guaicuruan
 Songhay
-Southern_Daly
 Cochimi-Yuman
 Aymaran
 Chocoan
 Bosavi
 Huitotoan
-Kadugli-Krongo
 Sentanic
 Nuclear-Macro-Je
 Yanomamic
@@ -66,8 +62,8 @@ Central_Sudanic
 Nakh-Daghestanian
 Uto-Aztecan
 Pama-Nyungan
-Mayan
 Austroasiatic
+Mayan
 Nuclear_Trans_New_Guinea
 Afro-Asiatic
 Indo-European

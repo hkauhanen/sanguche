@@ -2,7 +2,7 @@ J=julia +1.5.3
 JNEW=julia +1.10.4
 R=Rscript
 DICTSCRIPT=make_dicts.jl
-MRBSCRIPT=runMrBayes_strict.jl
+MRBSCRIPT=runMrBayes.jl
 
 
 .PHONY : Jdeps preprocess data dicts sandwich phyloprep familyprep revbayes treelog posterior model correlations postprocess stats plots
@@ -44,13 +44,13 @@ revbayes : src/code/runrevbayes.jl
 	cd src/code; $J -p $(NPROC) runrevbayes.jl $(DATASET)
 
 mrbayes_large : src/code/$(MRBSCRIPT) src/code/fm_large_$(DATASET).txt
-	cd src/code; $J -p $(NPROC) $(MRBSCRIPT) $(DATASET) fm_large_$(DATASET).txt
+	cd src/code; $J -p $(NPROC) $(MRBSCRIPT) $(DATASET) fm_large_$(DATASET).txt $(BEAGLERES)
 
 mrbayes_problematic : src/code/$(MRBSCRIPT) src/code/fm_problematic_$(DATASET).txt
-	cd src/code; $J -p $(NPROC) $(MRBSCRIPT) $(DATASET) fm_problematic_$(DATASET).txt
+	cd src/code; $J -p $(NPROC) $(MRBSCRIPT) $(DATASET) fm_problematic_$(DATASET).txt $(BEAGLERES)
 
 mrbayes_small : src/code/$(MRBSCRIPT) src/code/fm_rest_$(DATASET).txt
-	cd src/code; $J -p $(NPROC) $(MRBSCRIPT) $(DATASET) fm_rest_$(DATASET).txt
+	cd src/code; $J -p $(NPROC) $(MRBSCRIPT) $(DATASET) fm_rest_$(DATASET).txt $(BEAGLERES)
 
 purge_mrbayes :
 	rm -rf $(DATASET)/data/asjpNex/output/$(FAMILY).*

@@ -8,6 +8,7 @@ end
 
 @everywhere dataset = argfunc($ARGS[1])
 @everywhere fm_file = argfunc($ARGS[2])
+@everywhere bresource = argfunc($ARGS[3])
 
 @everywhere families = open(fm_file) do file
   readlines(file)
@@ -49,7 +50,7 @@ end
 
 @everywhere using Conda
 @everywhere Conda.pip_interop(true)
-Conda.pip("install", "ete3")
+#Conda.pip("install", "ete3")
 
 
 @everywhere ENV["PYTHON"] = ""
@@ -94,7 +95,7 @@ end
 
 ##
 
-@everywhere function mbScript(fm, ngen, append, nchains, temp)
+@everywhere function mbScript(fm, ngen, append, nchains, temp, precision, resource)
   fmTaxa = filter(x -> x.glot_fam == fm, data).longname
   nex = """
 #Nexus
@@ -130,7 +131,8 @@ end
 \t\tprset clockvarpr = igr;
 \t\tprset treeagepr=Gamma(0.05, 0.005);
 \t\tprset shapepr=Exponential(10);
-\t\tset beagleprecision=double;
+\t\tset beagleresource=$resource;
+\t\tset beagleprecision=$precision;
 \t\tmcmcp Burninfrac=0.5 stoprule=no stopval=0.01;
 \t\tmcmcp filename=../../$dataset/data/asjpNex/output/$fm;
 \t\tmcmcp samplefreq=1000 printfreq=5000 append=$append;
@@ -144,9 +146,9 @@ end
 
 
 if fm_file == "fm_problematic_wals.txt" || fm_file == "fm_problematic_grambank.txt"
-  @everywhere mbScript(fm, ngen, append) = mbScript(fm, ngen, append, 8, 5.0)
+	@everywhere mbScript(fm, ngen, append) = mbScript(fm, ngen, append, 8, 5.0, "single", bresource)
 else
-  @everywhere mbScript(fm, ngen, append) = mbScript(fm, ngen, append, 4, 0.2)
+  @everywhere mbScript(fm, ngen, append) = mbScript(fm, ngen, append, 4, 0.2, "single", bresource)
 end
 
 
@@ -227,7 +229,8 @@ end
       write(file, "$fm,$date,$nrun,$meanStdev,$maxPSRF\n")
     end
 
-    maxPSRF <= 1.1 && meanStdev <= 0.01
+    #maxPSRF <= 1.1 && meanStdev <= 0.01
+    maxPSRF <= 1.05 && meanStdev <= 0.01
   end
 
   while !converged()

@@ -126,9 +126,9 @@ Executing the following scripts runs the analysis for WALS (repeat with `gramban
 make phyloprep DATASET=wals
 make familyprep DATASET=wals
 make revbayes DATASET=wals NPROC=8  # adjust NPROC if necessary
-make mrbayes_small DATASET=wals NPROC=8
-make mrbayes_large DATASET=wals NPROC=3 & \
-    make mrbayes_problematic DATASET=wals NPROC=1           # TIME-CONSUMING (~1 week)
+make mrbayes_small DATASET=wals NPROC=8 BEAGLERES=0
+make mrbayes_large DATASET=wals NPROC=3 BEAGLERES=1 & \
+    make mrbayes_problematic DATASET=wals NPROC=1 BEAGLERES=1           # TIME-CONSUMING (~1 week)
 make posterior DATASET=wals
 make model DATASET=wals             # TIME-CONSUMING (~1 day)
 make correlations DATASET=wals
@@ -137,6 +137,8 @@ make correlations DATASET=wals
 The order of the above operations is important.
 
 This is fine-tuned for the hardware listed above. Your mileage may vary; in particular, you may find it necessary to tune the numbers of parallel processes used in `Makefile`.
+
+`BEAGLERES` is used to select the Beagle resource (device) in MrBayes. This should be set to the fastest resource available, a determination that may depend on the size of the language family. In practice, I have found small families to be quickest on the CPU and large families quickest on the GPU. Launch MrBayes and type `showbeagle` to obtain the ID number of the relevant resource and set `BEAGLERES` to this number.
 
 While MrBayes is running, a trace of the convergence can be produced with the following command. Output goes to the `log/` directory.
 
