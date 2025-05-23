@@ -1,5 +1,10 @@
 # Detailed instructions, Part 3: Phylogenetic analysis
 
+NB!!!! Running 3 large families for both datasets in parallel on the GPU takes up about 4.5 GB of VRAM. This means we can increase the number of families in the "large" MrBayes sets quite considerably, and thereby probably make things a bit faster. In general, the best strategy (wall-clock-runtime-wise) is to do WALS and Grambank in parallel, having the large families run on the GPU and the small ones on the CPU.
+
+
+
+
 This document details how Part 3 of the analysis (see [README.md](README.md) for overall summary) is set up and run. It is divided into two major sections:
 
 1. Installing dependencies
