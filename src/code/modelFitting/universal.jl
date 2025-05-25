@@ -1,5 +1,8 @@
 global charNum = parse(Int, ARGS[2])
 
+#psrf_threshold = 1.1
+psrf_threshold = 1.05
+
 dataset = ARGS[1]
 prefix = "../../../$dataset/"
 
@@ -135,7 +138,7 @@ if charNum > 0 && charNum <= 45
   psrf = maximum(gd.value[:,1])
   write("$prefix/modeloutput/universal_$(lpad((charNum), 2, "0")).jls", sim[bi:end,:,:])
   write("$prefix/modeloutput/universal_$(lpad((charNum), 2, "0")).log", string(psrf)*"\n")
-  while psrf > 1.1
+  while psrf > psrf_threshold
     global sim, psrf, bi, gd
     @show psrf
     sim = mcmc(sim, 1000)
