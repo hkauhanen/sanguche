@@ -9,6 +9,7 @@ end
 @everywhere dataset = argfunc($ARGS[1])
 @everywhere fm_file = argfunc($ARGS[2])
 @everywhere bresource = argfunc($ARGS[3])
+@everywhere aggressive = argfunc($ARGS[4])
 
 @everywhere families = open(fm_file) do file
   readlines(file)
@@ -145,7 +146,7 @@ end
 end
 
 
-if fm_file == "fm_problematic_wals.txt" || fm_file == "fm_problematic_grambank.txt"
+if aggressive == "1"
 	@everywhere mbScript(fm, ngen, append) = mbScript(fm, ngen, append, 8, 5.0, "single", bresource)
 else
   @everywhere mbScript(fm, ngen, append) = mbScript(fm, ngen, append, 4, 0.2, "single", bresource)
