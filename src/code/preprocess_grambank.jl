@@ -1,5 +1,9 @@
 cd(@__DIR__)
 
+downsample = true
+ds_rate = 0.3
+
+
 include("features_grambank.jl")
 include("params.jl")
 
@@ -66,12 +70,33 @@ dataF = "./data/database/data_preprocessed.csv"
 end
 
 
+##
+
+function deesse(x)
+  if !ismissing(x)
+    return x == "Austronesian" ? rand() : 0
+  else
+    return 0
+  end
+end
+
 
 ##
 
 languages = CSV.read(languagesF, DataFrame)
 
+if downsample
+  transform!(languages, :Family_name => (f -> deesse.(f)) => :filterer)
+  filter!(x -> x.filterer < ds_rate, languages)
+  CSV.write(languagesF, languages)
+end
+
 vals = CSV.read(valsF, DataFrame)
+
+if downsample
+  filter!(x -> x.Language_ID ∈ languages.ID, vals)
+  CSV.write(valsF, vals)
+end
 
 params = CSV.read(paramsF, DataFrame)
 

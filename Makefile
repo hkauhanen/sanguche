@@ -37,7 +37,7 @@ phyloprep : src/code/createPhyloData.jl src/code/params.jl $(DATASET)/data/data.
 	cd src/code; $J createPhyloData.jl $(DATASET)
 
 familyprep : src/code/createFmList.jl src/code/family_stats.R
-	cd src/code; $J createFmList.jl $(DATASET)
+	cd src/code; $(JNEW) createFmList.jl $(DATASET)
 	cd src/code; $R family_stats.R $(DATASET)
 
 revbayes : src/code/runrevbayes.jl
