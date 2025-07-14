@@ -1,6 +1,9 @@
 cd(@__DIR__)
 
+# do we downsample Austronesian?
 downsample = true
+
+# downsampling proportion
 ds_rate = 0.3
 
 
@@ -72,6 +75,11 @@ end
 
 ##
 
+
+# this function assists in downsampling. It attaches a random number between 0 and 1
+# (uniform) to every Austronesian language, and zero to every other language. We then
+# include all languages where this number is less than ds_rate (see top of this file)
+# in the final dataset. ("deesse" = DS = downsampling.)
 function deesse(x)
   if !ismissing(x)
     return x == "Austronesian" ? rand() : 0
