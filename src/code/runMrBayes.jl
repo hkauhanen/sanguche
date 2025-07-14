@@ -10,6 +10,7 @@ end
 @everywhere fm_file = argfunc($ARGS[2])
 @everywhere bresource = argfunc($ARGS[3])
 @everywhere aggressive = argfunc($ARGS[4])
+@everywhere precision = argfunc($ARGS[5])
 
 @everywhere families = open(fm_file) do file
   readlines(file)
@@ -147,9 +148,9 @@ end
 
 
 if aggressive == "1"
-	@everywhere mbScript(fm, ngen, append) = mbScript(fm, ngen, append, 8, 5.0, "single", bresource)
+	@everywhere mbScript(fm, ngen, append) = mbScript(fm, ngen, append, 8, 5.0, precision, bresource)
 else
-  @everywhere mbScript(fm, ngen, append) = mbScript(fm, ngen, append, 4, 0.2, "single", bresource)
+  @everywhere mbScript(fm, ngen, append) = mbScript(fm, ngen, append, 4, 0.2, precision, bresource)
 end
 
 

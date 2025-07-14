@@ -44,10 +44,10 @@ revbayes : src/code/runrevbayes.jl
 	cd src/code; $J -p $(NPROC) runrevbayes.jl $(DATASET)
 
 mrbayes_large : src/code/$(MRBSCRIPT) $(DATASET)/data/fm_large.txt
-	cd src/code; $J -p $(NPROC) $(MRBSCRIPT) $(DATASET) ../../$(DATASET)/data/fm_large.txt $(BEAGLERES) $(AGGRESSIVE)
+	cd src/code; $J -p $(NPROC) $(MRBSCRIPT) $(DATASET) ../../$(DATASET)/data/fm_large.txt $(BEAGLERES) $(AGGRESSIVE) $(PRECISION)
 
 mrbayes_small : src/code/$(MRBSCRIPT) $(DATASET)/data/fm_small.txt
-	cd src/code; $J -p $(NPROC) $(MRBSCRIPT) $(DATASET) ../../$(DATASET)/data/fm_small.txt $(BEAGLERES) $(AGGRESSIVE)
+	cd src/code; $J -p $(NPROC) $(MRBSCRIPT) $(DATASET) ../../$(DATASET)/data/fm_small.txt $(BEAGLERES) $(AGGRESSIVE) $(PRECISION)
 
 purge_mrbayes :
 	rm -rf $(DATASET)/data/asjpNex/output/$(FAMILY).*
