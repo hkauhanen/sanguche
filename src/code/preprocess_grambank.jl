@@ -4,7 +4,7 @@ cd(@__DIR__)
 downsample = true
 
 # downsampling proportion
-ds_rate = 0.3
+ds_rate = 0.75
 
 
 include("features_grambank.jl")
