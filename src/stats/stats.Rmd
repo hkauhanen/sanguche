@@ -12,6 +12,7 @@ params:
 ```{r}
 # required packages
 require(tidyverse)
+require(reshape2)
 require(broom)
 require(pixiedust)
 require(emmeans)
@@ -34,7 +35,7 @@ wals$abs_corrected_phi <- abs(wals$corrected_phi)
 
 # restrict to one single neighbourhood size
 wals$k <- wals$degree
-wals <- wals[wals$k == 850, ]
+wals <- wals[wals$k == 10, ]
 ```
 
 # Descriptive statistics
@@ -71,6 +72,29 @@ mod1_under_w %>%
               row.names=FALSE, col.names=FALSE, sep=",", quote=FALSE)
 
 print(summary(mod1_under_w))
+```
+
+```{r}
+walsh <- wals[wals$status != "unknown", ]
+
+walsh <- melt(walsh, id.vars=c("pair", "status", "skewness"), measure.vars=c("Delta_over", "Delta_under"))
+
+mod <- lm(value ~ variable*status, walsh)
+
+emm <- emmeans(mod, specs = pairwise ~ variable:status)
+con <- as.data.frame(emm$contrasts)
+eff <- as.data.frame(eff_size(emm, sigma=sigma(mod), edf=mod$df, method="identity"))
+
+print(con)
+print(eff)
+
+print(-con[con$contrast == "(Delta_under non-interacting) - Delta_under interacting", ]$estimate)
+print(con[con$contrast == "(Delta_under non-interacting) - Delta_under interacting", ]$p.value)
+print(-eff[eff$contrast == "((Delta_under non-interacting) - Delta_under interacting)", ]$effect.size)
+
+print(-con[con$contrast == "(Delta_over non-interacting) - Delta_over interacting", ]$estimate)
+print(con[con$contrast == "(Delta_over non-interacting) - Delta_over interacting", ]$p.value)
+print(-eff[eff$contrast == "((Delta_over non-interacting) - Delta_over interacting)", ]$effect.size)
 ```
 
 
