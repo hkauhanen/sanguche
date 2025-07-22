@@ -232,7 +232,8 @@ end
     end
 
     #maxPSRF <= 1.1 && meanStdev <= 0.01
-    maxPSRF <= 1.05 && meanStdev <= 0.01
+    #maxPSRF <= 1.05 && meanStdev <= 0.01
+    maxPSRF <= 1.02 && meanStdev <= 0.005
   end
 
   while !converged()
