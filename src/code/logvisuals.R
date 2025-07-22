@@ -17,7 +17,7 @@ tryCatch(expr = {
          df <- do.call(rbind, lapply(X=files, FUN=read_one))
          df$dataset <- "WALS"
          df$converged <- FALSE
-         df$smaxPSRF = df$maxPSRF/240
+         df$smaxPSRF = df$maxPSRF/204
 
          for (i in 1:nrow(df)) {
            famhere = df[i, ]$family
