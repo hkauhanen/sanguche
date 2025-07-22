@@ -1,7 +1,8 @@
 cd(@__DIR__)
 
-# do we downsample Austronesian?
+# do we downsample?
 downsample = true
+to_downsample = ["Austronesian", "Atlantic-Congo"]
 
 # downsampling proportion
 ds_rate = 0.75
@@ -82,7 +83,7 @@ end
 # in the final dataset. ("deesse" = DS = downsampling.)
 function deesse(x)
   if !ismissing(x)
-    return x == "Austronesian" ? rand() : 0
+    return x ∈ to_downsample ? rand() : 0
   else
     return 0
   end
