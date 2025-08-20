@@ -131,9 +131,9 @@ Executing the following scripts runs the analysis for WALS (repeat with `gramban
 make data DATASET=wals              # (this should have already been run in Step 1)
 make phyloprep DATASET=wals
 make familyprep DATASET=wals
+make mrbayes_small DATASET=wals NPROC=3 BEAGLERES=0 AGGRESSIVE=0 PRECISION=double
+make mrbayes_large DATASET=wals NPROC=5 BEAGLERES=1 AGGRESSIVE=0 PRECISION=double # TIME-CONSUMING (~1 week)
 make revbayes DATASET=wals NPROC=8  # adjust NPROC if necessary
-make mrbayes_small DATASET=wals NPROC=8 BEAGLERES=0 AGGRESSIVE=0 PRECISION=double
-make mrbayes_large DATASET=wals NPROC=3 BEAGLERES=1 AGGRESSIVE=0 PRECISION=double # TIME-CONSUMING (~1 week)
 make posterior DATASET=wals
 make model DATASET=wals             # TIME-CONSUMING (~1 day)
 make correlations DATASET=wals

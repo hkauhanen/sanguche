@@ -1,12 +1,5 @@
 cd(@__DIR__)
 
-# do we downsample?
-downsample = true
-to_downsample = ["Austronesian", "Atlantic-Congo"]
-
-# downsampling proportion
-ds_rate = 0.75
-
 
 include("features_grambank.jl")
 include("params.jl")
