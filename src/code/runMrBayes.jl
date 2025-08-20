@@ -16,8 +16,8 @@ end
   readlines(file)
 end
 
-@everywhere PSRF_limit = dataset == "grambank" ? 1.05 : 1.1
-@everywhere STD_limit = 0.01
+@everywhere PSRF_LIMIT = dataset == "grambank" ? 1.05 : 1.1
+@everywhere STD_LIMIT = 0.01
 
 @everywhere using Pkg
 @everywhere Pkg.activate("mrbayes_project")

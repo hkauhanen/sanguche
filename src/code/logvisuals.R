@@ -17,7 +17,7 @@ tryCatch(expr = {
          df <- do.call(rbind, lapply(X=files, FUN=read_one))
          df$dataset <- "WALS"
          df$converged <- FALSE
-         df$smaxPSRF = df$maxPSRF/110
+         df$smaxPSRF = df$maxPSRF/204
 
          for (i in 1:nrow(df)) {
            famhere = df[i, ]$family
@@ -38,7 +38,7 @@ tryCatch(expr = {
 
          pdf(paste0("../../log/log_", dataset, ".pdf"), height=20, width=20)
 
-         g_w <- ggplot(melt(df, measure.vars=c("ASDSF", "smaxPSRF")), aes(lty=variable, x=generations, y=value, color=converged, group=interaction(variable, family))) + geom_path(lwd=1.0, show.legend=TRUE) + facet_wrap(.~family, scales="free", nrow=10, ncol=9) + geom_hline(yintercept=0.01, lty=1, alpha=0.5, lwd=1.0) + theme_bw() + scale_color_npg() + theme(legend.position="top") + scale_y_log10() + annotation_logticks(sides="l")
+         g_w <- ggplot(melt(df, measure.vars=c("ASDSF", "smaxPSRF")), aes(lty=variable, x=generations, y=value, color=converged, group=interaction(variable, family))) + geom_path(lwd=1.0, show.legend=TRUE) + facet_wrap(.~family, scales="free", nrow=10, ncol=9) + geom_hline(yintercept=0.005, lty=1, alpha=0.5, lwd=1.0) + theme_bw() + scale_color_npg() + theme(legend.position="top") + scale_y_log10() + annotation_logticks(sides="l")
 
          print(g_w)
 

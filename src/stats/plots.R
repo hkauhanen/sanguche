@@ -123,7 +123,7 @@ if (limtype == "rank") {
   xaxistitle <- expression("Neighbourhood radius limit"~italic(R))
 }
 
-kl1 <- kloop(data, unique(data$dataset), var="Delta_under", klim=4000)
+kl1 <- kloop(data, unique(data$dataset), var="Delta_under", klim=200)
 kl1$predictor <- "categorical"
 
 #kl2 <- kloop(data, unique(data$dataset), variable="Delta_under", indvariable="abs_corrected_phi", klim=10000)
@@ -175,7 +175,7 @@ dev.off()
 
 
 
-kl1 <- kloop(data, unique(data$dataset), var="Delta_over", klim=4000)
+kl1 <- kloop(data, unique(data$dataset), var="Delta_over", klim=200)
 kl1$predictor <- "categorical"
 
 #kl2 <- kloop(data, unique(data$dataset), variable="Delta_over", indvariable="abs_corrected_phi", klim=10000)
