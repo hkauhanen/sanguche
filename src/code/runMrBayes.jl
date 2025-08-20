@@ -16,6 +16,8 @@ end
   readlines(file)
 end
 
+@everywhere PSRF_limit = dataset == "grambank" ? 1.05 : 1.1
+@everywhere STD_limit = 0.01
 
 @everywhere using Pkg
 @everywhere Pkg.activate("mrbayes_project")
@@ -232,7 +234,7 @@ end
     end
 
     #maxPSRF <= 1.1 && meanStdev <= 0.01
-    maxPSRF <= 1.05 && meanStdev <= 0.01
+    maxPSRF <= PSRF_LIMIT && meanStdev <= STD_LIMIT
   end
 
   while !converged()
