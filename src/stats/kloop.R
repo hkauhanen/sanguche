@@ -9,7 +9,7 @@ kloop <- function(data, dataset, var, klim = 10000) {
 
   data <- data[data$k <= klim, ]
 
-  data <- data[data$status != "unknown", ]
+  #data <- data[data$status != "unknown", ]
 
   data$status <- factor(data$status)
   data$status <- relevel(data$status, ref="non-interacting")
@@ -21,7 +21,7 @@ kloop <- function(data, dataset, var, klim = 10000) {
   for (k in ks) {
     datah <- data[data$k == k, ]
 
-    datah <- melt(datah, id.vars=c("pair", "status", "skewness"), measure.vars=c("Delta_over", "Delta_under"))
+    datah <- melt(datah, id.vars=c("pair", "status"), measure.vars=c("Delta_over", "Delta_under"))
 
     mod <- lm(value ~ variable*status, datah)
 

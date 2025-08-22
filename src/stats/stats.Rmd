@@ -23,19 +23,11 @@ try(dir.create("../../results/tables", recursive=TRUE))
 
 # load data
 dataset <- params$dataset
-#wals <- read.csv("../results/wals/results_combined.csv")
-wals <- read.csv(paste0("../../results/", dataset, "/results_combined.csv"))
+data <- read.csv(paste0("../../results/", dataset, "/results_combined.csv"))
 
 # make "control" the reference level of "status" factor
-wals$status <- factor(wals$status)
-wals$status <- relevel(wals$status, ref="non-interacting")
-
-# absolute value of corrected correlation coefficient
-wals$abs_corrected_phi <- abs(wals$corrected_phi)
-
-# restrict to one single neighbourhood size
-wals$k <- wals$degree
-wals <- wals[wals$k == 10, ]
+data$status <- factor(data$status)
+data$status <- relevel(data$status, ref="non-interacting")
 ```
 
 # Descriptive statistics
@@ -43,43 +35,31 @@ wals <- wals[wals$k == 10, ]
 Mean sample size:
 
 ```{r}
-round(mean(wals$N))
+round(mean(data$N))
 ```
 This suggests the following neighbourhood size to use:
 
 ```{r}
-round(sqrt(round(mean(wals$N))))
+neisize = round(sqrt(round(mean(data$N))))
+neisize
 ```
+
+Restrict to this size:
+
+```{r}
+data <- data[data$degree == neisize, ]
+#data <- data[data$degree == 10, ]
+```
+
 
 # Basic model: comparison of $\Delta$ between typologies of different statuses
 
-## Under-represented types ($\Delta^-$)
-
 ```{r}
-mod1_under_w <- lm(Delta_under ~ status + skewness, data=wals)
+#datah <- data[data$status != "unknown", ]
 
-mathematize <- function(value) {
-  paste0("[", value, "]")
-}
+datah <- melt(data, id.vars=c("pair", "status", "abs_corrected_phi"), measure.vars=c("Delta_over", "Delta_under"))
 
-mod1_under_w %>% 
-  dust %>% 
-  sprinkle(round=3) %>% 
-  sprinkle(cols="term", replace=c("intercept", "interacting (vs. control)", 
-                                  "unknown (vs. control)", "TAS")) %>% 
-  sprinkle(cols="p.value", fn = quote(pvalString_demo(value, stars=TRUE))) %>%
-  write.table(file="../../results/tables/mod1_cat_under_wals.csv", 
-              row.names=FALSE, col.names=FALSE, sep=",", quote=FALSE)
-
-print(summary(mod1_under_w))
-```
-
-```{r}
-walsh <- wals[wals$status != "unknown", ]
-
-walsh <- melt(walsh, id.vars=c("pair", "status", "skewness"), measure.vars=c("Delta_over", "Delta_under"))
-
-mod <- lm(value ~ variable*status, walsh)
+mod <- lm(value ~ variable*status, datah)
 
 emm <- emmeans(mod, specs = pairwise ~ variable:status)
 con <- as.data.frame(emm$contrasts)
@@ -98,101 +78,22 @@ print(-eff[eff$contrast == "((Delta_over non-interacting) - Delta_over interacti
 ```
 
 
-## Over-represented types ($\Delta^+$)
-
-```{r}
-mod1_over_w <- lm(Delta_over ~ status + skewness, data=wals)
-
-mod1_over_w %>% 
-  dust %>% 
-  sprinkle(round=3) %>% 
-  sprinkle(cols="term", replace=c("intercept", "interacting (vs. control)", 
-                                  "unknown (vs. control)", "TAS")) %>% 
-  sprinkle(cols="p.value", fn = quote(pvalString_demo(value, stars=TRUE))) %>%
-  write.table(file="../../results/tables/mod1_cat_over_wals.csv", 
-              row.names=FALSE, col.names=FALSE, sep=",", quote=FALSE)
-
-print(summary(mod1_over_w))
-```
-
-
 # Model 2: continuous predictor
 
-## Under-represented types ($\Delta^-$)
-
 ```{r}
-mod1_under_w <- lm(Delta_under ~ abs_corrected_phi + skewness, data=wals)
+datah <- melt(data, id.vars=c("pair", "status", "abs_corrected_phi"), measure.vars=c("Delta_over", "Delta_under"))
+datah <- datah[datah$status != "non-interacting", ]
 
-mathematize <- function(value) {
-  paste0("[", value, "]")
-}
+mod1_under_w <- lm(value ~ variable * abs_corrected_phi, data=datah)
 
-mod1_under_w %>% 
-  dust %>% 
-  sprinkle(round=3) %>% 
-  sprinkle(cols="term", replace=c("intercept", "|φ_c|", "TAS")) %>% 
-  sprinkle(cols="p.value", fn = quote(pvalString_demo(value, stars=TRUE))) %>%
-  write.table(file="../../results/tables/mod1_cts_under_wals.csv", 
-              row.names=FALSE, col.names=FALSE, sep=",", quote=FALSE)
+#mod1_under_w %>% 
+#  dust %>% 
+#  sprinkle(round=3) %>% 
+#  sprinkle(cols="term", replace=c("intercept", "|φ_c|", "TAS")) %>% 
+#  sprinkle(cols="p.value", fn = quote(pvalString_demo(value, stars=TRUE))) %>%
+#  write.table(file=paste0("../../results/tables/mod1_cts_under_", dataset, ".csv"), 
+#              row.names=FALSE, col.names=FALSE, sep=",", quote=FALSE)
 
 print(summary(mod1_under_w))
 ```
-
-## Under-represented types ($\Delta^-$), only interacting typologies
-
-```{r}
-mod1_under_w <- lm(Delta_under ~ abs_corrected_phi + skewness, data=wals[wals$status == "interacting", ])
-
-mathematize <- function(value) {
-  paste0("[", value, "]")
-}
-
-mod1_under_w %>% 
-  dust %>% 
-  sprinkle(round=3) %>% 
-  sprinkle(cols="term", replace=c("intercept", "|φ_c|", "TAS")) %>% 
-  sprinkle(cols="p.value", fn = quote(pvalString_demo(value, stars=TRUE))) %>%
-  write.table(file="../../results/tables/mod1_cts_inter_under_wals.csv", 
-              row.names=FALSE, col.names=FALSE, sep=",", quote=FALSE)
-
-print(summary(mod1_under_w))
-```
-
-
-
-## Over-represented types ($\Delta^+$)
-
-```{r}
-mod1_over_w <- lm(Delta_over ~ abs_corrected_phi + skewness, data=wals)
-
-mod1_over_w %>% 
-  dust %>% 
-  sprinkle(round=3) %>% 
-  sprinkle(cols="term", replace=c("intercept", "|φ_c|", "TAS")) %>% 
-  sprinkle(cols="p.value", fn = quote(pvalString_demo(value, stars=TRUE))) %>%
-  write.table(file="../../results/tables/mod1_cts_over_wals.csv", 
-              row.names=FALSE, col.names=FALSE, sep=",", quote=FALSE)
-
-print(summary(mod1_over_w))
-```
-
-
-
-## Over-represented types ($\Delta^+$), interacting typologies only
-
-```{r}
-mod1_over_w <- lm(Delta_over ~ abs_corrected_phi + skewness, data=wals[wals$status == "interacting", ])
-
-mod1_over_w %>% 
-  dust %>% 
-  sprinkle(round=3) %>% 
-  sprinkle(cols="term", replace=c("intercept", "|φ_c|", "TAS")) %>% 
-  sprinkle(cols="p.value", fn = quote(pvalString_demo(value, stars=TRUE))) %>%
-  write.table(file="../../results/tables/mod1_cts_inter_over_wals.csv", 
-              row.names=FALSE, col.names=FALSE, sep=",", quote=FALSE)
-
-print(summary(mod1_over_w))
-```
-
-
 

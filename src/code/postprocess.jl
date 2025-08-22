@@ -1,13 +1,18 @@
 dataset = ARGS[1]
-pvaluelimit = 0.05
 
+pvaluelimit_wals = 0.05
+pvaluelimit_grambank = 0.1
+
+pvaluelimit = dataset == "wals" ? pvaluelimit_wals : pvaluelimit_grambank
 
 using Pkg
-using CSV
-using DataFrames
 
 Pkg.activate("Sanguche")
 Pkg.instantiate()
+
+
+using CSV
+using DataFrames
 
 
 include("features_$dataset.jl")
@@ -73,10 +78,11 @@ transform!(combined, [:H, :H_dispref] => ((a,b) -> b - a) => :Delta_under)
 
 
 # skewness measure
+#=
 transform!(combined, [:freq11, :freq12, :freq21, :freq22] => ((a,b,c,d) -> bernoulli_skewness.(a+b,c+d)) => :skewness1)
 transform!(combined, [:freq11, :freq12, :freq21, :freq22] => ((a,b,c,d) -> bernoulli_skewness.(a+c,b+d)) => :skewness2)
 transform!(combined, [:skewness1, :skewness2] => ((a,b) -> abs.(a) .+ abs.(b)) => :skewness)
-
+=#
 
 # writeout
 CSV.write("../../results/$dataset/results_combined.csv", combined)

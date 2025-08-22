@@ -446,14 +446,14 @@ data$status &lt;- relevel(data$status, ref=&quot;non-interacting&quot;)</code></
 <h1>Descriptive statistics</h1>
 <p>Mean sample size:</p>
 <pre class="r"><code>round(mean(data$N))</code></pre>
-<pre><code>## [1] 1485</code></pre>
+<pre><code>## [1] 758</code></pre>
 <p>This suggests the following neighbourhood size to use:</p>
 <pre class="r"><code>neisize = round(sqrt(round(mean(data$N))))
 neisize</code></pre>
-<pre><code>## [1] 39</code></pre>
+<pre><code>## [1] 28</code></pre>
 <p>Restrict to this size:</p>
-<pre class="r"><code>#data &lt;- data[data$degree == neisize, ]
-data &lt;- data[data$degree == 10, ]</code></pre>
+<pre class="r"><code>data &lt;- data[data$degree == neisize, ]
+#data &lt;- data[data$degree == 10, ]</code></pre>
 </div>
 <div id="basic-model-comparison-of-delta-between-typologies-of-different-statuses" class="section level1">
 <h1>Basic model: comparison of <span class="math inline">\(\Delta\)</span> between typologies of different
@@ -469,88 +469,88 @@ con &lt;- as.data.frame(emm$contrasts)
 eff &lt;- as.data.frame(eff_size(emm, sigma=sigma(mod), edf=mod$df, method=&quot;identity&quot;))</code></pre>
 <pre><code>## Since &#39;object&#39; is a list, we are using the contrasts already present.</code></pre>
 <pre class="r"><code>print(con)</code></pre>
-<pre><code>##  contrast                                                     estimate      SE
-##  (Delta_over non-interacting) - (Delta_under non-interacting) -0.00545 0.00913
-##  (Delta_over non-interacting) - Delta_over interacting         0.00338 0.01118
-##  (Delta_over non-interacting) - Delta_under interacting       -0.04275 0.01118
-##  (Delta_over non-interacting) - Delta_over unknown             0.00496 0.00913
-##  (Delta_over non-interacting) - Delta_under unknown           -0.03865 0.00913
-##  (Delta_under non-interacting) - Delta_over interacting        0.00883 0.01118
-##  (Delta_under non-interacting) - Delta_under interacting      -0.03731 0.01118
-##  (Delta_under non-interacting) - Delta_over unknown            0.01041 0.00913
-##  (Delta_under non-interacting) - Delta_under unknown          -0.03320 0.00913
-##  Delta_over interacting - Delta_under interacting             -0.04614 0.01291
-##  Delta_over interacting - Delta_over unknown                   0.00158 0.01118
-##  Delta_over interacting - Delta_under unknown                 -0.04203 0.01118
-##  Delta_under interacting - Delta_over unknown                  0.04772 0.01118
-##  Delta_under interacting - Delta_under unknown                 0.00410 0.01118
-##  Delta_over unknown - Delta_under unknown                     -0.04361 0.00913
+<pre><code>##  contrast                                                      estimate      SE
+##  (Delta_over non-interacting) - (Delta_under non-interacting) -0.000876 0.00500
+##  (Delta_over non-interacting) - Delta_over interacting         0.000195 0.00510
+##  (Delta_over non-interacting) - Delta_under interacting       -0.032676 0.00510
+##  (Delta_over non-interacting) - Delta_over unknown            -0.001447 0.00548
+##  (Delta_over non-interacting) - Delta_under unknown           -0.003955 0.00548
+##  (Delta_under non-interacting) - Delta_over interacting        0.001071 0.00510
+##  (Delta_under non-interacting) - Delta_under interacting      -0.031801 0.00510
+##  (Delta_under non-interacting) - Delta_over unknown           -0.000571 0.00548
+##  (Delta_under non-interacting) - Delta_under unknown          -0.003080 0.00548
+##  Delta_over interacting - Delta_under interacting             -0.032872 0.00519
+##  Delta_over interacting - Delta_over unknown                  -0.001642 0.00557
+##  Delta_over interacting - Delta_under unknown                 -0.004151 0.00557
+##  Delta_under interacting - Delta_over unknown                  0.031229 0.00557
+##  Delta_under interacting - Delta_under unknown                 0.028721 0.00557
+##  Delta_over unknown - Delta_under unknown                     -0.002509 0.00592
 ##  df t.ratio p.value
-##  74  -0.597  0.9909
-##  74   0.303  0.9996
-##  74  -3.825  0.0036
-##  74   0.544  0.9941
-##  74  -4.235  0.0009
-##  74   0.790  0.9684
-##  74  -3.338  0.0161
-##  74   1.141  0.8627
-##  74  -3.638  0.0065
-##  74  -3.575  0.0079
-##  74   0.141  1.0000
-##  74  -3.761  0.0044
-##  74   4.269  0.0008
-##  74   0.367  0.9991
-##  74  -4.779  0.0001
+##  68  -0.175  1.0000
+##  68   0.038  1.0000
+##  68  -6.412  &lt;.0001
+##  68  -0.264  0.9998
+##  68  -0.722  0.9786
+##  68   0.210  0.9999
+##  68  -6.240  &lt;.0001
+##  68  -0.104  1.0000
+##  68  -0.562  0.9931
+##  68  -6.334  &lt;.0001
+##  68  -0.295  0.9997
+##  68  -0.746  0.9753
+##  68   5.611  &lt;.0001
+##  68   5.161  &lt;.0001
+##  68  -0.424  0.9982
 ## 
 ## P value adjustment: tukey method for comparing a family of 6 estimates</code></pre>
 <pre class="r"><code>print(eff)</code></pre>
 <pre><code>##  contrast                                                       effect.size
-##  ((Delta_over non-interacting) - (Delta_under non-interacting))     -0.2111
-##  ((Delta_over non-interacting) - Delta_over interacting)             0.1311
-##  ((Delta_over non-interacting) - Delta_under interacting)           -1.6564
-##  ((Delta_over non-interacting) - Delta_over unknown)                 0.1923
-##  ((Delta_over non-interacting) - Delta_under unknown)               -1.4974
-##  ((Delta_under non-interacting) - Delta_over interacting)            0.3422
-##  ((Delta_under non-interacting) - Delta_under interacting)          -1.4453
-##  ((Delta_under non-interacting) - Delta_over unknown)                0.4033
-##  ((Delta_under non-interacting) - Delta_under unknown)              -1.2864
-##  (Delta_over interacting - Delta_under interacting)                 -1.7875
-##  (Delta_over interacting - Delta_over unknown)                       0.0612
-##  (Delta_over interacting - Delta_under unknown)                     -1.6285
-##  (Delta_under interacting - Delta_over unknown)                      1.8487
-##  (Delta_under interacting - Delta_under unknown)                     0.1590
-##  (Delta_over unknown - Delta_under unknown)                         -1.6897
+##  ((Delta_over non-interacting) - (Delta_under non-interacting))     -0.0662
+##  ((Delta_over non-interacting) - Delta_over interacting)             0.0148
+##  ((Delta_over non-interacting) - Delta_under interacting)           -2.4696
+##  ((Delta_over non-interacting) - Delta_over unknown)                -0.1093
+##  ((Delta_over non-interacting) - Delta_under unknown)               -0.2989
+##  ((Delta_under non-interacting) - Delta_over interacting)            0.0809
+##  ((Delta_under non-interacting) - Delta_under interacting)          -2.4034
+##  ((Delta_under non-interacting) - Delta_over unknown)               -0.0432
+##  ((Delta_under non-interacting) - Delta_under unknown)              -0.2327
+##  (Delta_over interacting - Delta_under interacting)                 -2.4843
+##  (Delta_over interacting - Delta_over unknown)                      -0.1241
+##  (Delta_over interacting - Delta_under unknown)                     -0.3137
+##  (Delta_under interacting - Delta_over unknown)                      2.3602
+##  (Delta_under interacting - Delta_under unknown)                     2.1706
+##  (Delta_over unknown - Delta_under unknown)                         -0.1896
 ##     SE df lower.CL upper.CL
-##  0.354 74   -0.916    0.494
-##  0.433 74   -0.732    0.994
-##  0.454 74   -2.561   -0.752
-##  0.354 74   -0.513    0.897
-##  0.374 74   -2.243   -0.751
-##  0.434 74   -0.522    1.207
-##  0.449 74   -2.340   -0.551
-##  0.355 74   -0.304    1.111
-##  0.369 74   -2.022   -0.551
-##  0.521 74   -2.826   -0.749
-##  0.433 74   -0.802    0.924
-##  0.453 74   -2.532   -0.725
-##  0.459 74    0.934    2.763
-##  0.433 74   -0.704    1.022
-##  0.380 74   -2.447   -0.933
+##  0.378 68   -0.820    0.688
+##  0.385 68   -0.754    0.783
+##  0.440 68   -3.347   -1.592
+##  0.414 68   -0.936    0.717
+##  0.415 68   -1.127    0.529
+##  0.385 68   -0.688    0.850
+##  0.437 68   -3.275   -1.532
+##  0.414 68   -0.869    0.783
+##  0.415 68   -1.060    0.594
+##  0.446 68   -3.375   -1.594
+##  0.421 68   -0.964    0.716
+##  0.421 68   -1.155    0.527
+##  0.467 68    1.429    3.292
+##  0.460 68    1.253    3.088
+##  0.448 68   -1.083    0.703
 ## 
-## sigma used for effect sizes: 0.02581 
+## sigma used for effect sizes: 0.01323 
 ## Confidence level used: 0.95</code></pre>
 <pre class="r"><code>print(-con[con$contrast == &quot;(Delta_under non-interacting) - Delta_under interacting&quot;, ]$estimate)</code></pre>
-<pre><code>## [1] 0.03730521</code></pre>
+<pre><code>## [1] 0.03180052</code></pre>
 <pre class="r"><code>print(con[con$contrast == &quot;(Delta_under non-interacting) - Delta_under interacting&quot;, ]$p.value)</code></pre>
-<pre><code>## [1] 0.01607607</code></pre>
+<pre><code>## [1] 4.756875e-07</code></pre>
 <pre class="r"><code>print(-eff[eff$contrast == &quot;((Delta_under non-interacting) - Delta_under interacting)&quot;, ]$effect.size)</code></pre>
-<pre><code>## [1] 1.445332</code></pre>
+<pre><code>## [1] 2.403376</code></pre>
 <pre class="r"><code>print(-con[con$contrast == &quot;(Delta_over non-interacting) - Delta_over interacting&quot;, ]$estimate)</code></pre>
-<pre><code>## [1] -0.003383962</code></pre>
+<pre><code>## [1] -0.0001953334</code></pre>
 <pre class="r"><code>print(con[con$contrast == &quot;(Delta_over non-interacting) - Delta_over interacting&quot;, ]$p.value)</code></pre>
-<pre><code>## [1] 0.9996452</code></pre>
+<pre><code>## [1] 1</code></pre>
 <pre class="r"><code>print(-eff[eff$contrast == &quot;((Delta_over non-interacting) - Delta_over interacting)&quot;, ]$effect.size)</code></pre>
-<pre><code>## [1] -0.1311063</code></pre>
+<pre><code>## [1] -0.01476264</code></pre>
 </div>
 <div id="model-2-continuous-predictor" class="section level1">
 <h1>Model 2: continuous predictor</h1>
@@ -574,21 +574,21 @@ print(summary(mod1_under_w))</code></pre>
 ## 
 ## Residuals:
 ##       Min        1Q    Median        3Q       Max 
-## -0.087582 -0.014815  0.001871  0.014623  0.085482 
+## -0.055097 -0.005351 -0.000334  0.000796  0.050076 
 ## 
 ## Coefficients:
-##                                        Estimate Std. Error t value Pr(&gt;|t|)   
-## (Intercept)                           -0.006823   0.011160  -0.611  0.54408   
-## variableDelta_under                    0.045363   0.015783   2.874  0.00622 **
-## abs_corrected_phi                      0.005925   0.062683   0.095  0.92513   
-## variableDelta_under:abs_corrected_phi -0.006417   0.088648  -0.072  0.94262   
+##                                         Estimate Std. Error t value Pr(&gt;|t|)  
+## (Intercept)                            0.0007612  0.0072309   0.105   0.9167  
+## variableDelta_under                   -0.0031044  0.0102261  -0.304   0.7630  
+## abs_corrected_phi                     -0.0017073  0.0217870  -0.078   0.9379  
+## variableDelta_under:abs_corrected_phi  0.0792462  0.0308115   2.572   0.0137 *
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.03312 on 44 degrees of freedom
-##   (8 observations deleted due to missingness)
-## Multiple R-squared:  0.3296, Adjusted R-squared:  0.2839 
-## F-statistic:  7.21 on 3 and 44 DF,  p-value: 0.0004871</code></pre>
+## Residual standard error: 0.01735 on 42 degrees of freedom
+##   (10 observations deleted due to missingness)
+## Multiple R-squared:  0.3953, Adjusted R-squared:  0.3522 
+## F-statistic: 9.154 on 3 and 42 DF,  p-value: 8.825e-05</code></pre>
 </div>
 
 
