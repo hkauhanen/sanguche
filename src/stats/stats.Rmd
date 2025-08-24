@@ -1,13 +1,15 @@
 ---
 title: "Contact helps dispreferred combinations of typological features to survive: geospatial evidence"
 subtitle: "Statistical analyses"
-output: html_document
-params:
-  dataset: null
+output:
+  html_document:
+    toc: true
 ---
 
 
 # Preliminaries
+
+Packages etc:
 
 ```{r}
 # required packages
@@ -16,67 +18,169 @@ require(reshape2)
 require(broom)
 require(pixiedust)
 require(emmeans)
+require(stringr)
+require(ggplot2)
+require(gridExtra)
+require(ggsci)
 source("pvalString_demo.R")
 
 # create results/tables, if it doesn't exist already
 try(dir.create("../../results/tables", recursive=TRUE))
+```
 
-# load data
-dataset <- params$dataset
-data <- read.csv(paste0("../../results/", dataset, "/results_combined.csv"))
+Prepare data:
 
-# make "control" the reference level of "status" factor
-data$status <- factor(data$status)
-data$status <- relevel(data$status, ref="non-interacting")
+```{r}
+prep_data <- function(dataset) {
+	# load data
+	data <- read.csv(paste0("../../results/", dataset, "/results_combined.csv"))
+
+	# rename "non-interacting" as "control"
+	data$status <- ifelse(data$status == "non-interacting", "control", data$status)
+	data$status <- factor(data$status)
+	data$status <- relevel(data$status, ref="control")
+
+	# return
+	data
+} 
+
+wals <- prep_data("wals")
+gram <- prep_data("grambank")
 ```
 
 # Descriptive statistics
 
-Mean sample size:
+Mean sample sizes:
 
 ```{r}
-round(mean(data$N))
-```
-This suggests the following neighbourhood size to use:
-
-```{r}
-neisize = round(sqrt(round(mean(data$N))))
-neisize
+round(mean(wals$N))
+round(mean(gram$N))
 ```
 
-Restrict to this size:
+This suggests the following neighbourhood sizes to use, on average:
 
 ```{r}
-data <- data[data$degree == neisize, ]
-#data <- data[data$degree == 10, ]
+neisize_wals = round(sqrt(round(mean(wals$N))))
+neisize_gram = round(sqrt(round(mean(gram$N))))
+
+neisize_wals
+neisize_gram
+```
+
+Restrict neighbourhoods by sample sizes per individual feature. Also make a smaller-neighbourhoods version of Grambank:
+
+```{r}
+wals <- wals %>% group_by(pair) %>% filter(degree == round(sqrt(N)))
+gram <- gram %>% group_by(pair) %>% filter(degree == round(sqrt(N)))
+
+gram_smol <- prep_data("grambank")
+kless <- -20
+gram_smol <- gram_smol %>% group_by(pair) %>% filter(degree == round(sqrt(N)) + kless)
 ```
 
 
 # Basic model: comparison of $\Delta$ between typologies of different statuses
 
 ```{r}
-#datah <- data[data$status != "unknown", ]
+basic_model <- function(data) {
+	data$overattested <- data$Delta_over
+	data$underattested <- data$Delta_under
 
-datah <- melt(data, id.vars=c("pair", "status", "abs_corrected_phi"), measure.vars=c("Delta_over", "Delta_under"))
+	datah <- melt(data, id.vars=c("pair", "status", "abs_corrected_phi"), measure.vars=c("overattested", "underattested"))
+	mod <- lm(value ~ variable*status, datah)
+	
+	emm <- emmeans(mod, specs = pairwise ~ variable:status)
+	con <- as.data.frame(emm$contrasts)
+	eff <- as.data.frame(eff_size(emm, sigma=sigma(mod), edf=mod$df, method="identity"))
 
-mod <- lm(value ~ variable*status, datah)
+	list(mod=mod, con=con, eff=eff)
+}
 
-emm <- emmeans(mod, specs = pairwise ~ variable:status)
-con <- as.data.frame(emm$contrasts)
-eff <- as.data.frame(eff_size(emm, sigma=sigma(mod), edf=mod$df, method="identity"))
-
-print(con)
-print(eff)
-
-print(-con[con$contrast == "(Delta_under non-interacting) - Delta_under interacting", ]$estimate)
-print(con[con$contrast == "(Delta_under non-interacting) - Delta_under interacting", ]$p.value)
-print(-eff[eff$contrast == "((Delta_under non-interacting) - Delta_under interacting)", ]$effect.size)
-
-print(-con[con$contrast == "(Delta_over non-interacting) - Delta_over interacting", ]$estimate)
-print(con[con$contrast == "(Delta_over non-interacting) - Delta_over interacting", ]$p.value)
-print(-eff[eff$contrast == "((Delta_over non-interacting) - Delta_over interacting)", ]$effect.size)
+mod_wals <- basic_model(wals)
+mod_gram <- basic_model(gram)
+mod_gram_smol <- basic_model(gram_smol)
 ```
 
+## WALS results
+
+```{r}
+print(mod_wals$con)
+print(mod_wals$eff)
+```
+
+## Grambank results
+
+```{r}
+print(mod_gram$con)
+print(mod_gram$eff)
+```
+
+## Grambank (k=10) results
+
+```{r}
+print(mod_gram_smol$con)
+print(mod_gram_smol$eff)
+```
+
+## Nice tables for paper
+
+```{r}
+mods = list(mod_wals, mod_gram, mod_gram_smol)
+names = list("wals", "grambank", "grambank_smol")
+
+write_con <- function(mod, dataset) {
+	#mod$con %>% dust %>% sprinkle(cols=c("estimate", "SE", "t.ratio"), round=4) %>% sprinkle(cols="p.value", fn=quote(pvalString_demo(value, stars=TRUE))) %>% write.table(file=paste0("../../results/tables/mod1_con_", dataset, ".csv"), row.names=FALSE, col.names=FALSE, sep=",", quote=FALSE)
+	mod$con %>% subset(select=c("contrast", "estimate", "p.value")) %>% dust %>% sprinkle(cols=c("estimate", "SE", "t.ratio"), round=4) %>% sprinkle(cols="p.value", fn=quote(pvalString_demo(value, stars=TRUE))) %>% write.table(file=paste0("../../results/tables/mod1_con_", dataset, ".csv"), row.names=FALSE, col.names=FALSE, sep=",", quote=FALSE)
+}
+
+write_eff <- function(mod, dataset) {
+	#mod$eff %>% dust %>% sprinkle(cols=c("effect.size", "SE", "lower.CL", "upper.CL"), round=3) %>% sprinkle(cols="p.value", fn=quote(pvalString_demo(value, stars=TRUE))) %>% write.table(file=paste0("../../results/tables/mod1_eff_", dataset, ".csv"), row.names=FALSE, col.names=FALSE, sep=",", quote=FALSE)
+	mod$eff %>% subset(select=c("contrast", "effect.size", "lower.CL", "upper.CL")) %>% dust %>% sprinkle(cols=c("effect.size", "SE", "lower.CL", "upper.CL"), round=3) %>% sprinkle(cols="p.value", fn=quote(pvalString_demo(value, stars=TRUE))) %>% write.table(file=paste0("../../results/tables/mod1_eff_", dataset, ".csv"), row.names=FALSE, col.names=FALSE, sep=",", quote=FALSE)
+}
+
+write_combined <- function(mod, dataset) {
+	df <- mod$con
+	df$cohens.d <- mod$eff$effect.size
+	df %>% subset(select=c("contrast", "estimate", "cohens.d", "p.value")) %>% dust %>% sprinkle(cols=c("estimate", "cohens.d"), round=4) %>% sprinkle(cols="p.value", fn=quote(pvalString_demo(value, stars=TRUE))) %>% write.table(file=paste0("../../results/tables/mod1_combined_", dataset, ".csv"), row.names=FALSE, col.names=FALSE, sep=",", quote=FALSE)
+}
+
+write_combined_concise <- function(mod, dataset) {
+	df <- mod$con
+	df$cohens.d <- mod$eff$effect.size
+
+	df <- df[str_count(df$contrast, "underattested") == 2 | str_count(df$contrast, "overattested") == 2, ]
+	df <- df[c(3,4,6,1,2,5), ]
+	df %>% subset(select=c("contrast", "estimate", "cohens.d", "p.value")) %>% dust %>% sprinkle(cols=c("estimate", "cohens.d"), round=4) %>% sprinkle(cols="p.value", fn=quote(pvalString_demo(value, stars=TRUE))) %>% write.table(file=paste0("../../results/tables/mod1_combined_concise_", dataset, ".csv"), row.names=FALSE, col.names=FALSE, sep=",", quote=FALSE)
+}
+
+for (i in 1:3) {
+	write_con(mods[[i]], names[[i]])
+	write_eff(mods[[i]], names[[i]])
+	write_combined(mods[[i]], names[[i]])
+	write_combined_concise(mods[[i]], names[[i]])
+}
+```
+
+## Make plot
+
+```{r}
+wals$dataset <- "WALS"
+gram$dataset <- "Grambank"
+gram_smol$dataset <- "Grambank SN"
+
+all <- rbind(wals, gram, gram_smol)
+
+g1 <- ggplot(all, aes(x=dataset, y=Delta_under, fill=status)) + geom_boxplot() + ggtitle("Underrepresented types") + xlab("Dataset") + ylab("Neighbourhood entropy differential") + scale_fill_npg(name="Typology", guide="none")
+g2 <- ggplot(all, aes(x=dataset, y=Delta_over, fill=status)) + geom_boxplot() + ggtitle("Overrepresented types") + xlab("Dataset") + ylab("Neighbourhood entropy differential") + scale_fill_npg(name="Typology")
+
+g <- grid.arrange(g1, g2, nrow=1, widths=c(0.8, 1.0))
+```
+
+Save plot:
+
+```{r}
+ggsave(filename="../../results/plots/boxplot.png", plot=g, device="png", units="px", width=3000, height=1500, dpi=350)
+```
 
 # Model 2: continuous predictor
 

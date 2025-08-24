@@ -1,0 +1,15 @@
+(overattested control - underattested control),0.1,-0.605,0.804
+(overattested control - overattested interacting),-0.039,-0.942,0.864
+(overattested control - underattested interacting),-0.096,-0.999,0.807
+(overattested control - overattested unknown),-0.139,-0.833,0.556
+(overattested control - underattested unknown),-0.411,-1.108,0.286
+(underattested control - overattested interacting),-0.139,-1.042,0.764
+(underattested control - underattested interacting),-0.196,-1.099,0.708
+(underattested control - overattested unknown),-0.238,-0.933,0.457
+(underattested control - underattested unknown),-0.511,-1.21,0.189
+(overattested interacting - underattested interacting),-0.057,-1.122,1.009
+(overattested interacting - overattested unknown),-0.099,-0.994,0.796
+(overattested interacting - underattested unknown),-0.372,-1.268,0.525
+(underattested interacting - overattested unknown),-0.043,-0.938,0.852
+(underattested interacting - underattested unknown),-0.315,-1.211,0.581
+(overattested unknown - underattested unknown),-0.272,-0.957,0.413

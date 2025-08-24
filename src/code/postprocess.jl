@@ -1,7 +1,7 @@
 dataset = ARGS[1]
 
 pvaluelimit_wals = 0.05
-pvaluelimit_grambank = 0.1
+pvaluelimit_grambank = 0.05
 
 pvaluelimit = dataset == "wals" ? pvaluelimit_wals : pvaluelimit_grambank
 
@@ -13,10 +13,18 @@ Pkg.instantiate()
 
 using CSV
 using DataFrames
+using Pipe
+using Statistics
 
 
 include("features_$dataset.jl")
 include("params.jl")
+
+
+try
+	mkdir("../../results/featuretables")
+catch e
+end
 
 
 # a couple of useful functions
@@ -52,15 +60,15 @@ transform!(phyl, :cpp => (p -> p .< pvaluelimit) => :interacting)
 transform!(phyl, [:f1, :f2] => ((a,b) -> a .∈ [control_features] .|| b .∈ [control_features]) => :control)
 
 function classifier(i, c)
-  if i
-    return "interacting"
-  elseif !i && !c
-    return "unknown"
-  elseif !i && c
-    return "non-interacting"
-  else
-    return "weird"
-  end
+	if i
+		return "interacting"
+	elseif !i && !c
+		return "unknown"
+	elseif !i && c
+		return "non-interacting"
+	else
+		return "weird"
+	end
 end
 
 transform!(phyl, [:interacting, :control] => ((i,c) -> classifier.(i,c)) => :status)
@@ -86,3 +94,39 @@ transform!(combined, [:skewness1, :skewness2] => ((a,b) -> abs.(a) .+ abs.(b)) =
 
 # writeout
 CSV.write("../../results/$dataset/results_combined.csv", combined)
+
+
+# print featuretables
+
+function newname(s)
+	s == "non-interacting" ? "control" : s
+end
+transform!(combined, :status => (s -> newname.(s)) => :status)
+
+k = round(Int, sqrt(mean(combined.N)))
+
+tabletoprint = @pipe combined |> subset(_, :degree => (d -> d .== k)) |> subset(_, :status => (s -> s .== "interacting")) |> select(_, [:pair, :N, :logBayes, :cpp, :phi, :corrected_phi]) |> sort(_, :logBayes, rev=true)
+
+transform!(tabletoprint, :phi => (p -> round.(p, digits=2)) => :phi)
+
+CSV.write("../../results/featuretables/featuretable_interacting_$dataset.csv", tabletoprint, writeheader=false)
+
+
+tabletoprint = @pipe combined |> subset(_, :degree => (d -> d .== k)) |> select(_, [:pair, :N, :status, :logBayes, :cpp, :phi, :corrected_phi, :Delta_over, :Delta_under]) |> sort(_, :logBayes, rev=true)
+
+transform!(tabletoprint, :phi => (p -> round.(p, digits=2)) => :phi)
+transform!(tabletoprint, :Delta_over => (p -> round.(p, digits=5)) => :Delta_over)
+transform!(tabletoprint, :Delta_under => (p -> round.(p, digits=5)) => :Delta_under)
+
+CSV.write("../../results/featuretables/featuretable_withDelta_$dataset.csv", tabletoprint, writeheader=false)
+
+if dataset == "grambank"
+	k = 10
+	tabletoprint = @pipe combined |> subset(_, :degree => (d -> d .== k)) |> select(_, [:pair, :N, :status, :logBayes, :cpp, :phi, :corrected_phi, :Delta_over, :Delta_under]) |> sort(_, :logBayes, rev=true)
+
+	transform!(tabletoprint, :phi => (p -> round.(p, digits=2)) => :phi)
+	transform!(tabletoprint, :Delta_over => (p -> round.(p, digits=5)) => :Delta_over)
+	transform!(tabletoprint, :Delta_under => (p -> round.(p, digits=5)) => :Delta_under)
+
+	CSV.write("../../results/featuretables/featuretable_withDelta_k10_$dataset.csv", tabletoprint, writeheader=false)
+end
