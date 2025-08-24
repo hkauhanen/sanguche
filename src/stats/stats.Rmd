@@ -23,6 +23,7 @@ require(ggplot2)
 require(gridExtra)
 require(ggsci)
 source("pvalString_demo.R")
+source("kloop.R")
 
 # create results/tables, if it doesn't exist already
 try(dir.create("../../results/tables", recursive=TRUE))
@@ -70,11 +71,14 @@ neisize_gram
 Restrict neighbourhoods by sample sizes per individual feature. Also make a smaller-neighbourhoods version of Grambank:
 
 ```{r}
+fullwals <- wals
+fullgram <- gram
+
 wals <- wals %>% group_by(pair) %>% filter(degree == round(sqrt(N)))
 gram <- gram %>% group_by(pair) %>% filter(degree == round(sqrt(N)))
 
 gram_smol <- prep_data("grambank")
-kless <- -20
+kless <- -30
 gram_smol <- gram_smol %>% group_by(pair) %>% filter(degree == round(sqrt(N)) + kless)
 ```
 
@@ -182,22 +186,34 @@ Save plot:
 ggsave(filename="../../results/plots/boxplot.png", plot=g, device="png", units="px", width=3000, height=1500, dpi=350)
 ```
 
-# Model 2: continuous predictor
+
+## k sweeps
 
 ```{r}
-datah <- melt(data, id.vars=c("pair", "status", "abs_corrected_phi"), measure.vars=c("Delta_over", "Delta_under"))
-datah <- datah[datah$status != "non-interacting", ]
+klo_wals <- kloop(fullwals, "underattested", ks=-23:110)
+klo_gram <- kloop(fullgram, "underattested", ks=-39:40)
 
-mod1_under_w <- lm(value ~ variable * abs_corrected_phi, data=datah)
+klo_wals$dataset <- "WALS"
+klo_gram$dataset <- "Grambank"
 
-#mod1_under_w %>% 
-#  dust %>% 
-#  sprinkle(round=3) %>% 
-#  sprinkle(cols="term", replace=c("intercept", "|φ_c|", "TAS")) %>% 
-#  sprinkle(cols="p.value", fn = quote(pvalString_demo(value, stars=TRUE))) %>%
-#  write.table(file=paste0("../../results/tables/mod1_cts_under_", dataset, ".csv"), 
-#              row.names=FALSE, col.names=FALSE, sep=",", quote=FALSE)
+klo <- rbind(klo_wals, klo_gram)
 
-print(summary(mod1_under_w))
+klo <- klo[, c("k", "dataset", "effect.size", "pvalue")]
+names(klo) <- c("l", "database", "effect size", "p-value")
 ```
+
+Plot:
+
+```{r}
+klo <- melt(klo, id.vars=c("l", "database"))
+
+g <- ggplot(klo, aes(x=l, y=value)) + geom_line() + facet_grid(variable~database, scales="free") + xlab("Nudge to neighbourhood size, ℓ") + ylab("")
+#g1 <- ggplot(klo, aes(x=k, y=effect.size)) + geom_line() + facet_wrap(.~dataset, scales="free") + scale_y_continuous(limits=c(-2.5, 0.5))
+#g2 <- ggplot(klo, aes(x=k, y=pvalue)) + geom_line() + facet_wrap(.~dataset, scales="free") + scale_y_log10(limits=c(1e-07, 1.0))
+
+#g <- grid.arrange(g1, g2, nrow=2)
+g
+ggsave(filename="../../results/plots/ksweep.png", plot=g, device="png", units="px", width=3000, height=2000, dpi=400)
+```
+
 
