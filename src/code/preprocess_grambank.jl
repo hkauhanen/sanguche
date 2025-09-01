@@ -76,7 +76,8 @@ end
 # in the final dataset. ("deesse" = DS = downsampling.)
 function deesse(x)
   if !ismissing(x)
-    return x ∈ to_downsample ? rand() : 0
+    #return x ∈ to_downsample ? rand() : 0
+    return rand()
   else
     return 0
   end
