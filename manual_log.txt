@@ -18,3 +18,6 @@ Now running CTMC model on Grambank, all families included. 45 feature pairs in t
 
 20/08/2025 @ 17:30
 Started what is hopefully the final rerun of everything, just to double-check.
+
+01/09/2025 @ 13:45
+Running model now for Grambank downsampled entirely. After this, should run model for Grambank where only Austronesian is downsampled. WALS is already a-okay.
