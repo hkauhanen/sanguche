@@ -29,6 +29,22 @@ source("kloop.R")
 try(dir.create("../../results/tables", recursive=TRUE))
 ```
 
+Theme:
+
+```{r}
+# default theme
+  deftheme <- function() {
+    g <- theme_bw()
+    #  g <- g + theme(panel.grid.major=element_blank(), panel.grid.minor=element_blank())
+    g <- g + theme(panel.grid.minor=element_blank())
+    g <- g + theme(axis.text=element_text(color="black"))
+    g <- g + theme(strip.text=element_text(size=11), strip.background=element_blank())
+    #g <- g + theme(strip.text=element_text(size=12, hjust=0), strip.background=element_blank()  )
+    g <- g + theme(text=element_text(family="Times"))
+    g
+  }
+```
+
 Prepare data:
 
 ```{r}
@@ -174,16 +190,32 @@ gram_smol$dataset <- "Grambank SN"
 
 all <- rbind(wals, gram, gram_smol)
 
-g1 <- ggplot(all, aes(x=dataset, y=Delta_under, fill=status)) + geom_boxplot() + ggtitle("Underrepresented types") + xlab("Dataset") + ylab("Neighbourhood entropy differential") + scale_fill_npg(name="Typology", guide="none")
-g2 <- ggplot(all, aes(x=dataset, y=Delta_over, fill=status)) + geom_boxplot() + ggtitle("Overrepresented types") + xlab("Dataset") + ylab("Neighbourhood entropy differential") + scale_fill_npg(name="Typology")
+g1 <- ggplot(all, aes(x=dataset, y=Delta_under, fill=status)) + geom_boxplot(outlier.size=1.0) + ggtitle("Underrepresented types") + xlab("") + ylab("Neighbourhood entropy differential") + scale_fill_npg(name="Typology", guide="none") + theme_bw() + theme(axis.text.x=element_text(color="black", size=10), axis.text.y=element_text(color="black")) + ylim(-0.10, 0.15) + theme(text=element_text(family="serif"))
+g2 <- ggplot(all, aes(x=dataset, y=Delta_over, fill=status)) + geom_boxplot(outlier.size=1.0) + ggtitle("Overrepresented types") + xlab("") + ylab("") + scale_fill_npg(name="Typology") + theme_bw() + theme(axis.text.x=element_text(color="black", size=10), axis.text.y=element_text(color="black")) + ylim(-0.10, 0.15) + theme(text=element_text(family="serif"))
 
-g <- grid.arrange(g1, g2, nrow=1, widths=c(0.8, 1.0))
+g <- grid.arrange(g1, g2, nrow=1, widths=c(0.77, 1.0))
 ```
 
 Save plot:
 
 ```{r}
-ggsave(filename="../../results/plots/boxplot.png", plot=g, device="png", units="px", width=3000, height=1500, dpi=350)
+ggsave(filename="../../results/plots/boxplot_alt.png", plot=g, device="png", units="px", width=3000, height=1500, dpi=350)
+```
+
+
+New boxplot:
+
+```{r}
+all$overattested <- all$Delta_over
+all$underattested <- all$Delta_under
+all <- melt(all, measure.vars=c("underattested", "overattested"))
+all$dataset <- factor(all$dataset, levels=c("WALS", "Grambank", "Grambank SN"))
+
+g <- ggplot(all, aes(x=status, y=value, fill=status)) + geom_boxplot(outlier.size=0.75) + facet_wrap(variable~dataset, nrow=1) + geom_signif(comparisons = list(c("control", "interacting")), map_signif_level=TRUE, family="Times", y_position=0.12, size=0.3) + ylab("Neighborhood entropy differential") + xlab("Typology status") + deftheme() + theme(axis.text.x=element_text(angle=35, size=10, hjust=1)) + guides(fill=FALSE) + scale_fill_npg()
+
+png(filename="../../results/plots/boxplot.png", width=3000, height=2000, res=400)
+g
+dev.off()
 ```
 
 
@@ -199,21 +231,26 @@ klo_gram$dataset <- "Grambank"
 klo <- rbind(klo_wals, klo_gram)
 
 klo <- klo[, c("k", "dataset", "effect.size", "pvalue")]
-names(klo) <- c("l", "database", "effect size", "p-value")
 ```
 
-Plot:
+Plots:
 
 ```{r}
-klo <- melt(klo, id.vars=c("l", "database"))
+g1 <- ggplot(klo[klo$dataset == "WALS", ], aes(x=k, y=effect.size)) + geom_line() + xlab("Nudge to neighbourhood size (ℓ)") + ylab(expression("Effect size ("*italic(d)*")")) + deftheme() + ylim(-2.5, 0.5)
+g2 <- ggplot(klo[klo$dataset == "WALS", ], aes(x=k, y=pvalue)) + geom_line() + xlab("Nudge to neighbourhood size (ℓ)") + ylab(expression(italic(p)*"-value")) + scale_y_log10() + deftheme() + annotation_logticks(sides="l")
 
-g <- ggplot(klo, aes(x=l, y=value)) + geom_line() + facet_grid(variable~database, scales="free") + xlab("Nudge to neighbourhood size, ℓ") + ylab("")
-#g1 <- ggplot(klo, aes(x=k, y=effect.size)) + geom_line() + facet_wrap(.~dataset, scales="free") + scale_y_continuous(limits=c(-2.5, 0.5))
-#g2 <- ggplot(klo, aes(x=k, y=pvalue)) + geom_line() + facet_wrap(.~dataset, scales="free") + scale_y_log10(limits=c(1e-07, 1.0))
-
-#g <- grid.arrange(g1, g2, nrow=2)
 g
-ggsave(filename="../../results/plots/ksweep.png", plot=g, device="png", units="px", width=3000, height=2000, dpi=400)
+png(filename="../../results/plots/ksweep_WALS.png", width=3000, height=1500, res=400)
+grid.arrange(g1, g2, nrow=1)
+dev.off()
+
+
+g1 <- ggplot(klo[klo$dataset == "Grambank", ], aes(x=k, y=effect.size)) + geom_line() + xlab("Nudge to neighbourhood size (ℓ)") + ylab(expression("Effect size ("*italic(d)*")")) + deftheme() + ylim(-2.5, 0.5)
+g2 <- ggplot(klo[klo$dataset == "Grambank", ], aes(x=k, y=pvalue)) + geom_line() + xlab("Nudge to neighbourhood size (ℓ)") + ylab(expression(italic(p)*"-value")) + scale_y_log10() + deftheme() + annotation_logticks(sides="l")
+
+g <- grid.arrange(g1, g2, nrow=1)
+g
+png(filename="../../results/plots/ksweep_Grambank.png", width=3000, height=1500, res=400)
+grid.arrange(g1, g2, nrow=1)
+dev.off()
 ```
-
-
