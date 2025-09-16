@@ -79,6 +79,8 @@ combined = innerjoin(phyl, sand, on=:pair_ID, makeunique=true)
 combined = innerjoin(corr, combined, on=:pair_ID, makeunique=true)
 combined.dataset .= dataset == "grambank" ? "Grambank" : "WALS"
 
+combined.abs_phi = abs.(combined.phi)
+
 
 # Delta measures
 transform!(combined, [:H, :H_pref] => ((a,b) -> b - a) => :Delta_over)
@@ -105,16 +107,16 @@ transform!(combined, :status => (s -> newname.(s)) => :status)
 
 k = round(Int, sqrt(mean(combined.N)))
 
-tabletoprint = @pipe combined |> subset(_, :degree => (d -> d .== k)) |> subset(_, :status => (s -> s .== "interacting")) |> select(_, [:pair, :N, :logBayes, :cpp, :phi, :corrected_phi]) |> sort(_, :logBayes, rev=true)
+tabletoprint = @pipe combined |> subset(_, :degree => (d -> d .== k)) |> subset(_, :status => (s -> s .== "interacting")) |> select(_, [:pair, :N, :logBayes, :cpp, :abs_phi, :abs_corrected_phi]) |> sort(_, :logBayes, rev=true)
 
-transform!(tabletoprint, :phi => (p -> round.(p, digits=2)) => :phi)
+transform!(tabletoprint, :abs_phi => (p -> round.(p, digits=2)) => :abs_phi)
 
 CSV.write("../../results/featuretables/featuretable_interacting_$dataset.csv", tabletoprint, writeheader=false)
 
 
-tabletoprint = @pipe combined |> subset(_, :degree => (d -> d .== k)) |> select(_, [:pair, :N, :status, :logBayes, :cpp, :phi, :corrected_phi, :Delta_over, :Delta_under]) |> sort(_, :logBayes, rev=true)
+tabletoprint = @pipe combined |> subset(_, :degree => (d -> d .== k)) |> select(_, [:pair, :N, :status, :logBayes, :cpp, :abs_phi, :abs_corrected_phi, :Delta_over, :Delta_under]) |> sort(_, :logBayes, rev=true)
 
-transform!(tabletoprint, :phi => (p -> round.(p, digits=2)) => :phi)
+transform!(tabletoprint, :abs_phi => (p -> round.(p, digits=2)) => :abs_phi)
 transform!(tabletoprint, :Delta_over => (p -> round.(p, digits=5)) => :Delta_over)
 transform!(tabletoprint, :Delta_under => (p -> round.(p, digits=5)) => :Delta_under)
 
@@ -122,9 +124,9 @@ CSV.write("../../results/featuretables/featuretable_withDelta_$dataset.csv", tab
 
 if dataset == "grambank"
 	k = 10
-	tabletoprint = @pipe combined |> subset(_, :degree => (d -> d .== k)) |> select(_, [:pair, :N, :status, :logBayes, :cpp, :phi, :corrected_phi, :Delta_over, :Delta_under]) |> sort(_, :logBayes, rev=true)
+	tabletoprint = @pipe combined |> subset(_, :degree => (d -> d .== k)) |> select(_, [:pair, :N, :status, :logBayes, :cpp, :abs_phi, :abs_corrected_phi, :Delta_over, :Delta_under]) |> sort(_, :logBayes, rev=true)
 
-	transform!(tabletoprint, :phi => (p -> round.(p, digits=2)) => :phi)
+	transform!(tabletoprint, :abs_phi => (p -> round.(p, digits=2)) => :abs_phi)
 	transform!(tabletoprint, :Delta_over => (p -> round.(p, digits=5)) => :Delta_over)
 	transform!(tabletoprint, :Delta_under => (p -> round.(p, digits=5)) => :Delta_under)
 
