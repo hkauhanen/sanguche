@@ -77,7 +77,7 @@ results/$(DATASET)/results_combined.csv : src/code/postprocess.jl results/$(DATA
 stats : results/stats_$(DATASET).html
 
 results/stats_$(DATASET).html : src/stats/stats.Rmd results/$(DATASET)/results_combined.csv
-	cd src/stats; $R runstats.R $(DATASET)
+	cd src/stats; $R runstats.R
 
 plots : results/plots/*.png
 
