@@ -39,9 +39,10 @@ Theme:
     #  g <- g + theme(panel.grid.major=element_blank(), panel.grid.minor=element_blank())
     g <- g + theme(panel.grid.minor=element_blank())
     g <- g + theme(axis.text=element_text(color="black"))
-    g <- g + theme(strip.text=element_text(size=11), strip.background=element_blank())
+    g <- g + theme(strip.text=element_text(size=10), strip.background=element_blank())
     #g <- g + theme(strip.text=element_text(size=12, hjust=0), strip.background=element_blank()  )
     g <- g + theme(text=element_text(family="Times"))
+    g <- g + theme(plot.title=element_text(size=12))
     g
   }
 ```
@@ -212,9 +213,9 @@ all$underattested <- all$Delta_under
 all <- melt(all, measure.vars=c("underattested", "overattested"))
 all$dataset <- factor(all$dataset, levels=c("WALS", "Grambank", "Grambank SN"))
 
-g <- ggplot(all, aes(x=status, y=value, fill=status)) + geom_boxplot(outlier.size=0.75) + facet_wrap(variable~dataset, nrow=1) + geom_signif(comparisons = list(c("control", "interacting")), map_signif_level=TRUE, family="Times", y_position=0.12, size=0.3) + ylab("Neighborhood entropy differential") + xlab("Typology status") + deftheme() + theme(axis.text.x=element_text(angle=35, size=10, hjust=1)) + guides(fill=FALSE) + scale_fill_npg()
+g <- ggplot(all, aes(x=status, y=value, fill=status)) + geom_boxplot(outlier.size=0.75) + facet_wrap(variable~dataset, nrow=1) + geom_signif(comparisons = list(c("control", "interacting")), test="wilcox.test", map_signif_level=c("***"=0.001, "*"=0.03), family="Times", y_position=0.12, size=0.3, textsize=3.0) + ylab("Neighborhood entropy differential") + xlab("") + deftheme() + theme(axis.text.x=element_text(angle=35, size=10, hjust=1)) + guides(fill=FALSE) + scale_fill_npg()
 
-png(filename="../../results/plots/boxplot.png", width=3000, height=2000, res=400)
+png(filename="../../results/plots/boxplot.png", width=3000, height=2000, res=500)
 g
 dev.off()
 ```
@@ -241,7 +242,7 @@ g1 <- ggplot(klo[klo$dataset == "WALS", ], aes(x=k, y=effect.size)) + geom_line(
 g2 <- ggplot(klo[klo$dataset == "WALS", ], aes(x=k, y=pvalue)) + geom_line() + xlab("Nudge to neighbourhood size (ℓ)") + ylab(expression(italic(p)*"-value")) + scale_y_log10() + deftheme() + annotation_logticks(sides="l")
 
 g
-png(filename="../../results/plots/ksweep_WALS.png", width=3000, height=1500, res=400)
+png(filename="../../results/plots/ksweep_WALS.png", width=3000, height=1500, res=500)
 grid.arrange(g1, g2, nrow=1)
 dev.off()
 
@@ -251,7 +252,7 @@ g2 <- ggplot(klo[klo$dataset == "Grambank", ], aes(x=k, y=pvalue)) + geom_line()
 
 g <- grid.arrange(g1, g2, nrow=1)
 g
-png(filename="../../results/plots/ksweep_Grambank.png", width=3000, height=1500, res=400)
+png(filename="../../results/plots/ksweep_Grambank.png", width=3000, height=1500, res=500)
 grid.arrange(g1, g2, nrow=1)
 dev.off()
 ```
@@ -265,7 +266,7 @@ comp <- merge(wals, gram, by="pair_ID")
 g1 <- ggplot(comp, aes(x=abs_phi.x, y=abs_phi.y)) + geom_point() + geom_smooth(method=lm) + xlab("WALS") + ylab("Grambank") + xlim(0,1) + ylim(0,1) + ggtitle(expression("Plain correlation coefficient"~phi)) + deftheme()
 g2 <- ggplot(comp, aes(x=abs_corrected_phi.x, y=abs_corrected_phi.y)) + geom_point() + geom_smooth(method=lm) + xlab("WALS") + ylab("Grambank") + xlim(0,1) + ylim(0,1) + ggtitle(expression("Corrected correlation coefficient"~phi[c])) + deftheme()
 
-png(filename="../../results/plots/grambankwals.png", width=3000, height=1600, res=400)
+png(filename="../../results/plots/grambankwals.png", width=3000, height=1600, res=500)
 grid.arrange(g1, g2, nrow=1)
 dev.off()
 ```

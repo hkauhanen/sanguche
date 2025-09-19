@@ -123,12 +123,14 @@ transform!(tabletoprint, :Delta_under => (p -> round.(p, digits=5)) => :Delta_un
 CSV.write("../../results/featuretables/featuretable_withDelta_$dataset.csv", tabletoprint, writeheader=false)
 
 if dataset == "grambank"
-	k = 10
-	tabletoprint = @pipe combined |> subset(_, :degree => (d -> d .== k)) |> select(_, [:pair, :N, :status, :logBayes, :cpp, :abs_phi, :abs_corrected_phi, :Delta_over, :Delta_under]) |> sort(_, :logBayes, rev=true)
+	#k = 10
+	#tabletoprint = @pipe combined |> subset(_, :degree => (d -> d .== k)) |> select(_, [:pair, :N, :status, :logBayes, :cpp, :abs_phi, :abs_corrected_phi, :Delta_over, :Delta_under]) |> sort(_, :logBayes, rev=true)
+	ell = -30
+  tabletoprint = @pipe combined |> subset(_, [:degree, :N] => ((d,n) -> d .== round.(sqrt.(n), digits=0) .+ ell)) |> select(_, [:pair, :N, :status, :logBayes, :cpp, :abs_phi, :abs_corrected_phi, :Delta_over, :Delta_under]) |> sort(_, :logBayes, rev=true)
 
 	transform!(tabletoprint, :abs_phi => (p -> round.(p, digits=2)) => :abs_phi)
 	transform!(tabletoprint, :Delta_over => (p -> round.(p, digits=5)) => :Delta_over)
 	transform!(tabletoprint, :Delta_under => (p -> round.(p, digits=5)) => :Delta_under)
 
-	CSV.write("../../results/featuretables/featuretable_withDelta_k10_$dataset.csv", tabletoprint, writeheader=false)
+  CSV.write("../../results/featuretables/featuretable_withDelta_$(dataset)_SN.csv", tabletoprint, writeheader=false)
 end
