@@ -3,13 +3,14 @@ require(reshape2)
 require(dplyr)
 
 
-kloop <- function(data, variable, ks = -30:50) {
+kloop <- function(data, variable, ks = 1:50) {
 	var <- ifelse(variable == "underattested", "Delta_under", "Delta_over")
 
 	df <- expand.grid(k=ks, estimate=NA, effect.size=NA, effect.size.2=NA, effect.size.3=NA, pvalue=NA)
 
 	for (k in ks) {
-		datah <- data %>% group_by(pair) %>% filter(degree == round(sqrt(N)) + k)
+		#datah <- data %>% group_by(pair) %>% filter(degree == round(sqrt(N)) + k)
+		datah <- data %>% group_by(pair) %>% filter(degree == k)
 
 		datah <- melt(datah, id.vars=c("pair", "status"), measure.vars=c("Delta_over", "Delta_under"))
 

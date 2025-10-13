@@ -224,8 +224,10 @@ dev.off()
 ## k sweeps
 
 ```{r}
-klo_wals <- kloop(fullwals, "underattested", ks=-23:110)
-klo_gram <- kloop(fullgram, "underattested", ks=-39:40)
+#klo_wals <- kloop(fullwals, "underattested", ks=-23:110)
+#klo_gram <- kloop(fullgram, "underattested", ks=-39:40)
+klo_wals <- kloop(fullwals, "underattested", ks=1:100)
+klo_gram <- kloop(fullgram, "underattested", ks=1:100)
 
 klo_wals$dataset <- "WALS"
 klo_gram$dataset <- "Grambank"
@@ -238,8 +240,8 @@ klo <- klo[, c("k", "dataset", "effect.size", "pvalue")]
 Plots:
 
 ```{r}
-g1 <- ggplot(klo[klo$dataset == "WALS", ], aes(x=k, y=effect.size)) + geom_line() + xlab("Nudge to neighbourhood size (ℓ)") + ylab(expression("Effect size ("*italic(d)*")")) + deftheme() + ylim(-2.5, 0.5)
-g2 <- ggplot(klo[klo$dataset == "WALS", ], aes(x=k, y=pvalue)) + geom_line() + xlab("Nudge to neighbourhood size (ℓ)") + ylab(expression(italic(p)*"-value")) + scale_y_log10() + deftheme() + annotation_logticks(sides="l")
+g1 <- ggplot(klo[klo$dataset == "WALS", ], aes(x=k, y=effect.size)) + geom_line() + xlab(expression("Neighborhood size (" * italic(k) * ")")) + ylab(expression("Effect size ("*italic(d)*")")) + deftheme() + ylim(-2.75, 0.5)
+g2 <- ggplot(klo[klo$dataset == "WALS", ], aes(x=k, y=pvalue)) + geom_line() + xlab(expression("Neighborhood size (" * italic(k) * ")")) + ylab(expression(italic(p)*"-value")) + scale_y_log10() + deftheme() + annotation_logticks(sides="l")
 
 g
 png(filename="../../results/plots/ksweep_WALS.png", width=3000, height=1500, res=500)
@@ -247,8 +249,10 @@ grid.arrange(g1, g2, nrow=1)
 dev.off()
 
 
-g1 <- ggplot(klo[klo$dataset == "Grambank", ], aes(x=k, y=effect.size)) + geom_line() + xlab("Nudge to neighbourhood size (ℓ)") + ylab(expression("Effect size ("*italic(d)*")")) + deftheme() + ylim(-2.5, 0.5)
-g2 <- ggplot(klo[klo$dataset == "Grambank", ], aes(x=k, y=pvalue)) + geom_line() + xlab("Nudge to neighbourhood size (ℓ)") + ylab(expression(italic(p)*"-value")) + scale_y_log10() + deftheme() + annotation_logticks(sides="l")
+#g1 <- ggplot(klo[klo$dataset == "Grambank", ], aes(x=k, y=effect.size)) + geom_line() + xlab("Nudge to neighbourhood size (ℓ)") + ylab(expression("Effect size ("*italic(d)*")")) + deftheme() + ylim(-2.5, 0.5)
+#g2 <- ggplot(klo[klo$dataset == "Grambank", ], aes(x=k, y=pvalue)) + geom_line() + xlab("Nudge to neighbourhood size (ℓ)") + ylab(expression(italic(p)*"-value")) + scale_y_log10() + deftheme() + annotation_logticks(sides="l")
+g1 <- ggplot(klo[klo$dataset == "Grambank", ], aes(x=k, y=effect.size)) + geom_line() + xlab(expression("Neighborhood size (" * italic(k) * ")")) + ylab(expression("Effect size ("*italic(d)*")")) + deftheme() + ylim(-2.75, 0.5)
+g2 <- ggplot(klo[klo$dataset == "Grambank", ], aes(x=k, y=pvalue)) + geom_line() + xlab(expression("Neighborhood size (" * italic(k) * ")")) + ylab(expression(italic(p)*"-value")) + scale_y_log10() + deftheme() + annotation_logticks(sides="l")
 
 g <- grid.arrange(g1, g2, nrow=1)
 g
