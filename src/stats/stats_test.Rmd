@@ -1,0 +1,158 @@
+---
+title: "Contact helps dispreferred combinations of typological features to survive: geospatial evidence"
+subtitle: "Statistical analyses"
+output:
+  html_document:
+    toc: true
+---
+
+
+# Preliminaries
+
+Packages etc:
+
+```{r}
+# required packages
+require(tidyverse)
+require(reshape2)
+require(broom)
+require(pixiedust)
+require(emmeans)
+require(stringr)
+require(ggplot2)
+require(gridExtra)
+require(ggsci)
+require(ggsignif)
+source("pvalString_demo.R")
+source("kloop.R")
+
+# create results/tables, if it doesn't exist already
+try(dir.create("../../results/tables", recursive=TRUE))
+```
+
+Theme:
+
+```{r}
+# default theme
+  deftheme <- function() {
+    g <- theme_bw()
+    #  g <- g + theme(panel.grid.major=element_blank(), panel.grid.minor=element_blank())
+    g <- g + theme(panel.grid.minor=element_blank())
+    g <- g + theme(axis.text=element_text(color="black"))
+    g <- g + theme(strip.text=element_text(size=10), strip.background=element_blank())
+    #g <- g + theme(strip.text=element_text(size=12, hjust=0), strip.background=element_blank()  )
+    g <- g + theme(text=element_text(family="Times"))
+    g <- g + theme(plot.title=element_text(size=12))
+    g
+  }
+```
+
+Prepare data:
+
+```{r}
+prep_data <- function(dataset) {
+	# load data
+	data <- read.csv(paste0("../../results/", dataset, "/results_combined.csv"))
+
+	# rename "non-interacting" as "control"
+	data$status <- ifelse(data$status == "non-interacting", "control", data$status)
+	data$status <- factor(data$status)
+	data$status <- relevel(data$status, ref="control")
+
+	# return
+	data
+} 
+
+wals <- prep_data("wals")
+gram <- prep_data("grambank")
+```
+
+# Descriptive statistics
+
+Mean sample sizes:
+
+```{r}
+round(mean(wals$N))
+round(mean(gram$N))
+```
+
+This suggests the following neighbourhood sizes to use, on average:
+
+```{r}
+neisize_wals = round(sqrt(round(mean(wals$N))))
+neisize_gram = round(sqrt(round(mean(gram$N))))
+
+neisize_wals
+neisize_gram
+```
+
+Restrict neighbourhoods by sample sizes per individual feature. Also make a smaller-neighbourhoods version of Grambank:
+
+```{r}
+fullwals <- wals
+fullgram <- gram
+
+wals <- wals %>% group_by(pair) %>% filter(degree == round(sqrt(N)))
+gram <- gram %>% group_by(pair) %>% filter(degree == round(sqrt(N)))
+
+gram_smol <- prep_data("grambank")
+kless <- -30
+gram_smol <- gram_smol %>% group_by(pair) %>% filter(degree == round(sqrt(N)) + kless)
+```
+
+
+
+## k sweeps
+
+```{r}
+#klo_wals <- kloop(fullwals, "underattested", ks=-23:110)
+#klo_gram <- kloop(fullgram, "underattested", ks=-39:40)
+klo_wals <- kloop(fullwals, "underattested", ks=1:500)
+klo_gram <- kloop(fullgram, "underattested", ks=1:500)
+
+klo_wals$dataset <- "WALS"
+klo_gram$dataset <- "Grambank"
+
+klo <- rbind(klo_wals, klo_gram)
+
+#klo <- klo[, c("k", "dataset", "effect.size", "pvalue")]
+```
+
+Plots:
+
+```{r}
+g1 <- ggplot(klo[klo$dataset == "WALS", ], aes(x=k, y=effect.size)) + geom_line() + xlab(expression("Neighborhood size (" * italic(k) * ")")) + ylab(expression("Effect size ("*italic(d)*")")) + deftheme() + ylim(-2.75, 0.5)
+g2 <- ggplot(klo[klo$dataset == "WALS", ], aes(x=k, y=pvalue)) + geom_line() + xlab(expression("Neighborhood size (" * italic(k) * ")")) + ylab(expression(italic(p)*"-value")) + scale_y_log10() + deftheme() + annotation_logticks(sides="l")
+
+#g
+png(filename="../../results/plots/ksweep_WALS.png", width=3000, height=1500, res=500)
+grid.arrange(g1, g2, nrow=1)
+dev.off()
+
+
+#g1 <- ggplot(klo[klo$dataset == "Grambank", ], aes(x=k, y=effect.size)) + geom_line() + xlab("Nudge to neighbourhood size (ℓ)") + ylab(expression("Effect size ("*italic(d)*")")) + deftheme() + ylim(-2.5, 0.5)
+#g2 <- ggplot(klo[klo$dataset == "Grambank", ], aes(x=k, y=pvalue)) + geom_line() + xlab("Nudge to neighbourhood size (ℓ)") + ylab(expression(italic(p)*"-value")) + scale_y_log10() + deftheme() + annotation_logticks(sides="l")
+g1 <- ggplot(klo[klo$dataset == "Grambank", ], aes(x=k, y=effect.size)) + geom_line() + xlab(expression("Neighborhood size (" * italic(k) * ")")) + ylab(expression("Effect size ("*italic(d)*")")) + deftheme() + ylim(-2.75, 0.5)
+g2 <- ggplot(klo[klo$dataset == "Grambank", ], aes(x=k, y=pvalue)) + geom_line() + xlab(expression("Neighborhood size (" * italic(k) * ")")) + ylab(expression(italic(p)*"-value")) + scale_y_log10() + deftheme() + annotation_logticks(sides="l")
+
+#g <- grid.arrange(g1, g2, nrow=1)
+#g
+png(filename="../../results/plots/ksweep_Grambank.png", width=3000, height=1500, res=500)
+grid.arrange(g1, g2, nrow=1)
+dev.off()
+```
+
+
+## $\phi$ comparison
+
+```{r}
+comp <- merge(wals, gram, by="pair_ID")
+
+g1 <- ggplot(comp, aes(x=abs_phi.x, y=abs_phi.y)) + geom_point() + geom_smooth(method=lm) + xlab("WALS") + ylab("Grambank") + xlim(0,1) + ylim(0,1) + ggtitle(expression("Plain correlation coefficient"~phi)) + deftheme()
+g2 <- ggplot(comp, aes(x=abs_corrected_phi.x, y=abs_corrected_phi.y)) + geom_point() + geom_smooth(method=lm) + xlab("WALS") + ylab("Grambank") + xlim(0,1) + ylim(0,1) + ggtitle(expression("Corrected correlation coefficient"~phi[c])) + deftheme()
+
+png(filename="../../results/plots/grambankwals.png", width=3000, height=1600, res=500)
+grid.arrange(g1, g2, nrow=1)
+dev.off()
+```
+

@@ -226,8 +226,8 @@ dev.off()
 ```{r}
 #klo_wals <- kloop(fullwals, "underattested", ks=-23:110)
 #klo_gram <- kloop(fullgram, "underattested", ks=-39:40)
-klo_wals <- kloop(fullwals, "underattested", ks=1:100)
-klo_gram <- kloop(fullgram, "underattested", ks=1:100)
+klo_wals <- kloop(fullwals, "underattested", ks=1:500)
+klo_gram <- kloop(fullgram, "underattested", ks=1:500)
 
 klo_wals$dataset <- "WALS"
 klo_gram$dataset <- "Grambank"
