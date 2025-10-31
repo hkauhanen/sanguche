@@ -1,15 +1,15 @@
-overattested control - underattested control,-0.001,-0.0746,> 0.99
-overattested control - overattested interacting,1e-04,0.0042,> 0.99
-overattested control - underattested interacting,-0.0338,-2.4179,< 0.001***
-overattested control - overattested unknown,-0.0017,-0.124,> 0.99
-overattested control - underattested unknown,-0.0044,-0.3167,0.97
-underattested control - overattested interacting,0.0011,0.0789,> 0.99
-underattested control - underattested interacting,-0.0327,-2.3433,< 0.001***
-underattested control - overattested unknown,-7e-04,-0.0494,> 0.99
-underattested control - underattested unknown,-0.0034,-0.242,> 0.99
-overattested interacting - underattested interacting,-0.0338,-2.4222,< 0.001***
-overattested interacting - overattested unknown,-0.0018,-0.1282,> 0.99
-overattested interacting - underattested unknown,-0.0045,-0.3209,0.97
-underattested interacting - overattested unknown,0.032,2.294,< 0.001***
-underattested interacting - underattested unknown,0.0293,2.1013,< 0.001***
-overattested unknown - underattested unknown,-0.0027,-0.1927,> 0.99
+overattested control - underattested control,-6e-04,-0.0571,> 0.99
+overattested control - overattested interacting,2e-04,0.0217,> 0.99
+overattested control - underattested interacting,-0.0292,-2.7358,< 0.001***
+overattested control - overattested unknown,-4e-04,-0.0342,> 0.99
+overattested control - underattested unknown,-0.004,-0.3751,0.94
+underattested control - overattested interacting,8e-04,0.0788,> 0.99
+underattested control - underattested interacting,-0.0286,-2.6787,< 0.001***
+underattested control - overattested unknown,2e-04,0.0229,> 0.99
+underattested control - underattested unknown,-0.0034,-0.318,0.97
+overattested interacting - underattested interacting,-0.0294,-2.7575,< 0.001***
+overattested interacting - overattested unknown,-6e-04,-0.0559,> 0.99
+overattested interacting - underattested unknown,-0.0042,-0.3968,0.93
+underattested interacting - overattested unknown,0.0288,2.7016,< 0.001***
+underattested interacting - underattested unknown,0.0252,2.3607,< 0.001***
+overattested unknown - underattested unknown,-0.0036,-0.3409,0.97
