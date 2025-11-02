@@ -42,7 +42,7 @@ deftheme <- function() {
     g <- g + theme(strip.text=element_text(size=10), strip.background=element_blank())
     #g <- g + theme(strip.text=element_text(size=12, hjust=0), strip.background=element_blank()  )
     g <- g + theme(text=element_text(family="Times"))
-    g <- g + theme(plot.title=element_text(size=12))
+    g <- g + theme(plot.title=element_text(size=11))
     g
 }
 ```
@@ -76,6 +76,7 @@ round(mean(wals$N))
 round(mean(gram$N))
 ```
 
+
 # Neighborhood size sweep
 
 ```{r}
@@ -85,8 +86,26 @@ source("plot_kloop_complicated.R")
 wals_ideal <- which.max(klops[klops$dataset == "WALS", ]$SNR)
 gram_ideal <- which.max(klops[klops$dataset == "Grambank", ]$SNR)
 
+fullwals <- wals
+fullgram <- gram
+
 wals <- wals[wals$degree == wals_ideal, ]
 gram <- gram[gram$degree == gram_ideal, ]
+
+print(wals_ideal)
+print(gram_ideal)
+```
+
+
+# Mean distances
+
+```{r}
+mean(fullwals[fullwals$degree==1, ]$mean_distance)
+mean(fullwals[fullwals$degree==wals_ideal, ]$mean_distance)
+mean(fullwals[fullwals$degree==500, ]$mean_distance)
+mean(fullgram[fullgram$degree==1, ]$mean_distance)
+mean(fullgram[fullgram$degree==gram_ideal, ]$mean_distance)
+mean(fullgram[fullgram$degree==500, ]$mean_distance)
 ```
 
 
@@ -171,8 +190,8 @@ for (i in 1:2) {
 ```{r}
 comp <- merge(wals, gram, by="pair_ID")
 
-g1 <- ggplot(comp, aes(x=abs_phi.x, y=abs_phi.y)) + geom_point() + geom_smooth(method=lm) + xlab("WALS") + ylab("Grambank") + xlim(0,1) + ylim(0,1) + ggtitle(expression("Plain correlation coefficient"~phi)) + deftheme()
-g2 <- ggplot(comp, aes(x=abs_corrected_phi.x, y=abs_corrected_phi.y)) + geom_point() + geom_smooth(method=lm) + xlab("WALS") + ylab("Grambank") + xlim(0,1) + ylim(0,1) + ggtitle(expression("Corrected correlation coefficient"~phi[c])) + deftheme()
+g1 <- ggplot(comp, aes(x=abs_phi.x, y=abs_phi.y)) + geom_point() + geom_smooth(method=lm) + xlab("WALS") + ylab("Grambank") + xlim(0,1) + ylim(0,1) + ggtitle(expression("(a) Plain correlation coefficient"~phi)) + deftheme()
+g2 <- ggplot(comp, aes(x=abs_corrected_phi.x, y=abs_corrected_phi.y)) + geom_point() + geom_smooth(method=lm) + xlab("WALS") + ylab("Grambank") + xlim(0,1) + ylim(0,1) + ggtitle(expression("(b) Corrected correlation coefficient"~phi[c])) + deftheme()
 
 png(filename="../../results/plots/grambankwals.png", width=3000, height=1600, res=500)
 grid.arrange(g1, g2, nrow=1)
