@@ -1,15 +1,15 @@
-overattested control - underattested control,-0.002,-0.1174,> 0.99
-overattested control - overattested interacting,3e-04,0.0165,> 0.99
-overattested control - underattested interacting,-0.035,-2.0731,< 0.001***
-overattested control - overattested unknown,-3e-04,-0.015,> 0.99
-overattested control - underattested unknown,-0.0153,-0.9069,0.10
-underattested control - overattested interacting,0.0023,0.1339,> 0.99
-underattested control - underattested interacting,-0.033,-1.9558,0.001**
-underattested control - overattested unknown,0.0017,0.1024,> 0.99
-underattested control - underattested unknown,-0.0133,-0.7895,0.21
-overattested interacting - underattested interacting,-0.0353,-2.0896,0.007**
-overattested interacting - overattested unknown,-5e-04,-0.0315,> 0.99
-overattested interacting - underattested unknown,-0.0156,-0.9234,0.38
-underattested interacting - overattested unknown,0.0348,2.0581,< 0.001***
-underattested interacting - underattested unknown,0.0197,1.1663,0.15
-overattested unknown - underattested unknown,-0.0151,-0.8918,0.093
+overattested interacting - underattested interacting,-0.0502,-1.7527,0.019*
+overattested interacting - overattested unknown,5e-04,0.0162,> 0.99
+overattested interacting - underattested unknown,-0.0513,-1.7934,0.002**
+overattested interacting - overattested control,-0.0055,-0.1935,> 0.99
+overattested interacting - underattested control,-0.012,-0.4192,0.94
+underattested interacting - overattested unknown,0.0506,1.7689,0.002**
+underattested interacting - underattested unknown,-0.0012,-0.0407,> 0.99
+underattested interacting - overattested control,0.0446,1.5592,0.012*
+underattested interacting - underattested control,0.0382,1.3335,0.048*
+overattested unknown - underattested unknown,-0.0518,-1.8095,< 0.001***
+overattested unknown - overattested control,-0.006,-0.2096,> 0.99
+overattested unknown - underattested control,-0.0125,-0.4354,0.81
+underattested unknown - overattested control,0.0458,1.5999,< 0.001***
+underattested unknown - underattested control,0.0393,1.3742,0.002**
+overattested control - underattested control,-0.0065,-0.2257,0.99

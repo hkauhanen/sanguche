@@ -18,7 +18,18 @@ do_all_kloops <- function(dfW = fullwals,
 
 	klo <- rbind(klo_wals, klo_gram)
 
-	klo$SNR <- abs(klo$effect.size.x) + abs(klo$effect.size.2.x) + abs(klo$effect.size.3.x) + abs(klo$effect.size.y) + abs(klo$effect.size.2.y) + abs(klo$effect.size.3.y)
+	alpha <- 0.05
+
+	klo$esx <- ifelse(klo$pvalue.x < alpha, abs(klo$effect.size.x), 0) +
+		ifelse(klo$pvalue.2.x < alpha, abs(klo$effect.size.2.x), 0) +
+		ifelse(klo$pvalue.3.x < alpha, abs(klo$effect.size.3.x), 0)
+
+	klo$esy <- ifelse(klo$pvalue.y < alpha, abs(klo$effect.size.y), 0) +
+		ifelse(klo$pvalue.2.y < alpha, abs(klo$effect.size.2.y), 0) +
+		ifelse(klo$pvalue.3.y < alpha, abs(klo$effect.size.3.y), 0)
+
+	#klo$SNR <- abs(klo$effect.size.x) + abs(klo$effect.size.2.x) + abs(klo$effect.size.3.x) + abs(klo$effect.size.y) + abs(klo$effect.size.2.y) + abs(klo$effect.size.3.y)
+	klo$SNR <- klo$esx + klo$esy
 
 	klo
 }

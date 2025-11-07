@@ -6,6 +6,10 @@ output:
     toc: true
 ---
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+```
+
 
 # Preliminaries
 
@@ -80,6 +84,8 @@ round(mean(gram$N))
 # Neighborhood size sweep
 
 ```{r}
+alpha <- 0.05
+
 klops <- do_all_kloops(dfW = wals, dfG = gram, ks = 1:500)
 
 wals_ideal <- which.max(klops[klops$dataset == "WALS", ]$SNR)
@@ -118,6 +124,9 @@ basic_model <- function(data) {
 	data$underattested <- data$Delta_under
 
 	datah <- melt(data, id.vars=c("pair", "status", "abs_corrected_phi"), measure.vars=c("overattested", "underattested"))
+
+	datah$status <- factor(datah$status, levels=c("interacting", "unknown", "control"))
+
 	mod <- lm(value ~ variable*status, datah)
 	
 	emm <- emmeans(mod, specs = pairwise ~ variable:status)

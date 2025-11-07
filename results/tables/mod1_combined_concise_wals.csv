@@ -1,6 +1,6 @@
-underattested control - underattested interacting,-0.0286,-2.6787,< 0.001***
-underattested control - underattested unknown,-0.0034,-0.318,0.97
 underattested interacting - underattested unknown,0.0252,2.3607,< 0.001***
-overattested control - overattested interacting,2e-04,0.0217,> 0.99
-overattested control - overattested unknown,-4e-04,-0.0342,> 0.99
+underattested interacting - underattested control,0.0286,2.6787,< 0.001***
+underattested unknown - underattested control,0.0034,0.318,0.97
 overattested interacting - overattested unknown,-6e-04,-0.0559,> 0.99
+overattested interacting - overattested control,-2e-04,-0.0217,> 0.99
+overattested unknown - overattested control,4e-04,0.0342,> 0.99

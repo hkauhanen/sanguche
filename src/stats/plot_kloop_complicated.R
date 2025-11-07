@@ -17,7 +17,7 @@ paulscolors <- paulscolors[c(1, 4, 5)]
 breaks <- 10^(-10:10)
 minor_breaks <- rep(1:9, 21)*(10^rep(-10:10, each=9))
 
-klops <- klopsu[klopsu$k %in% round(exp(seq(from=log(1), to=log(500), length.out=20))), ]
+#klops <- klops[klops$k %in% round(exp(seq(from=log(1), to=log(500), length.out=20))), ]
 
 
 klops_W_UA <- melt(klops[klops$dataset == "WALS", ], measure.vars=c("SNR", "effect.size.x", "effect.size.2.x", "effect.size.3.x"), variable.name="Contrast")
@@ -48,7 +48,7 @@ g <- g + geom_point(aes(y=value, size=Contrast, shape=Contrast, color=Contrast))
 g <- g + geom_vline(xintercept=wals_ideal, lty=2)
 g <- g + scale_linewidth_manual(values=c(0.8, rep(0.5, 6)))
 g <- g + scale_shape_manual(values=c(20, 1:6))
-g <- g + scale_size_manual(values=c(2.5, rep(1.2, 6)))
+g <- g + scale_size_manual(values=c(1.5, rep(1.2, 6)))
 g <- g + scale_color_manual(values=c("#000000", paulscolors), labels=c("IvC", "UvC", "IvU"))
 g <- g + deftheme_withminorgrid()
 g <- g + scale_x_log10(breaks=breaks, minor_breaks=minor_breaks) + annotation_logticks(sides="b")
@@ -63,7 +63,7 @@ g <- g + geom_point(aes(y=value, size=Contrast, shape=Contrast, color=Contrast))
 g <- g + geom_vline(xintercept=wals_ideal, lty=2)
 g <- g + scale_linewidth_manual(values=c(0.8, rep(0.5, 6)))
 g <- g + scale_shape_manual(values=c(20, 1:6), labels=deflabels)
-g <- g + scale_size_manual(values=c(2.5, rep(1.2, 6)))
+g <- g + scale_size_manual(values=c(1.5, rep(1.2, 6)))
 g <- g + scale_color_manual(values=c("#000000", paulscolors), labels=deflabels)
 g <- g + guides(lty="none", size="none", linewidth="none")
 g <- g + deftheme_withminorgrid()
@@ -78,7 +78,7 @@ g <- g + geom_point(aes(y=value, size=Contrast, shape=Contrast, color=Contrast))
 g <- g + geom_vline(xintercept=gram_ideal, lty=2)
 g <- g + scale_linewidth_manual(values=c(0.8, rep(0.5, 6)))
 g <- g + scale_shape_manual(values=c(20, 1:6))
-g <- g + scale_size_manual(values=c(2.5, rep(1.2, 6)))
+g <- g + scale_size_manual(values=c(1.5, rep(1.2, 6)))
 g <- g + scale_color_manual(values=c("#000000", paulscolors))
 g <- g + deftheme_withminorgrid()
 g <- g + scale_x_log10(breaks=breaks, minor_breaks=minor_breaks) + annotation_logticks(sides="b")
@@ -93,7 +93,7 @@ g <- g + geom_point(aes(y=value, size=Contrast, shape=Contrast, color=Contrast))
 g <- g + geom_vline(xintercept=gram_ideal, lty=2)
 g <- g + scale_linewidth_manual(values=c(0.8, rep(0.5, 6)))
 g <- g + scale_shape_manual(values=c(20, 1:6), labels=deflabels)
-g <- g + scale_size_manual(values=c(2.5, rep(1.2, 6)))
+g <- g + scale_size_manual(values=c(1.5, rep(1.2, 6)))
 g <- g + scale_color_manual(values=c("#000000", paulscolors), labels=deflabels)
 g <- g + guides(lty="none", size="none", linewidth="none")
 g <- g + deftheme_withminorgrid()
@@ -103,11 +103,6 @@ g <- g + ggtitle("(d) Grambank, overattested") + xlab(expression("Neighborhood s
 g4 <- g
 
 
-
-
-
-if (1 == 0) {
-png("../../results/plots/SNR_complex.png", width=3000, height=4000, res=550)
-grid.arrange(g1, g2, g3, g4, nrow=2)
+png("../../results/plots/SNR_complex.png", width=3500, height=3000, res=500)
+grid.arrange(g1, g2, g3, g4, nrow=2, widths=c(0.7, 1.0))
 dev.off()
-}
