@@ -94,8 +94,6 @@ Part 3 is an adaptation of the code to Jäger and Wahle (FIXME), released under 
 
 The final part, which combines the output of Parts 2 and 3, is quick. It depends on Julia version 1.10.4 and R version 4.4.2.
 
-NB: the make commands below have broken dependencies. therefore for now just do this:
-
 ```
 cd src/code
 julia +1.10.4 postprocess.jl wals
@@ -104,18 +102,7 @@ cd ../stats
 Rscript runstats.R
 ```
 
-
-
-```
-make Rdeps
-make postprocess DATASET=wals
-make stats DATASET=wals
-make plots DATASET=wals
-```
-
-Replace `wals` with `grambank` to produce the same for Grambank.
-
-The resulting statistics and plots will appear in `results/`, `results/tables/` and `results/plots/`.
+The resulting statistics and plots will appear in `results/featuretables/`, `results/tables/` and `results/plots/`.
 
 
 ## Postlude: Brief description of code logic of Part 2
