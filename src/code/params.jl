@@ -2,11 +2,7 @@
 include_controls = true
 
 # neighbourhood sizes 
-#degrees = 100:50:4000  # km based
 degrees = 1:1:500  # rank based
-#degrees = 1:1:200  # rank based
-#degrees = [28]  # rank based
-#degrees = 10:100:1500  # rank based
 
 # features
 features = vcat(first.(fPairs), construct)
@@ -36,7 +32,7 @@ alpha = 0.05
 downsample = true
 
 # which language families to downsample
-#to_downsample = ["Austronesian"]
+to_downsample = ["Austronesian"]
 
 # downsampling proportion
-ds_rate = 0.50
+ds_rate = 0.75

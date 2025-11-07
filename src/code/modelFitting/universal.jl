@@ -1,3 +1,8 @@
+# Adapted from code by Gerhard Jäger & Johannes Wahle,
+# https://github.com/gerhardJaeger/phylogeneticTypology,
+# under the MIT licence (see LICENSE in root folder).
+
+
 global charNum = parse(Int, ARGS[2])
 
 #psrf_threshold = 1.1

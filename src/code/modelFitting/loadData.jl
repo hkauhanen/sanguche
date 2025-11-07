@@ -1,3 +1,8 @@
+# Adapted from code by Gerhard Jäger & Johannes Wahle,
+# https://github.com/gerhardJaeger/phylogeneticTypology,
+# under the MIT licence (see LICENSE in root folder).
+
+
 ##
 
 wals = CSV.read("$prefix/data/charMtx.csv", DataFrame)

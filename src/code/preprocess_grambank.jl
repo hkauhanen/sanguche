@@ -1,3 +1,8 @@
+# Adapted from code by Gerhard Jäger & Johannes Wahle,
+# https://github.com/gerhardJaeger/phylogeneticTypology,
+# under the MIT licence (see LICENSE in root folder).
+
+
 cd(@__DIR__)
 
 
@@ -76,8 +81,7 @@ end
 # in the final dataset. ("deesse" = DS = downsampling.)
 function deesse(x)
   if !ismissing(x)
-    #return x ∈ to_downsample ? rand() : 0
-    return rand()
+    return x ∈ to_downsample ? rand() : 0
   else
     return 0
   end
