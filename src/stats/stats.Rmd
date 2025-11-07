@@ -81,7 +81,6 @@ round(mean(gram$N))
 
 ```{r}
 klops <- do_all_kloops(dfW = wals, dfG = gram, ks = 1:500)
-source("plot_kloop_complicated.R")
 
 wals_ideal <- which.max(klops[klops$dataset == "WALS", ]$SNR)
 gram_ideal <- which.max(klops[klops$dataset == "Grambank", ]$SNR)
@@ -91,6 +90,8 @@ fullgram <- gram
 
 wals <- wals[wals$degree == wals_ideal, ]
 gram <- gram[gram$degree == gram_ideal, ]
+
+source("plot_kloop_complicated.R")
 
 print(wals_ideal)
 print(gram_ideal)

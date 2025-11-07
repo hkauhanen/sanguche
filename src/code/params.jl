@@ -32,7 +32,7 @@ alpha = 0.05
 downsample = true
 
 # which language families to downsample
-to_downsample = ["Austronesian"]
+#to_downsample = ["Austronesian"]
 
 # downsampling proportion
-ds_rate = 0.75
+ds_rate = 0.50

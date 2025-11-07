@@ -3,6 +3,7 @@ JNEW=julia +1.10.4
 R=Rscript
 DICTSCRIPT=make_dicts.jl
 MRBSCRIPT=runMrBayes.jl
+LIMTYPE=rank
 
 
 .PHONY : Jdeps preprocess data dicts sandwich phyloprep familyprep revbayes treelog posterior model correlations postprocess stats plots

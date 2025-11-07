@@ -55,13 +55,13 @@ Part 2 requires Julia version 1.10.4.
 To reproduce the analysis from scratch, type the following on the command line, paying special attention to the capitalization:
 
 ```
-make sandwich DATASET=wals LIMTYPE=rank NPROC=8
-make sandwich DATASET=grambank LIMTYPE=rank NPROC=8
+make sandwich DATASET=wals NPROC=8
+make sandwich DATASET=grambank NPROC=8
 ```
 
-`LIMTYPE` can be either `km` (distance-limited neighbourhoods) or `rank` (neighbourhoods limited by number of neighbours). `NPROC` specifies the number of parallel processes to use (best set to the number of physical cores in your processor).
+`NPROC` specifies the number of parallel processes to use (best set to the number of physical cores in your processor).
 
-Note that each argument, `DATASET`, `LIMTYPE` and `NPROC`, are mandatory.
+Note that each argument, `DATASET` and `NPROC`, is mandatory.
 
 Results are saved in the `results/wals/` and `results/grambank/` directories, respectively. The `*.csv` files are in ordinary comma-separated values format; the `*.jls` files are serializations of Julia dataframes which can be loaded into a Julia session using the tools provided by the Serialization package.
 
@@ -93,6 +93,18 @@ Part 3 is an adaptation of the code to Jäger and Wahle (FIXME), released under 
 ## Instructions, Part 4: Post-processing
 
 The final part, which combines the output of Parts 2 and 3, is quick. It depends on Julia version 1.10.4 and R version 4.4.2.
+
+NB: the make commands below have broken dependencies. therefore for now just do this:
+
+```
+cd src/code
+julia +1.10.4 postprocess.jl wals
+julia +1.10.4 postprocess.jl grambank
+cd ../stats
+Rscript runstats.R
+```
+
+
 
 ```
 make Rdeps
