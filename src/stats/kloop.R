@@ -18,8 +18,7 @@ do_all_kloops <- function(dfW = fullwals,
 
 	klo <- rbind(klo_wals, klo_gram)
 
-	klo$SNR <- abs(klo$effect.size.x) + abs(klo$effect.size.2.x) + abs(klo$effect.size.3.x) +
-		abs(klo$effect.size.y) + abs(klo$effect.size.2.y) + abs(klo$effect.size.3.y)
+	klo$SNR <- abs(klo$effect.size.x) + abs(klo$effect.size.2.x) + abs(klo$effect.size.3.x) + abs(klo$effect.size.y) + abs(klo$effect.size.2.y) + abs(klo$effect.size.3.y)
 
 	klo
 }
@@ -28,7 +27,7 @@ do_all_kloops <- function(dfW = fullwals,
 kloop <- function(data, variable, ks = 1:50) {
 	var <- ifelse(variable == "underattested", "Delta_under", "Delta_over")
 
-	df <- expand.grid(k=ks, estimate=NA, estimate.2=NA, estimate.3=NA, effect.size=NA, effect.size.2=NA, effect.size.3=NA, pvalue=NA)
+	df <- expand.grid(k=ks, estimate=NA, estimate.2=NA, estimate.3=NA, effect.size=NA, effect.size.2=NA, effect.size.3=NA, pvalue=NA, pvalue.2=NA, pvalue.3=NA)
 
 	for (k in ks) {
 		#datah <- data %>% group_by(pair) %>% filter(degree == round(sqrt(N)) + k)
@@ -42,13 +41,15 @@ kloop <- function(data, variable, ks = 1:50) {
 		con <- as.data.frame(emm$contrasts)
 		eff <- as.data.frame(eff_size(emm, sigma=sigma(mod), edf=mod$df, method="identity"))
 
-		df[df$k == k, ]$estimate = con[con$contrast == paste0("", var, " control - ", var, " interacting"), ]$estimate
-		df[df$k == k, ]$estimate.2 = con[con$contrast == paste0("", var, " control - ", var, " unknown"), ]$estimate
+		df[df$k == k, ]$estimate = -con[con$contrast == paste0("", var, " control - ", var, " interacting"), ]$estimate
+		df[df$k == k, ]$estimate.2 = -con[con$contrast == paste0("", var, " control - ", var, " unknown"), ]$estimate
 		df[df$k == k, ]$estimate.3 = con[con$contrast == paste0("", var, " interacting - ", var, " unknown"), ]$estimate
-		df[df$k == k, ]$effect.size = eff[eff$contrast == paste0("(", var, " control - ", var, " interacting)"), ]$effect.size
-		df[df$k == k, ]$effect.size.2 = eff[eff$contrast == paste0("(", var, " control - ", var, " unknown)"), ]$effect.size
+		df[df$k == k, ]$effect.size = -eff[eff$contrast == paste0("(", var, " control - ", var, " interacting)"), ]$effect.size
+		df[df$k == k, ]$effect.size.2 = -eff[eff$contrast == paste0("(", var, " control - ", var, " unknown)"), ]$effect.size
 		df[df$k == k, ]$effect.size.3 = eff[eff$contrast == paste0("(", var, " interacting - ", var, " unknown)"), ]$effect.size
 		df[df$k == k, ]$pvalue = con[con$contrast == paste0("", var, " control - ", var, " interacting"), ]$p.value
+		df[df$k == k, ]$pvalue.2 = con[con$contrast == paste0("", var, " control - ", var, " unknown"), ]$p.value
+		df[df$k == k, ]$pvalue.3 = con[con$contrast == paste0("", var, " interacting - ", var, " unknown"), ]$p.value
 		#df[df$k == k, ]$estimate = con[con$contrast == paste0(var, " interacting - (", var, " non-interacting)"), ]$estimate
 		#df[df$k == k, ]$pvalue = con[con$contrast == paste0(var, " interacting - (", var, " non-interacting)"), ]$p.value
 	}
