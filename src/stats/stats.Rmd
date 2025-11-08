@@ -208,3 +208,13 @@ grid.arrange(g1, g2, nrow=1)
 dev.off()
 ```
 
+
+# Boxplot
+
+```{r}
+source("boxplot.R")
+
+png(filename="../../results/plots/boxplot.png", width=3000, height=2000, res=500)
+make_boxplot(wals, gram)
+dev.off()
+```

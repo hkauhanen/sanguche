@@ -11,6 +11,7 @@ deftheme_withminorgrid <- function() {
 }
 
 paulscolors <- c("#0077BB", "#33BBEE", "#009988", "#EE7733", "#CC3311", "#EE3377")
+paulscolors2 <- paulscolors[-c(1, 4, 5)]
 paulscolors <- paulscolors[c(1, 4, 5)]
 
 

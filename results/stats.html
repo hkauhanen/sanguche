@@ -416,6 +416,7 @@ typologies of different statuses</a>
 <li><a href="#phi-comparison"><span class="math inline">\(\phi\)</span>
 comparison</a></li>
 </ul></li>
+<li><a href="#boxplot">Boxplot</a></li>
 </ul>
 </div>
 
@@ -733,6 +734,87 @@ dev.off()</code></pre>
 <pre><code>## png 
 ##   2</code></pre>
 </div>
+</div>
+<div id="boxplot" class="section level1">
+<h1>Boxplot</h1>
+<pre class="r"><code>source(&quot;boxplot.R&quot;)</code></pre>
+<pre><code>##  contrast                                          estimate      SE df t.ratio
+##  underattested interacting - underattested control   0.0286 0.00411 68   6.955
+##  p.value
+##   &lt;.0001
+## 
+## P value adjustment: tukey method for comparing a family of 6 estimates 
+## [1] &quot;underattested interacting&quot;
+## [1] &quot;underattested control&quot;
+## [1] 2.540218e-08
+##  contrast                                         estimate      SE df t.ratio
+##  overattested interacting - overattested control -0.000232 0.00411 68  -0.056
+##  p.value
+##   1.0000
+## 
+## P value adjustment: tukey method for comparing a family of 6 estimates 
+## [1] &quot;overattested interacting&quot;
+## [1] &quot;overattested control&quot;
+## [1] 0.9999999
+##  contrast                                          estimate    SE df t.ratio
+##  underattested interacting - underattested control   0.0382 0.013 74   2.943
+##  p.value
+##   0.0479
+## 
+## P value adjustment: tukey method for comparing a family of 6 estimates 
+## [1] &quot;underattested interacting&quot;
+## [1] &quot;underattested control&quot;
+## [1] 0.04785832
+##  contrast                                        estimate    SE df t.ratio
+##  overattested interacting - overattested control -0.00554 0.013 74  -0.427
+##  p.value
+##   0.9981
+## 
+## P value adjustment: tukey method for comparing a family of 6 estimates 
+## [1] &quot;overattested interacting&quot;
+## [1] &quot;overattested control&quot;
+## [1] 0.9981249
+##  contrast                                      estimate      SE df t.ratio
+##  underattested unknown - underattested control  0.00339 0.00442 68   0.768
+##  p.value
+##   0.9720
+## 
+## P value adjustment: tukey method for comparing a family of 6 estimates 
+## [1] &quot;underattested unknown&quot;
+## [1] &quot;underattested control&quot;
+## [1] 0.9719623
+##  contrast                                    estimate      SE df t.ratio
+##  overattested unknown - overattested control 0.000365 0.00442 68   0.083
+##  p.value
+##   1.0000
+## 
+## P value adjustment: tukey method for comparing a family of 6 estimates 
+## [1] &quot;overattested unknown&quot;
+## [1] &quot;overattested control&quot;
+## [1] 0.9999994
+##  contrast                                      estimate      SE df t.ratio
+##  underattested unknown - underattested control   0.0393 0.00997 74   3.945
+##  p.value
+##   0.0024
+## 
+## P value adjustment: tukey method for comparing a family of 6 estimates 
+## [1] &quot;underattested unknown&quot;
+## [1] &quot;underattested control&quot;
+## [1] 0.002396545
+##  contrast                                    estimate      SE df t.ratio
+##  overattested unknown - overattested control   -0.006 0.00997 74  -0.602
+##  p.value
+##   0.9906
+## 
+## P value adjustment: tukey method for comparing a family of 6 estimates 
+## [1] &quot;overattested unknown&quot;
+## [1] &quot;overattested control&quot;
+## [1] 0.9905954</code></pre>
+<pre class="r"><code>png(filename=&quot;../../results/plots/boxplot.png&quot;, width=3000, height=2000, res=500)
+make_boxplot(wals, gram)
+dev.off()</code></pre>
+<pre><code>## png 
+##   2</code></pre>
 </div>
 
 
