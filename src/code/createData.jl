@@ -85,7 +85,8 @@ dropmissing!(languages, :Glottocode)
 
 data = innerjoin(
     data,
-    select(languages, [:ID, :Glottocode]),
+    #select(languages, [:ID, :Glottocode]),
+    select(languages, [:ID, :Glottocode, :Family, :Subfamily, :Genus]),
     on = :Language_ID => :ID,
 )
 

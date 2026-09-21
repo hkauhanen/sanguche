@@ -15,6 +15,7 @@ using Distributed
 @everywhere using Random
 @everywhere using Serialization
 @everywhere using Statistics
+@everywhere using Pipe
 
 
 # for a mysterious reason, we need to do the following to pass the 
@@ -67,6 +68,75 @@ end
 end
 
 
+# join count statistic: overattested neighbours of underattested focals
+@everywhere function JC(underatt, overatt, data, dists)
+	datat = subset(data, :type => (t -> t .∈ [underatt]))
+
+	neighbours = subset(dists, :language_ID => (a -> a .∈ [datat.Language_ID])).neighbour_ID
+
+	datan = subset(data, :Language_ID => (a -> a .∈ [neighbours]))
+
+	datanover = subset(datan, :type => (t -> t .∈ [overatt]))
+
+	out = nrow(datanover)
+
+	if underatt == overatt
+		out = out / 2
+	end
+
+	return out
+end
+
+
+# join count statistic: overattested neighbours of underattested focals,
+# gravity-based
+@everywhere function JCgravity(underatt, overatt, data, dists)
+	datat = subset(data, :type => (t -> t .∈ [underatt]))
+
+	neighbours = subset(dists, :language_ID => (a -> a .∈ [datat.Language_ID])).neighbour_ID
+
+	datan = subset(data, :Language_ID => (a -> a .∈ [neighbours]))
+
+	overatt_neighbours = subset(datan, :type => (t -> t .∈ [overatt])).Language_ID
+
+	df = subset(dists, :language_ID => (a -> a .∈ [datat.Language_ID]))
+	df = subset(df, :neighbour_ID => (a -> a .∈ [overatt_neighbours]))
+
+	out = sum(1 ./ (df.distance .^ 2))
+
+	if underatt == overatt
+		out = out / 2
+	end
+
+	return out
+end
+
+
+# join count statistic: identity joins
+# gravity-based
+@everywhere function JCgravity_identity(types, data, dists)
+	datat = subset(data, :type => (t -> t .∈ [types]))
+
+	out = 0.0
+
+	for r in eachrow(datat)
+		neighbours = subset(dists, :language_ID => (a -> a .== r.Language_ID)).neighbour_ID
+
+		datan = subset(data, :Language_ID => (a -> a .∈ [neighbours]))
+
+		identical_neighbours = subset(datan, :type => (t -> t .== r.type)).Language_ID
+
+		df = subset(dists, :language_ID => (a -> a .== r.Language_ID))
+		df = subset(df, :neighbour_ID => (a -> a .∈ [identical_neighbours]))
+
+		out += sum(1 ./ (df.distance .^ 2))
+	end
+
+	return out / 2
+end
+
+
+
 # compute neighbourhood entropy for types in 'typeset'
 @everywhere function NE(typeset, data, dists)
     # cycle through types
@@ -113,6 +183,7 @@ end
       distsh = subset(distsh, :distance => (i -> i .<= degree))
     elseif limtype == "rank"
       distsh = subset(distsh, :eachindex => (i -> i .<= degree))
+      #distsh = subset(distsh, :eachindex => (i -> i .== degree))
     else
       println("invalid limtype!")
     end
@@ -131,6 +202,97 @@ end
             push!(dispref_types, type)
         end
     end
+
+    #empirical_JC = JC(dispref_types, pref_types, datah, distsh)
+    empirical_JC = JCgravity(dispref_types, pref_types, datah, distsh)
+    out.JC .= empirical_JC
+
+    permureps = 1000
+    permutest = zeros(permureps)
+
+    for i in 1:permureps
+	    datac = deepcopy(datah)
+
+	    # world-wide randomization
+	    #Random.shuffle!(datac.type)
+
+	    # family-wide randomization
+	    @pipe datac |> groupby(_, :Family) |> transform!(_, :type => Random.shuffle => :type) 
+
+	    #permutest[i] = JC(dispref_types, pref_types, datac, distsh)
+	    permutest[i] = JCgravity(dispref_types, pref_types, datac, distsh)
+    end
+
+    out.JC_pval .= sum(permutest .>= empirical_JC) / permureps
+
+
+    #empirical_JC2 = JC(dispref_types, dispref_types, datah, distsh)
+    empirical_JC2 = JCgravity(dispref_types, dispref_types, datah, distsh)
+    out.JC2 .= empirical_JC2
+
+    permureps = 1000
+    permutest = zeros(permureps)
+
+    for i in 1:permureps
+	    datac = deepcopy(datah)
+
+	    # world-wide randomization
+	    #Random.shuffle!(datac.type)
+
+	    # family-wide randomization
+	    @pipe datac |> groupby(_, :Family) |> transform!(_, :type => Random.shuffle => :type) 
+
+	    #permutest[i] = JC(dispref_types, dispref_types, datac, distsh)
+	    permutest[i] = JCgravity(dispref_types, dispref_types, datac, distsh)
+    end
+
+    out.JC2_pval .= sum(permutest .>= empirical_JC2) / permureps
+
+
+    empirical_JCi = JCgravity_identity(dispref_types, datah, distsh)
+    out.JCi .= empirical_JCi
+
+    permureps = 1000
+    permutest = zeros(permureps)
+
+    for i in 1:permureps
+	    datac = deepcopy(datah)
+
+	    # world-wide randomization
+	    #Random.shuffle!(datac.type)
+
+	    # family-wide randomization
+	    @pipe datac |> groupby(_, :Family) |> transform!(_, :type => Random.shuffle => :type) 
+
+	    #permutest[i] = JC(dispref_types, dispref_types, datac, distsh)
+	    permutest[i] = JCgravity_identity(dispref_types, datac, distsh)
+    end
+
+    out.JCi_pval .= sum(permutest .>= empirical_JCi) / permureps
+
+
+    empirical_JCj = JCgravity_identity(pref_types, datah, distsh)
+    out.JCj .= empirical_JCj
+
+    permureps = 1000
+    permutest = zeros(permureps)
+
+    for i in 1:permureps
+	    datac = deepcopy(datah)
+
+	    # world-wide randomization
+	    #Random.shuffle!(datac.type)
+
+	    # family-wide randomization
+	    @pipe datac |> groupby(_, :Family) |> transform!(_, :type => Random.shuffle => :type) 
+
+	    #permutest[i] = JC(dispref_types, dispref_types, datac, distsh)
+	    permutest[i] = JCgravity_identity(pref_types, datac, distsh)
+    end
+
+    out.JCj_pval .= sum(permutest .>= empirical_JCj) / permureps
+
+
 
     out.H .= NE(types, datah, distsh)
     out.H_pref .= length(pref_types) == 0 ? missing : NE(pref_types, datah, distsh)

@@ -81,6 +81,11 @@ results.freq12 .= 0.0
 results.freq21 .= 0.0
 results.freq22 .= 0.0
 
+results.absfreq11 .= 0
+results.absfreq12 .= 0
+results.absfreq21 .= 0
+results.absfreq22 .= 0
+
 results.pref11 .= 0
 results.pref12 .= 0
 results.pref21 .= 0
@@ -120,6 +125,7 @@ for r in 1:nrow(results)
 
       # frequency of this type
       results[r, "freq" * string(x) * string(y)] = prop(conthere)[x,y]
+      results[r, "absfreq" * string(x) * string(y)] = conthere[x,y]
 
       # number of languages with feature 1 == "off"
       local Ni = sum(conthere[x,:])
@@ -169,7 +175,7 @@ Ddata = Dict()
 Ddists = Dict()
 
 for r in eachrow(results)
-  local tmp = data[:, ["Language_ID", r.f1, r.f2]]
+  local tmp = data[:, ["Language_ID", "Family", r.f1, r.f2]]
   dropmissing!(tmp)
   transform!(tmp, [r.f1, r.f2] => ((a,b) -> string.(a) .* string.(b)) => :type)
 
