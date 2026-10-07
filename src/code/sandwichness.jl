@@ -203,96 +203,55 @@ end
         end
     end
 
-    #empirical_JC = JC(dispref_types, pref_types, datah, distsh)
-    empirical_JC = JCgravity(dispref_types, pref_types, datah, distsh)
-    out.JC .= empirical_JC
+    pairs = [("11", "11"),
+	     ("11", "12"),
+	     ("11", "21"),
+	     ("11", "22"),
+	     ("12", "12"),
+	     ("12", "21"),
+	     ("12", "22"),
+	     ("21", "21"),
+	     ("21", "22"),
+	     ("22", "22")]
 
     permureps = 1000
-    permutest = zeros(permureps)
 
-    for i in 1:permureps
-	    datac = deepcopy(datah)
+    for p in pairs
+	    focal = p[1]
+	    target = p[2]
+	    empirical_JC = JCgravity([focal], [target], datah, distsh)
+	    out[!, "JC_$(focal)_$(target)"] .= empirical_JC
 
-	    # world-wide randomization
-	    #Random.shuffle!(datac.type)
+	    permutest = zeros(permureps)
 
-	    # family-wide randomization
-	    @pipe datac |> groupby(_, :Family) |> transform!(_, :type => Random.shuffle => :type) 
+	    for i in 1:permureps
+		    datac = deepcopy(datah)
 
-	    #permutest[i] = JC(dispref_types, pref_types, datac, distsh)
-	    permutest[i] = JCgravity(dispref_types, pref_types, datac, distsh)
+		    #world-wide randomization
+		    #Random.shuffle!(datac.type)
+
+		    #family-wide randomization
+		    @pipe datac |> groupby(_, :Family) |> transform!(_, :type => Random.shuffle => :type)
+
+		    permutest[i] = JCgravity([focal], [target], datah, distsh)
+	    end
+
+	    out[!, "JC_$(focal)_$(target)_pval"] .= sum(permutest .>= empirical_JC) / permureps
     end
 
-    out.JC_pval .= sum(permutest .>= empirical_JC) / permureps
+    out.JC_12_11 = out.JC_11_12
+    out.JC_21_11 = out.JC_11_21
+    out.JC_21_12 = out.JC_12_21
+    out.JC_22_11 = out.JC_11_22
+    out.JC_22_12 = out.JC_12_22
+    out.JC_22_21 = out.JC_21_22
 
-
-    #empirical_JC2 = JC(dispref_types, dispref_types, datah, distsh)
-    empirical_JC2 = JCgravity(dispref_types, dispref_types, datah, distsh)
-    out.JC2 .= empirical_JC2
-
-    permureps = 1000
-    permutest = zeros(permureps)
-
-    for i in 1:permureps
-	    datac = deepcopy(datah)
-
-	    # world-wide randomization
-	    #Random.shuffle!(datac.type)
-
-	    # family-wide randomization
-	    @pipe datac |> groupby(_, :Family) |> transform!(_, :type => Random.shuffle => :type) 
-
-	    #permutest[i] = JC(dispref_types, dispref_types, datac, distsh)
-	    permutest[i] = JCgravity(dispref_types, dispref_types, datac, distsh)
-    end
-
-    out.JC2_pval .= sum(permutest .>= empirical_JC2) / permureps
-
-
-    empirical_JCi = JCgravity_identity(dispref_types, datah, distsh)
-    out.JCi .= empirical_JCi
-
-    permureps = 1000
-    permutest = zeros(permureps)
-
-    for i in 1:permureps
-	    datac = deepcopy(datah)
-
-	    # world-wide randomization
-	    #Random.shuffle!(datac.type)
-
-	    # family-wide randomization
-	    @pipe datac |> groupby(_, :Family) |> transform!(_, :type => Random.shuffle => :type) 
-
-	    #permutest[i] = JC(dispref_types, dispref_types, datac, distsh)
-	    permutest[i] = JCgravity_identity(dispref_types, datac, distsh)
-    end
-
-    out.JCi_pval .= sum(permutest .>= empirical_JCi) / permureps
-
-
-    empirical_JCj = JCgravity_identity(pref_types, datah, distsh)
-    out.JCj .= empirical_JCj
-
-    permureps = 1000
-    permutest = zeros(permureps)
-
-    for i in 1:permureps
-	    datac = deepcopy(datah)
-
-	    # world-wide randomization
-	    #Random.shuffle!(datac.type)
-
-	    # family-wide randomization
-	    @pipe datac |> groupby(_, :Family) |> transform!(_, :type => Random.shuffle => :type) 
-
-	    #permutest[i] = JC(dispref_types, dispref_types, datac, distsh)
-	    permutest[i] = JCgravity_identity(pref_types, datac, distsh)
-    end
-
-    out.JCj_pval .= sum(permutest .>= empirical_JCj) / permureps
-
-
+    out.JC_12_11_pval = out.JC_11_12_pval
+    out.JC_21_11_pval = out.JC_11_21_pval
+    out.JC_21_12_pval = out.JC_12_21_pval
+    out.JC_22_11_pval = out.JC_11_22_pval
+    out.JC_22_12_pval = out.JC_12_22_pval
+    out.JC_22_21_pval = out.JC_21_22_pval
 
     out.H .= NE(types, datah, distsh)
     out.H_pref .= length(pref_types) == 0 ? missing : NE(pref_types, datah, distsh)
