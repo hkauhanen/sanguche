@@ -203,29 +203,11 @@ end
         end
     end
 
-    pairs = [("11", "11"),
-	     ("11", "12"),
-	     ("11", "21"),
-	     ("11", "22"),
-	     ("12", "12"),
-	     ("12", "21"),
-	     ("12", "22"),
-	     ("21", "21"),
-	     ("21", "22"),
-	     ("22", "22")]
-
-    permureps = 1000
-
-    for p in pairs
-	    focal = p[1]
-	    target = p[2]
-	    empirical_JC = JCgravity([focal], [target], datah, distsh)
-	    out[!, "JC_$(focal)_$(target)"] .= empirical_JC
-
+    function permutationtest(focus, target, data, dists, empirical; permureps = 1000)
 	    permutest = zeros(permureps)
 
 	    for i in 1:permureps
-		    datac = deepcopy(datah)
+		    datac = deepcopy(data)
 
 		    #world-wide randomization
 		    #Random.shuffle!(datac.type)
@@ -233,25 +215,39 @@ end
 		    #family-wide randomization
 		    @pipe datac |> groupby(_, :Family) |> transform!(_, :type => Random.shuffle => :type)
 
-		    permutest[i] = JCgravity([focal], [target], datah, distsh)
+		    permutest[i] = JCgravity(focus, target, datac, dists)
 	    end
 
-	    out[!, "JC_$(focal)_$(target)_pval"] .= sum(permutest .>= empirical_JC) / permureps
+	    return (sum(permutest .>= empirical) + sum(permutest .<= empirical)) / permureps
     end
 
-    out.JC_12_11 = out.JC_11_12
-    out.JC_21_11 = out.JC_11_21
-    out.JC_21_12 = out.JC_12_21
-    out.JC_22_11 = out.JC_11_22
-    out.JC_22_12 = out.JC_12_22
-    out.JC_22_21 = out.JC_21_22
+    for focal in types
+	    # identity joins
+	    empirical_JC = JCgravity([focal], [focal], datah, distsh)
+	    out[!, "JC_$(focal)_identity"] .= empirical_JC
+	    out[!, "JC_$(focal)_identity_pval"] .= permutationtest([focal], [focal], datah, distsh, empirical_JC)
 
-    out.JC_12_11_pval = out.JC_11_12_pval
-    out.JC_21_11_pval = out.JC_11_21_pval
-    out.JC_21_12_pval = out.JC_12_21_pval
-    out.JC_22_11_pval = out.JC_11_22_pval
-    out.JC_22_12_pval = out.JC_12_22_pval
-    out.JC_22_21_pval = out.JC_21_22_pval
+	    # non-identity joins
+	    nonids = []
+	    for t in types
+		    if t != focal
+			    push!(nonids, t)
+		    end
+	    end
+	    empirical_JC = JCgravity([focal], nonids, datah, distsh)
+	    out[!, "JC_$(focal)_nonidentity"] .= empirical_JC
+	    out[!, "JC_$(focal)_nonidentity_pval"] .= permutationtest([focal], nonids, datah, distsh, empirical_JC)
+
+	    # joins to overattested
+	    empirical_JC = JCgravity([focal], pref_types, datah, distsh)
+	    out[!, "JC_$(focal)_overattested"] .= empirical_JC
+	    out[!, "JC_$(focal)_overattested_pval"] .= permutationtest([focal], pref_types, datah, distsh, empirical_JC)
+
+	    # joins to underattested
+	    empirical_JC = JCgravity([focal], dispref_types, datah, distsh)
+	    out[!, "JC_$(focal)_underattested"] .= empirical_JC
+	    out[!, "JC_$(focal)_underattested_pval"] .= permutationtest([focal], dispref_types, datah, distsh, empirical_JC)
+    end
 
     out.H .= NE(types, datah, distsh)
     out.H_pref .= length(pref_types) == 0 ? missing : NE(pref_types, datah, distsh)
