@@ -28,7 +28,7 @@ longdata = DataFrame()
 
 for r in eachrow(data)
     for t in ["11", "12", "21", "22"]
-        df = DataFrame(pair = r.pair, f1 = r.f1, f2 = r.f2, status = r.status, type = t)
+        df = DataFrame(pair = r.pair, f1 = r.f1, f2 = r.f2, class = r.class, status = r.status, type = t)
         
         if r["pref$t"] == 1
             df.attestation .= "overattested"
@@ -59,7 +59,17 @@ for r in eachrow(data)
 
         df.overattested_joins .= r["JC_$(t)_overattested"]
         df.overattested_joins_pvalue .= r["JC_$(t)_overattested_pval"]
-	df.overattested_joins_sig .= ifelse(r["JC_$(t)_overattested_pval"] < CRITLEVEL, 1, 0)
+        df.overattested_joins_sig .= ifelse(r["JC_$(t)_overattested_pval"] < CRITLEVEL, 1, 0)
+
+        #=
+        if df.class == "control" && df.attestation == "contingently underattested"
+            df.pedigree .= "control_under"
+        elseif df.classification == "dispreferred"
+            df.pedigree .= "dispreferred"
+        else
+            df.pedigree .= "NA"
+        end
+        =#
 
         global longdata = vcat(longdata, df)
     end
