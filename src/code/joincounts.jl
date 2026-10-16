@@ -27,8 +27,9 @@ data.status = ifelse.(data[!, "cumulative posterior probability"] .< CRITLEVEL, 
 longdata = DataFrame()
 
 for r in eachrow(data)
+	for grav in ["gravity", "plain"]
     for t in ["11", "12", "21", "22"]
-        df = DataFrame(pair = r.pair, f1 = r.f1, f2 = r.f2, class = r.class, status = r.status, type = t)
+        df = DataFrame(pair = r.pair, f1 = r.f1, f2 = r.f2, class = r.class, status = r.status, type = t, degree = r.degree, gravity = grav)
         
         if r["pref$t"] == 1
             df.attestation .= "overattested"
@@ -45,21 +46,29 @@ for r in eachrow(data)
 
         df.status .= r.status
 
-        df.identity_joins .= r["JC_$(t)_identity"]
-        df.identity_joins_pvalue .= r["JC_$(t)_identity_pval"]
-	df.identity_joins_sig .= ifelse(r["JC_$(t)_identity_pval"] < CRITLEVEL, 1, 0)
+        df.identity_joins .= r["JC_$(t)_identity_$grav"]
+        df.identity_joins_pvalue_less .= r["JC_$(t)_identity_pval_less_$grav"]
+	df.identity_joins_sig_less .= ifelse(r["JC_$(t)_identity_pval_less_$grav"] < CRITLEVEL, 1, 0)
+        df.identity_joins_pvalue_more .= r["JC_$(t)_identity_pval_more_$grav"]
+	df.identity_joins_sig_more .= ifelse(r["JC_$(t)_identity_pval_more_$grav"] < CRITLEVEL, 1, 0)
 
-        df.nonidentity_joins .= r["JC_$(t)_nonidentity"]
-        df.nonidentity_joins_pvalue .= r["JC_$(t)_nonidentity_pval"]
-	df.nonidentity_joins_sig .= ifelse(r["JC_$(t)_nonidentity_pval"] < CRITLEVEL, 1, 0)
+        df.nonidentity_joins .= r["JC_$(t)_nonidentity_$grav"]
+        df.nonidentity_joins_pvalue_less .= r["JC_$(t)_nonidentity_pval_less_$grav"]
+	df.nonidentity_joins_sig_less .= ifelse(r["JC_$(t)_nonidentity_pval_less_$grav"] < CRITLEVEL, 1, 0)
+        df.nonidentity_joins_pvalue_more .= r["JC_$(t)_nonidentity_pval_more_$grav"]
+	df.nonidentity_joins_sig_more .= ifelse(r["JC_$(t)_nonidentity_pval_more_$grav"] < CRITLEVEL, 1, 0)
 
-        df.underattested_joins .= r["JC_$(t)_underattested"]
-        df.underattested_joins_pvalue .= r["JC_$(t)_underattested_pval"]
-	df.underattested_joins_sig .= ifelse(r["JC_$(t)_underattested_pval"] < CRITLEVEL, 1, 0)
+        df.underattested_joins .= r["JC_$(t)_underattested_$grav"]
+        df.underattested_joins_pvalue_less .= r["JC_$(t)_underattested_pval_less_$grav"]
+	df.underattested_joins_sig_less .= ifelse(r["JC_$(t)_underattested_pval_less_$grav"] < CRITLEVEL, 1, 0)
+        df.underattested_joins_pvalue_more .= r["JC_$(t)_underattested_pval_more_$grav"]
+	df.underattested_joins_sig_more .= ifelse(r["JC_$(t)_underattested_pval_more_$grav"] < CRITLEVEL, 1, 0)
 
-        df.overattested_joins .= r["JC_$(t)_overattested"]
-        df.overattested_joins_pvalue .= r["JC_$(t)_overattested_pval"]
-        df.overattested_joins_sig .= ifelse(r["JC_$(t)_overattested_pval"] < CRITLEVEL, 1, 0)
+        df.overattested_joins .= r["JC_$(t)_overattested_$grav"]
+        df.overattested_joins_pvalue_less .= r["JC_$(t)_overattested_pval_less_$grav"]
+        df.overattested_joins_sig_less .= ifelse(r["JC_$(t)_overattested_pval_less_$grav"] < CRITLEVEL, 1, 0)
+        df.overattested_joins_pvalue_more .= r["JC_$(t)_overattested_pval_more_$grav"]
+        df.overattested_joins_sig_more .= ifelse(r["JC_$(t)_overattested_pval_more_$grav"] < CRITLEVEL, 1, 0)
 
         #=
         if df.class == "control" && df.attestation == "contingently underattested"
@@ -72,6 +81,7 @@ for r in eachrow(data)
         =#
 
         global longdata = vcat(longdata, df)
+    end
     end
 end
 

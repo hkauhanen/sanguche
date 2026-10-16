@@ -36,13 +36,13 @@ using Distributed
 
 
 try
-    mkdir("../results")
+	mkdir("../results")
 catch e
 end
 
 
 try
-    mkdir("../results/$dataset")
+	mkdir("../results/$dataset")
 catch e
 end
 
@@ -50,21 +50,21 @@ end
 
 # count number of times each element of 'x' occurs in 'y'
 @everywhere function levelcounter(x, y)
-    out = Dict{Any,Int}()
+	out = Dict{Any,Int}()
 
-    for elx in x
-        out[elx] = 0
-    end
+	for elx in x
+		out[elx] = 0
+	end
 
-    for elx in x
-        for ely in y
-            if ely == elx
-                out[elx] = out[elx] + 1
-            end
-        end
-    end
+	for elx in x
+		for ely in y
+			if ely == elx
+				out[elx] = out[elx] + 1
+			end
+		end
+	end
 
-    out
+	out
 end
 
 
@@ -139,136 +139,153 @@ end
 
 # compute neighbourhood entropy for types in 'typeset'
 @everywhere function NE(typeset, data, dists)
-    # cycle through types
-    # languages in typeset
-    datat = subset(data, :type => (t -> t .∈ [typeset]))
+	# cycle through types
+	# languages in typeset
+	datat = subset(data, :type => (t -> t .∈ [typeset]))
 
-    # their neighbours
-    neighbours = subset(dists, :language_ID => (a -> a .∈ [datat.Language_ID])).neighbour_ID
+	# their neighbours
+	neighbours = subset(dists, :language_ID => (a -> a .∈ [datat.Language_ID])).neighbour_ID
 
-    if length(neighbours) == 0
-        println("WARNING: empty neighbourhood (this shouldn't happen)")
-    end
+	if length(neighbours) == 0
+		println("WARNING: empty neighbourhood (this shouldn't happen)")
+	end
 
-    # those neighbours' data
-    datan = subset(data, :Language_ID => (a -> a .∈ [neighbours]))
+	# those neighbours' data
+	datan = subset(data, :Language_ID => (a -> a .∈ [neighbours]))
 
-    # counts of different types among those neighbours
-    cnts = levelcounter(["11", "12", "21", "22"], datan.type)
+	# counts of different types among those neighbours
+	cnts = levelcounter(["11", "12", "21", "22"], datan.type)
 
-    # total number of neighbours
-    total = sum(values(cnts))
+	# total number of neighbours
+	total = sum(values(cnts))
 
-    # entropy
-    entropy = 0
-    for k in keys(cnts)
-        if cnts[k] > 0
-            entropy = entropy - (cnts[k]/total)*log2(cnts[k]/total)
-        end
-    end
+	# entropy
+	entropy = 0
+	for k in keys(cnts)
+		if cnts[k] > 0
+			entropy = entropy - (cnts[k]/total)*log2(cnts[k]/total)
+		end
+	end
 
-    return entropy
+	return entropy
 end
 
 
 # computes the various "sandwichness" metrics
 @everywhere function sandwichness(r, results, Ddata, Ddists; limtype = "km")
-    #resultsh = subset(results, :pair => (p -> p .== r.pair))
-    datah = Ddata[r.pair]
-    distsh = Ddists[r.pair]
+	#resultsh = subset(results, :pair => (p -> p .== r.pair))
+	datah = Ddata[r.pair]
+	distsh = Ddists[r.pair]
 
-    degree = r.degree
+	degree = r.degree
 
-    if limtype == "km"
-      distsh = subset(distsh, :distance => (i -> i .<= degree))
-    elseif limtype == "rank"
-      distsh = subset(distsh, :eachindex => (i -> i .<= degree))
-      #distsh = subset(distsh, :eachindex => (i -> i .== degree))
-    else
-      println("invalid limtype!")
-    end
+	if limtype == "km"
+		distsh = subset(distsh, :distance => (i -> i .<= degree))
+	elseif limtype == "rank"
+		distsh = subset(distsh, :eachindex => (i -> i .<= degree))
+		#distsh = subset(distsh, :eachindex => (i -> i .== degree))
+	else
+		println("invalid limtype!")
+	end
 
-    out = DataFrame(pair=r.pair)
+	out = DataFrame(pair=r.pair)
 
-    types = ["11", "12", "21", "22"]
-    pref_types = []
-    dispref_types = []
-    for type in types
-        #if resultsh[1, "pref"*type] == 0
-        if r["pref"*type] == 1
-            push!(pref_types, type)
-        end
-        if r["dispref"*type] == 1
-            push!(dispref_types, type)
-        end
-    end
+	types = ["11", "12", "21", "22"]
+	pref_types = []
+	dispref_types = []
+	for type in types
+		#if resultsh[1, "pref"*type] == 0
+		if r["pref"*type] == 1
+			push!(pref_types, type)
+		end
+		if r["dispref"*type] == 1
+			push!(dispref_types, type)
+		end
+	end
 
-    function permutationtest(focus, target, data, dists, empirical; permureps = 1000)
-	    permutest = zeros(permureps)
+	function permutationtest(focus, target, data, dists, empirical; permureps = 1000, fun = JCgravity)
+		permutest = zeros(permureps)
 
-	    for i in 1:permureps
-		    datac = deepcopy(data)
+		for i in 1:permureps
+			datac = deepcopy(data)
 
-		    #world-wide randomization
-		    #Random.shuffle!(datac.type)
+			#world-wide randomization
+			#Random.shuffle!(datac.type)
 
-		    #family-wide randomization
-		    @pipe datac |> groupby(_, :Family) |> transform!(_, :type => Random.shuffle => :type)
+			#family-wide randomization
+			@pipe datac |> groupby(_, :Family) |> transform!(_, :type => Random.shuffle => :type)
 
-		    permutest[i] = JCgravity(focus, target, datac, dists)
-	    end
+			permutest[i] = fun(focus, target, datac, dists)
+		end
 
-	    return (sum(permutest .>= empirical) + sum(permutest .<= empirical)) / permureps
-    end
+		return (sum(permutest .<= empirical) / permureps,
+			sum(permutest .>= empirical) / permureps)
+	end
 
-    for focal in types
-	    # identity joins
-	    empirical_JC = JCgravity([focal], [focal], datah, distsh)
-	    out[!, "JC_$(focal)_identity"] .= empirical_JC
-	    out[!, "JC_$(focal)_identity_pval"] .= permutationtest([focal], [focal], datah, distsh, empirical_JC)
+	for grav in ["gravity", "plain"]
+		for focal in types
+			if grav == "gravity"
+				fun = JCgravity
+			elseif grav == "plain"
+				fun = JC
+			end
 
-	    # non-identity joins
-	    nonids = []
-	    for t in types
-		    if t != focal
-			    push!(nonids, t)
-		    end
-	    end
-	    empirical_JC = JCgravity([focal], nonids, datah, distsh)
-	    out[!, "JC_$(focal)_nonidentity"] .= empirical_JC
-	    out[!, "JC_$(focal)_nonidentity_pval"] .= permutationtest([focal], nonids, datah, distsh, empirical_JC)
+			# identity joins
+			empirical_JC = fun([focal], [focal], datah, distsh)
+			out[!, "JC_$(focal)_identity_$grav"] .= empirical_JC
+			permuresu = permutationtest([focal], [focal], datah, distsh, empirical_JC; fun = fun)
+			out[!, "JC_$(focal)_identity_pval_less_$grav"] .= permuresu[1]
+			out[!, "JC_$(focal)_identity_pval_more_$grav"] .= permuresu[2]
 
-	    # joins to overattested
-	    empirical_JC = JCgravity([focal], pref_types, datah, distsh)
-	    out[!, "JC_$(focal)_overattested"] .= empirical_JC
-	    out[!, "JC_$(focal)_overattested_pval"] .= permutationtest([focal], pref_types, datah, distsh, empirical_JC)
+			# non-identity joins
+			nonids = []
+			for t in types
+				if t != focal
+					push!(nonids, t)
+				end
+			end
+			empirical_JC = fun([focal], nonids, datah, distsh)
+			out[!, "JC_$(focal)_nonidentity_$grav"] .= empirical_JC
+			permuresu = permutationtest([focal], nonids, datah, distsh, empirical_JC; fun = fun)
+			out[!, "JC_$(focal)_nonidentity_pval_less_$grav"] .= permuresu[1]
+			out[!, "JC_$(focal)_nonidentity_pval_more_$grav"] .= permuresu[2]
 
-	    # joins to underattested
-	    empirical_JC = JCgravity([focal], dispref_types, datah, distsh)
-	    out[!, "JC_$(focal)_underattested"] .= empirical_JC
-	    out[!, "JC_$(focal)_underattested_pval"] .= permutationtest([focal], dispref_types, datah, distsh, empirical_JC)
-    end
+			# joins to overattested
+			empirical_JC = fun([focal], pref_types, datah, distsh)
+			out[!, "JC_$(focal)_overattested_$grav"] .= empirical_JC
+			permuresu = permutationtest([focal], pref_types, datah, distsh, empirical_JC; fun = fun)
+			out[!, "JC_$(focal)_overattested_pval_less_$grav"] .= permuresu[1]
+			out[!, "JC_$(focal)_overattested_pval_more_$grav"] .= permuresu[2]
 
-    out.H .= NE(types, datah, distsh)
-    out.H_pref .= length(pref_types) == 0 ? missing : NE(pref_types, datah, distsh)
-    out.H_dispref .= length(dispref_types) == 0 ? missing : NE(dispref_types, datah, distsh)
-    out.N .= nrow(datah)
-    out.mean_distance .= mean(distsh.distance)
-    out.sd_distance .= std(distsh.distance)
+			# joins to underattested
+			empirical_JC = fun([focal], dispref_types, datah, distsh)
+			out[!, "JC_$(focal)_underattested_$grav"] .= empirical_JC
+			permuresu = permutationtest([focal], dispref_types, datah, distsh, empirical_JC; fun = fun)
+			out[!, "JC_$(focal)_underattested_pval_less_$grav"] .= permuresu[1]
+			out[!, "JC_$(focal)_underattested_pval_more_$grav"] .= permuresu[2]
+		end
+	end
 
-    out.mean_nsize .= nrow(distsh)/nrow(datah)
+	out.H .= NE(types, datah, distsh)
+	out.H_pref .= length(pref_types) == 0 ? missing : NE(pref_types, datah, distsh)
+	out.H_dispref .= length(dispref_types) == 0 ? missing : NE(dispref_types, datah, distsh)
+	out.N .= nrow(datah)
+	out.mean_distance .= mean(distsh.distance)
+	out.sd_distance .= std(distsh.distance)
 
-    return out
+	out.mean_nsize .= nrow(distsh)/nrow(datah)
+
+	return out
 end
 
 
 sand = @distributed (vcat) for r in eachrow(results)
-    out = DataFrame(r)
-    out = out[:, Between(:pair, :class)]
-    out.degree .= r.degree
+	out = DataFrame(r)
+	out = out[:, Between(:pair, :class)]
+	out.degree .= r.degree
 
-    geo_results = sandwichness(r, results, Ddata, Ddists; limtype=limtype)
-    innerjoin(out, geo_results, on=:pair)
+	geo_results = sandwichness(r, results, Ddata, Ddists; limtype=limtype)
+	innerjoin(out, geo_results, on=:pair)
 end
 
 
