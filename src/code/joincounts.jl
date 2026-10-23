@@ -70,6 +70,25 @@ for r in eachrow(data)
         df.overattested_joins_pvalue_more .= r["JC_$(t)_overattested_pval_more_$grav"]
         df.overattested_joins_sig_more .= ifelse(r["JC_$(t)_overattested_pval_more_$grav"] < CRITLEVEL, 1, 0)
 
+        df.valuelevel_f1_joins .= r["JC_$(t)_valuelevel_f1_$grav"]
+        df.valuelevel_f1_joins_pvalue_less .= r["JC_$(t)_valuelevel_f1_pval_less_$grav"]
+        df.valuelevel_f1_joins_sig_less .= ifelse(r["JC_$(t)_valuelevel_f1_pval_less_$grav"] < CRITLEVEL, 1, 0)
+        df.valuelevel_f1_joins_pvalue_more .= r["JC_$(t)_valuelevel_f1_pval_more_$grav"]
+        df.valuelevel_f1_joins_sig_more .= ifelse(r["JC_$(t)_valuelevel_f1_pval_more_$grav"] < CRITLEVEL, 1, 0)
+
+        df.valuelevel_f2_joins .= r["JC_$(t)_valuelevel_f2_$grav"]
+        df.valuelevel_f2_joins_pvalue_less .= r["JC_$(t)_valuelevel_f2_pval_less_$grav"]
+        df.valuelevel_f2_joins_sig_less .= ifelse(r["JC_$(t)_valuelevel_f2_pval_less_$grav"] < CRITLEVEL, 1, 0)
+        df.valuelevel_f2_joins_pvalue_more .= r["JC_$(t)_valuelevel_f2_pval_more_$grav"]
+        df.valuelevel_f2_joins_sig_more .= ifelse(r["JC_$(t)_valuelevel_f2_pval_more_$grav"] < CRITLEVEL, 1, 0)
+
+        df.valuelevel_either_joins .= r["JC_$(t)_valuelevel_either_$grav"]
+        df.valuelevel_either_joins_pvalue_less .= r["JC_$(t)_valuelevel_either_pval_less_$grav"]
+        df.valuelevel_either_joins_sig_less .= ifelse(r["JC_$(t)_valuelevel_either_pval_less_$grav"] < CRITLEVEL, 1, 0)
+        df.valuelevel_either_joins_pvalue_more .= r["JC_$(t)_valuelevel_either_pval_more_$grav"]
+        df.valuelevel_either_joins_sig_more .= ifelse(r["JC_$(t)_valuelevel_either_pval_more_$grav"] < CRITLEVEL, 1, 0)
+
+
         #=
         if df.class == "control" && df.attestation == "contingently underattested"
             df.pedigree .= "control_under"

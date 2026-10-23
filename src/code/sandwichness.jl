@@ -34,6 +34,8 @@ using Distributed
 @everywhere Ddists = deserialize("./dicts/Ddists.jls")
 
 
+@everywhere PERMUREPS = 1000
+
 
 try
 	mkdir("../results")
@@ -203,7 +205,7 @@ end
 		end
 	end
 
-	function permutationtest(focus, target, data, dists, empirical; permureps = 1000, fun = JCgravity)
+	function permutationtest(focus, target, data, dists, empirical; permureps = PERMUREPS, fun = JCgravity)
 		permutest = zeros(permureps)
 
 		for i in 1:permureps
@@ -263,6 +265,31 @@ end
 			permuresu = permutationtest([focal], dispref_types, datah, distsh, empirical_JC; fun = fun)
 			out[!, "JC_$(focal)_underattested_pval_less_$grav"] .= permuresu[1]
 			out[!, "JC_$(focal)_underattested_pval_more_$grav"] .= permuresu[2]
+
+      # feature value level joins
+      f1 = focal[1]
+      f2 = focal[2]
+
+      leveljoins1 = ["$(f1)1", "$(f1)2"]
+      empirical_JC = fun([focal], leveljoins1, datah, distsh)
+      out[!, "JC_$(focal)_valuelevel_f1_$grav"] .= empirical_JC
+      permuresu = permutationtest([focal], leveljoins1, datah, distsh, empirical_JC; fun = fun)
+      out[!, "JC_$(focal)_valuelevel_f1_pval_less_$grav"] .= permuresu[1]
+      out[!, "JC_$(focal)_valuelevel_f1_pval_more_$grav"] .= permuresu[2]
+
+      leveljoins2 = ["1$(f2)", "2$(f2)"]
+      empirical_JC = fun([focal], leveljoins2, datah, distsh)
+      out[!, "JC_$(focal)_valuelevel_f2_$grav"] .= empirical_JC
+      permuresu = permutationtest([focal], leveljoins2, datah, distsh, empirical_JC; fun = fun)
+      out[!, "JC_$(focal)_valuelevel_f2_pval_less_$grav"] .= permuresu[1]
+      out[!, "JC_$(focal)_valuelevel_f2_pval_more_$grav"] .= permuresu[2]
+
+      leveljoinsE = union(leveljoins1, leveljoins2)
+      empirical_JC = fun([focal], leveljoinsE, datah, distsh)
+      out[!, "JC_$(focal)_valuelevel_either_$grav"] .= empirical_JC
+      permuresu = permutationtest([focal], leveljoinsE, datah, distsh, empirical_JC; fun = fun)
+      out[!, "JC_$(focal)_valuelevel_either_pval_less_$grav"] .= permuresu[1]
+      out[!, "JC_$(focal)_valuelevel_either_pval_more_$grav"] .= permuresu[2]
 		end
 	end
 
