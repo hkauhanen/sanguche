@@ -212,10 +212,10 @@ end
 			datac = deepcopy(data)
 
 			#world-wide randomization
-			#Random.shuffle!(datac.type)
+			Random.shuffle!(datac.type)
 
 			#family-wide randomization
-			@pipe datac |> groupby(_, :Family) |> transform!(_, :type => Random.shuffle => :type)
+			#@pipe datac |> groupby(_, :Family) |> transform!(_, :type => Random.shuffle => :type)
 
 			permutest[i] = fun(focus, target, datac, dists)
 		end
