@@ -220,8 +220,8 @@ end
 			permutest[i] = fun(focus, target, datac, dists)
 		end
 
-		return (sum(permutest .<= empirical) / permureps,
-			sum(permutest .>= empirical) / permureps)
+		return (sum(permutest .>= empirical) / permureps,
+			sum(permutest .<= empirical) / permureps)
 	end
 
 	for grav in ["gravity", "plain"]
