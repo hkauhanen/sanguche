@@ -179,6 +179,24 @@ end
 	datah = Ddata[r.pair]
 	distsh = Ddists[r.pair]
 
+	# add "LargeFamily" (i.e. pool small families together so that family-based
+	# randomization makes sense
+	SIZELIMIT = 10
+	familysizes = @pipe datah |> groupby(_, :Family) |> combine(_, nrow => :size)
+	smolfamilies = subset(familysizes, :size => (s -> s .<= SIZELIMIT)).Family
+
+	function myfamilyfunction(f)
+		if f in smolfamilies
+			return "OTHER"
+		else
+			return f
+		end
+	end
+
+	transform!(datah, :Family => (f -> myfamilyfunction.(f)) => :LargeFamily)
+
+
+
 	degree = r.degree
 
 	if limtype == "km"
@@ -205,17 +223,19 @@ end
 		end
 	end
 
-	function permutationtest(focus, target, data, dists, empirical; permureps = PERMUREPS, fun = JCgravity)
+	function permutationtest(focus, target, data, dists, empirical; permureps = PERMUREPS, fun = JCgravity, nullhyp = "globalnull")
 		permutest = zeros(permureps)
 
 		for i in 1:permureps
 			datac = deepcopy(data)
 
 			#world-wide randomization
-			Random.shuffle!(datac.type)
-
+			if nullhyp == "globalnull"
+				Random.shuffle!(datac.type)
+			else
 			#family-wide randomization
-			#@pipe datac |> groupby(_, :Family) |> transform!(_, :type => Random.shuffle => :type)
+				@pipe datac |> groupby(_, :LargeFamily) |> transform!(_, :type => Random.shuffle => :type)
+			end
 
 			permutest[i] = fun(focus, target, datac, dists)
 		end
@@ -224,72 +244,76 @@ end
 			sum(permutest .<= empirical) / permureps)
 	end
 
-	for grav in ["gravity", "plain"]
-		for focal in types
-			if grav == "gravity"
-				fun = JCgravity
-			elseif grav == "plain"
-				fun = JC
-			end
+	for nullhyp in ["globalnull", "familynull"]
+		for gravy in ["gravity", "plain"]
+			grav = "$(gravy)_$(nullhyp)"
 
-			# identity joins
-			empirical_JC = fun([focal], [focal], datah, distsh)
-			out[!, "JC_$(focal)_identity_$grav"] .= empirical_JC
-			permuresu = permutationtest([focal], [focal], datah, distsh, empirical_JC; fun = fun)
-			out[!, "JC_$(focal)_identity_pval_less_$grav"] .= permuresu[1]
-			out[!, "JC_$(focal)_identity_pval_more_$grav"] .= permuresu[2]
-
-			# non-identity joins
-			nonids = []
-			for t in types
-				if t != focal
-					push!(nonids, t)
+			for focal in types
+				if gravy == "gravity"
+					fun = JCgravity
+				elseif gravy == "plain"
+					fun = JC
 				end
+
+				# identity joins
+				empirical_JC = fun([focal], [focal], datah, distsh)
+				out[!, "JC_$(focal)_identity_$grav"] .= empirical_JC
+				permuresu = permutationtest([focal], [focal], datah, distsh, empirical_JC; fun = fun, nullhyp = nullhyp)
+				out[!, "JC_$(focal)_identity_pval_less_$grav"] .= permuresu[1]
+				out[!, "JC_$(focal)_identity_pval_more_$grav"] .= permuresu[2]
+
+				# non-identity joins
+				nonids = []
+				for t in types
+					if t != focal
+						push!(nonids, t)
+					end
+				end
+				empirical_JC = fun([focal], nonids, datah, distsh)
+				out[!, "JC_$(focal)_nonidentity_$grav"] .= empirical_JC
+				permuresu = permutationtest([focal], nonids, datah, distsh, empirical_JC; fun = fun, nullhyp = nullhyp)
+				out[!, "JC_$(focal)_nonidentity_pval_less_$grav"] .= permuresu[1]
+				out[!, "JC_$(focal)_nonidentity_pval_more_$grav"] .= permuresu[2]
+
+				# joins to overattested
+				empirical_JC = fun([focal], pref_types, datah, distsh)
+				out[!, "JC_$(focal)_overattested_$grav"] .= empirical_JC
+				permuresu = permutationtest([focal], pref_types, datah, distsh, empirical_JC; fun = fun, nullhyp = nullhyp)
+				out[!, "JC_$(focal)_overattested_pval_less_$grav"] .= permuresu[1]
+				out[!, "JC_$(focal)_overattested_pval_more_$grav"] .= permuresu[2]
+
+				# joins to underattested
+				empirical_JC = fun([focal], dispref_types, datah, distsh)
+				out[!, "JC_$(focal)_underattested_$grav"] .= empirical_JC
+				permuresu = permutationtest([focal], dispref_types, datah, distsh, empirical_JC; fun = fun, nullhyp = nullhyp)
+				out[!, "JC_$(focal)_underattested_pval_less_$grav"] .= permuresu[1]
+				out[!, "JC_$(focal)_underattested_pval_more_$grav"] .= permuresu[2]
+
+				# feature value level joins
+				f1 = focal[1]
+				f2 = focal[2]
+
+				leveljoins1 = ["$(f1)1", "$(f1)2"]
+				empirical_JC = fun([focal], leveljoins1, datah, distsh)
+				out[!, "JC_$(focal)_valuelevel_f1_$grav"] .= empirical_JC
+				permuresu = permutationtest([focal], leveljoins1, datah, distsh, empirical_JC; fun = fun, nullhyp = nullhyp)
+				out[!, "JC_$(focal)_valuelevel_f1_pval_less_$grav"] .= permuresu[1]
+				out[!, "JC_$(focal)_valuelevel_f1_pval_more_$grav"] .= permuresu[2]
+
+				leveljoins2 = ["1$(f2)", "2$(f2)"]
+				empirical_JC = fun([focal], leveljoins2, datah, distsh)
+				out[!, "JC_$(focal)_valuelevel_f2_$grav"] .= empirical_JC
+				permuresu = permutationtest([focal], leveljoins2, datah, distsh, empirical_JC; fun = fun, nullhyp = nullhyp)
+				out[!, "JC_$(focal)_valuelevel_f2_pval_less_$grav"] .= permuresu[1]
+				out[!, "JC_$(focal)_valuelevel_f2_pval_more_$grav"] .= permuresu[2]
+
+				leveljoinsE = union(leveljoins1, leveljoins2)
+				empirical_JC = fun([focal], leveljoinsE, datah, distsh)
+				out[!, "JC_$(focal)_valuelevel_either_$grav"] .= empirical_JC
+				permuresu = permutationtest([focal], leveljoinsE, datah, distsh, empirical_JC; fun = fun, nullhyp = nullhyp)
+				out[!, "JC_$(focal)_valuelevel_either_pval_less_$grav"] .= permuresu[1]
+				out[!, "JC_$(focal)_valuelevel_either_pval_more_$grav"] .= permuresu[2]
 			end
-			empirical_JC = fun([focal], nonids, datah, distsh)
-			out[!, "JC_$(focal)_nonidentity_$grav"] .= empirical_JC
-			permuresu = permutationtest([focal], nonids, datah, distsh, empirical_JC; fun = fun)
-			out[!, "JC_$(focal)_nonidentity_pval_less_$grav"] .= permuresu[1]
-			out[!, "JC_$(focal)_nonidentity_pval_more_$grav"] .= permuresu[2]
-
-			# joins to overattested
-			empirical_JC = fun([focal], pref_types, datah, distsh)
-			out[!, "JC_$(focal)_overattested_$grav"] .= empirical_JC
-			permuresu = permutationtest([focal], pref_types, datah, distsh, empirical_JC; fun = fun)
-			out[!, "JC_$(focal)_overattested_pval_less_$grav"] .= permuresu[1]
-			out[!, "JC_$(focal)_overattested_pval_more_$grav"] .= permuresu[2]
-
-			# joins to underattested
-			empirical_JC = fun([focal], dispref_types, datah, distsh)
-			out[!, "JC_$(focal)_underattested_$grav"] .= empirical_JC
-			permuresu = permutationtest([focal], dispref_types, datah, distsh, empirical_JC; fun = fun)
-			out[!, "JC_$(focal)_underattested_pval_less_$grav"] .= permuresu[1]
-			out[!, "JC_$(focal)_underattested_pval_more_$grav"] .= permuresu[2]
-
-      # feature value level joins
-      f1 = focal[1]
-      f2 = focal[2]
-
-      leveljoins1 = ["$(f1)1", "$(f1)2"]
-      empirical_JC = fun([focal], leveljoins1, datah, distsh)
-      out[!, "JC_$(focal)_valuelevel_f1_$grav"] .= empirical_JC
-      permuresu = permutationtest([focal], leveljoins1, datah, distsh, empirical_JC; fun = fun)
-      out[!, "JC_$(focal)_valuelevel_f1_pval_less_$grav"] .= permuresu[1]
-      out[!, "JC_$(focal)_valuelevel_f1_pval_more_$grav"] .= permuresu[2]
-
-      leveljoins2 = ["1$(f2)", "2$(f2)"]
-      empirical_JC = fun([focal], leveljoins2, datah, distsh)
-      out[!, "JC_$(focal)_valuelevel_f2_$grav"] .= empirical_JC
-      permuresu = permutationtest([focal], leveljoins2, datah, distsh, empirical_JC; fun = fun)
-      out[!, "JC_$(focal)_valuelevel_f2_pval_less_$grav"] .= permuresu[1]
-      out[!, "JC_$(focal)_valuelevel_f2_pval_more_$grav"] .= permuresu[2]
-
-      leveljoinsE = union(leveljoins1, leveljoins2)
-      empirical_JC = fun([focal], leveljoinsE, datah, distsh)
-      out[!, "JC_$(focal)_valuelevel_either_$grav"] .= empirical_JC
-      permuresu = permutationtest([focal], leveljoinsE, datah, distsh, empirical_JC; fun = fun)
-      out[!, "JC_$(focal)_valuelevel_either_pval_less_$grav"] .= permuresu[1]
-      out[!, "JC_$(focal)_valuelevel_either_pval_more_$grav"] .= permuresu[2]
 		end
 	end
 
