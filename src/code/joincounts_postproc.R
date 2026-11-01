@@ -1,9 +1,27 @@
-args <- commandArgs(trailingOnly=TRUE)
-dataset <- args[1]
+out <- NULL
 
-data <- read.csv(paste0("../../results/", dataset, "/joincounts.csv"))
+for (dataset in c("wals", "grambank", "grambankNEW")) {
+	suffix = ""
 
-data$pedigree <- ifelse(data$classification == "dispreferred", "dispreferred", NA)
-data$pedigree <- ifelse(data$class == "control" & data$attestation == "underattested", "control underattested", data$pedigree)
+	if (dataset == "grambankNEW") {
+		dataset = "grambank"
+		suffix = "_newJager"
+	}
 
-write.csv(data, paste0("../../results/", dataset ,"/joincounts_processed.csv"), row.names=FALSE)
+	data <- read.csv(paste0("../../results/", dataset, "/joincounts", suffix, ".csv"))
+
+	data$pedigree <- ifelse(data$classification == "dispreferred", "dispreferred", NA)
+	data$pedigree <- ifelse(data$class == "control" & data$attestation == "underattested", "control underattested", data$pedigree)
+
+	if (dataset == "wals")
+		data$dataset <- "WALS"
+	else if (dataset == "grambank")
+		if (suffix == "_newJager")
+			data$dataset <- "Grambank NEW"
+		else
+			data$dataset <- "Grambank"
+
+	out <- rbind(out, data)
+}
+
+write.csv(out, paste0("../../results/joincounts_all.csv"), row.names=FALSE)

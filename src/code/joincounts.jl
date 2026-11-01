@@ -10,12 +10,18 @@ using Pipe
 
 dataset = ARGS[1]
 
+if length(ARGS) > 1
+	JWflag = ARGS[2]
+else
+	JWflag = ""
+end
+
 CRITLEVEL = 0.05
 
 
 sand = deserialize("../../results/$dataset/sand_results.jls")
 
-jawa = CSV.read("../../results/$dataset/bfCorr.csv", DataFrame)
+jawa = CSV.read("../../results/$dataset/bfCorr$(JWflag).csv", DataFrame)
 
 transform!(jawa, "feature pair" => (fp -> Set.(split.(fp, "-"))) => :pair_ID)
 
@@ -73,5 +79,5 @@ for r in eachrow(data)
 end
 
 
-serialize("../../results/$dataset/joincounts.jls", longdata)
-CSV.write("../../results/$dataset/joincounts.csv", longdata)
+serialize("../../results/$dataset/joincounts$(JWflag).jls", longdata)
+CSV.write("../../results/$dataset/joincounts$(JWflag).csv", longdata)
