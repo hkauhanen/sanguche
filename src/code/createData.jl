@@ -65,10 +65,10 @@ data = CSV.read(datainF, DataFrame)
 ##
 
 for i in 1:size(data,1), j in 2:size(data,2)
-    v = data[i,j]
-    if !ismissing(v) && v > 2
-        data[i,j] = missing
-    end
+	v = data[i,j]
+	if !ismissing(v) && v > 2
+		data[i,j] = missing
+	end
 end
 
 
@@ -83,12 +83,17 @@ sort!(data, :nValues, rev=true)
 
 dropmissing!(languages, :Glottocode)
 
+if dataset == "grambank"
+	languages.Family = languages.Family_name
+end
+
 data = innerjoin(
-    data,
-    #select(languages, [:ID, :Glottocode]),
-    select(languages, [:ID, :Glottocode, :Family, :Subfamily, :Genus]),
-    on = :Language_ID => :ID,
-)
+		 data,
+		 #select(languages, [:ID, :Glottocode]),
+		 #select(languages, [:ID, :Glottocode, :Family, :Subfamily, :Genus]),
+		 select(languages, [:ID, :Glottocode, :Family]),
+		 on = :Language_ID => :ID,
+		 )
 
 unique!(data, :Glottocode)
 
@@ -96,7 +101,7 @@ filter!(x -> x.nValues >= 6, data)
 
 
 if dataset == "wals"
-    fDict = Dict(fPairs)
+	fDict = Dict(fPairs)
 end
 
 rename!(data, fDict)

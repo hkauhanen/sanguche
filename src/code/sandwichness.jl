@@ -7,6 +7,8 @@ using Distributed
 @everywhere Pkg.activate("Sanguche")
 #@everywhere Pkg.instantiate()
 
+@everywhere include("permutation_params.jl")
+
 
 # all processors need access to the following
 @everywhere using CSV
@@ -34,7 +36,8 @@ using Distributed
 @everywhere Ddists = deserialize("./dicts/Ddists.jls")
 
 
-@everywhere PERMUREPS = 1000
+
+#@everywhere PERMUREPS = 1000
 
 
 try
@@ -70,73 +73,27 @@ end
 end
 
 
-# join count statistic: overattested neighbours of underattested focals
-@everywhere function JC(underatt, overatt, data, dists)
-	datat = subset(data, :type => (t -> t .∈ [underatt]))
+# join count statistic: neighbours of langauges of type in 'focal' of type in 'target'
+@everywhere function JCgravity(focal, target, data, dists; exponent = 2.0)
+	datat = subset(data, :type => (t -> t .∈ [focal]))
 
 	neighbours = subset(dists, :language_ID => (a -> a .∈ [datat.Language_ID])).neighbour_ID
 
 	datan = subset(data, :Language_ID => (a -> a .∈ [neighbours]))
 
-	datanover = subset(datan, :type => (t -> t .∈ [overatt]))
-
-	out = nrow(datanover)
-
-	if underatt == overatt
-		out = out / 2
-	end
-
-	return out
-end
-
-
-# join count statistic: overattested neighbours of underattested focals,
-# gravity-based
-@everywhere function JCgravity(underatt, overatt, data, dists)
-	datat = subset(data, :type => (t -> t .∈ [underatt]))
-
-	neighbours = subset(dists, :language_ID => (a -> a .∈ [datat.Language_ID])).neighbour_ID
-
-	datan = subset(data, :Language_ID => (a -> a .∈ [neighbours]))
-
-	overatt_neighbours = subset(datan, :type => (t -> t .∈ [overatt])).Language_ID
+	target_neighbours = subset(datan, :type => (t -> t .∈ [target])).Language_ID
 
 	df = subset(dists, :language_ID => (a -> a .∈ [datat.Language_ID]))
-	df = subset(df, :neighbour_ID => (a -> a .∈ [overatt_neighbours]))
+	df = subset(df, :neighbour_ID => (a -> a .∈ [target_neighbours]))
 
-	out = sum(1 ./ (df.distance .^ 2))
+	out = sum(1 ./ (df.distance .^ exponent))
 
-	if underatt == overatt
+	if focal == target
 		out = out / 2
 	end
 
 	return out
 end
-
-
-# join count statistic: identity joins
-# gravity-based
-@everywhere function JCgravity_identity(types, data, dists)
-	datat = subset(data, :type => (t -> t .∈ [types]))
-
-	out = 0.0
-
-	for r in eachrow(datat)
-		neighbours = subset(dists, :language_ID => (a -> a .== r.Language_ID)).neighbour_ID
-
-		datan = subset(data, :Language_ID => (a -> a .∈ [neighbours]))
-
-		identical_neighbours = subset(datan, :type => (t -> t .== r.type)).Language_ID
-
-		df = subset(dists, :language_ID => (a -> a .== r.Language_ID))
-		df = subset(df, :neighbour_ID => (a -> a .∈ [identical_neighbours]))
-
-		out += sum(1 ./ (df.distance .^ 2))
-	end
-
-	return out / 2
-end
-
 
 
 # compute neighbourhood entropy for types in 'typeset'
@@ -181,7 +138,7 @@ end
 
 	# add "LargeFamily" (i.e. pool small families together so that family-based
 	# randomization makes sense
-	SIZELIMIT = 10
+	#SIZELIMIT = 10
 	familysizes = @pipe datah |> groupby(_, :Family) |> combine(_, nrow => :size)
 	smolfamilies = subset(familysizes, :size => (s -> s .<= SIZELIMIT)).Family
 
@@ -196,14 +153,12 @@ end
 	transform!(datah, :Family => (f -> myfamilyfunction.(f)) => :LargeFamily)
 
 
-
 	degree = r.degree
 
 	if limtype == "km"
 		distsh = subset(distsh, :distance => (i -> i .<= degree))
 	elseif limtype == "rank"
 		distsh = subset(distsh, :eachindex => (i -> i .<= degree))
-		#distsh = subset(distsh, :eachindex => (i -> i .== degree))
 	else
 		println("invalid limtype!")
 	end
@@ -211,10 +166,12 @@ end
 	out = DataFrame(pair=r.pair)
 
 	types = ["11", "12", "21", "22"]
+
+	# IMPORTANT! "pref" and "dispref" here have the meanings of "overattested"
+	# and "underattested", respectively, NOT "preferred" and "dispreferred".
 	pref_types = []
 	dispref_types = []
 	for type in types
-		#if resultsh[1, "pref"*type] == 0
 		if r["pref"*type] == 1
 			push!(pref_types, type)
 		end
@@ -223,7 +180,7 @@ end
 		end
 	end
 
-	function permutationtest(focus, target, data, dists, empirical; permureps = PERMUREPS, fun = JCgravity, nullhyp = "globalnull")
+	function permutationtest(focus, target, data, dists, empirical; permureps = PERMUREPS, fun = JCgravity, nullhyp = "globalnull", exponent = 2.0)
 		permutest = zeros(permureps)
 
 		for i in 1:permureps
@@ -233,93 +190,59 @@ end
 			if nullhyp == "globalnull"
 				Random.shuffle!(datac.type)
 			else
-			#family-wide randomization
+				#family-wide randomization
 				@pipe datac |> groupby(_, :LargeFamily) |> transform!(_, :type => Random.shuffle => :type)
 			end
 
-			permutest[i] = fun(focus, target, datac, dists)
+			permutest[i] = fun(focus, target, datac, dists; exponent = exponent)
 		end
 
 		return (sum(permutest .>= empirical) / permureps,
 			sum(permutest .<= empirical) / permureps)
 	end
 
+	fun = JCgravity
+
 	for nullhyp in ["globalnull", "familynull"]
-		for gravy in ["gravity", "plain"]
-			grav = "$(gravy)_$(nullhyp)"
+		for expon in [0.0, 1.0, 2.0]
+			grav = "GREX$(expon)_$(nullhyp)"
 
 			for focal in types
-				if gravy == "gravity"
-					fun = JCgravity
-				elseif gravy == "plain"
-					fun = JC
-				end
-
-				# identity joins
-				empirical_JC = fun([focal], [focal], datah, distsh)
-				out[!, "JC_$(focal)_identity_$grav"] .= empirical_JC
-				permuresu = permutationtest([focal], [focal], datah, distsh, empirical_JC; fun = fun, nullhyp = nullhyp)
-				out[!, "JC_$(focal)_identity_pval_less_$grav"] .= permuresu[1]
-				out[!, "JC_$(focal)_identity_pval_more_$grav"] .= permuresu[2]
-
-				# non-identity joins
-				nonids = []
-				for t in types
-					if t != focal
-						push!(nonids, t)
-					end
-				end
-				empirical_JC = fun([focal], nonids, datah, distsh)
-				out[!, "JC_$(focal)_nonidentity_$grav"] .= empirical_JC
-				permuresu = permutationtest([focal], nonids, datah, distsh, empirical_JC; fun = fun, nullhyp = nullhyp)
-				out[!, "JC_$(focal)_nonidentity_pval_less_$grav"] .= permuresu[1]
-				out[!, "JC_$(focal)_nonidentity_pval_more_$grav"] .= permuresu[2]
-
-				# joins to overattested
-				empirical_JC = fun([focal], pref_types, datah, distsh)
-				out[!, "JC_$(focal)_overattested_$grav"] .= empirical_JC
-				permuresu = permutationtest([focal], pref_types, datah, distsh, empirical_JC; fun = fun, nullhyp = nullhyp)
-				out[!, "JC_$(focal)_overattested_pval_less_$grav"] .= permuresu[1]
-				out[!, "JC_$(focal)_overattested_pval_more_$grav"] .= permuresu[2]
-
-				# joins to underattested
-				empirical_JC = fun([focal], dispref_types, datah, distsh)
-				out[!, "JC_$(focal)_underattested_$grav"] .= empirical_JC
-				permuresu = permutationtest([focal], dispref_types, datah, distsh, empirical_JC; fun = fun, nullhyp = nullhyp)
-				out[!, "JC_$(focal)_underattested_pval_less_$grav"] .= permuresu[1]
-				out[!, "JC_$(focal)_underattested_pval_more_$grav"] .= permuresu[2]
-
 				# feature value level joins
 				f1 = focal[1]
 				f2 = focal[2]
 
-				leveljoins1 = ["$(f1)1", "$(f1)2"]
-				empirical_JC = fun([focal], leveljoins1, datah, distsh)
-				out[!, "JC_$(focal)_valuelevel_f1_$grav"] .= empirical_JC
-				permuresu = permutationtest([focal], leveljoins1, datah, distsh, empirical_JC; fun = fun, nullhyp = nullhyp)
-				out[!, "JC_$(focal)_valuelevel_f1_pval_less_$grav"] .= permuresu[1]
-				out[!, "JC_$(focal)_valuelevel_f1_pval_more_$grav"] .= permuresu[2]
+				for comparison in ["f1", "f2", "AND", "OR", "XOR"]
+					f1joins = ["$(f1)1", "$(f1)2"]
+					f2joins = ["1$(f2)", "2$(f2)"]
 
-				leveljoins2 = ["1$(f2)", "2$(f2)"]
-				empirical_JC = fun([focal], leveljoins2, datah, distsh)
-				out[!, "JC_$(focal)_valuelevel_f2_$grav"] .= empirical_JC
-				permuresu = permutationtest([focal], leveljoins2, datah, distsh, empirical_JC; fun = fun, nullhyp = nullhyp)
-				out[!, "JC_$(focal)_valuelevel_f2_pval_less_$grav"] .= permuresu[1]
-				out[!, "JC_$(focal)_valuelevel_f2_pval_more_$grav"] .= permuresu[2]
+					if comparison == "f1"
+						leveljoins = f1joins
+					elseif comparison == "f2"
+						leveljoins = f2joins
+					elseif comparison == "AND"
+						leveljoins = intersect(f1joins, f2joins)
+					elseif comparison == "OR"
+						leveljoins = union(f1joins, f2joins)
+					elseif comparison == "XOR"
+						leveljoins = setdiff(union(f1joins, f2joins), intersect(f1joins, f2joins))
+					end
 
-				leveljoinsE = union(leveljoins1, leveljoins2)
-				empirical_JC = fun([focal], leveljoinsE, datah, distsh)
-				out[!, "JC_$(focal)_valuelevel_either_$grav"] .= empirical_JC
-				permuresu = permutationtest([focal], leveljoinsE, datah, distsh, empirical_JC; fun = fun, nullhyp = nullhyp)
-				out[!, "JC_$(focal)_valuelevel_either_pval_less_$grav"] .= permuresu[1]
-				out[!, "JC_$(focal)_valuelevel_either_pval_more_$grav"] .= permuresu[2]
+					empirical_JC = fun([focal], leveljoins, datah, distsh; exponent = expon)
+					out[!, "JC_$(focal)_$(comparison)_$(grav)"] .= empirical_JC
+					permuresu = permutationtest([focal], leveljoins, datah, distsh, empirical_JC; fun = fun, nullhyp = nullhyp, exponent = expon)
+					out[!, "JC_$(focal)_$(comparison)_pval_less_$grav"] .= permuresu[1]
+					out[!, "JC_$(focal)_$(comparison)_pval_more_$grav"] .= permuresu[2]
+				end
 			end
 		end
 	end
 
+	#=
 	out.H .= NE(types, datah, distsh)
 	out.H_pref .= length(pref_types) == 0 ? missing : NE(pref_types, datah, distsh)
 	out.H_dispref .= length(dispref_types) == 0 ? missing : NE(dispref_types, datah, distsh)
+	=#
 	out.N .= nrow(datah)
 	out.mean_distance .= mean(distsh.distance)
 	out.sd_distance .= std(distsh.distance)

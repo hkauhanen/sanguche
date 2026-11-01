@@ -31,7 +31,7 @@ $(DATASET)/dicts/Ddata.jls $(DATASET)/dicts/Ddists.jls $(DATASET)/dicts/grid.jls
 
 sandwich : results/$(DATASET)/sand_results.csv results/$(DATASET)/sand_results.jls
 
-results/$(DATASET)/sand_results.csv results/$(DATASET)/sand_results.jls &: src/code/sandwichness.jl src/code/params.jl src/code/deps.jl $(DATASET)/dicts/Ddata.jls $(DATASET)/dicts/Ddists.jls $(DATASET)/dicts/grid.jls
+results/$(DATASET)/sand_results.csv results/$(DATASET)/sand_results.jls &: src/code/sandwichness.jl src/code/params.jl src/code/deps.jl $(DATASET)/dicts/Ddata.jls $(DATASET)/dicts/Ddists.jls $(DATASET)/dicts/grid.jls src/code/permutation_params.jl
 	cd src/code; $(JNEW) -p $(NPROC) sandwichness.jl $(DATASET) $(LIMTYPE)
 
 phyloprep : src/code/createPhyloData.jl src/code/params.jl $(DATASET)/data/data.csv $(DATASET)/data/database/*.csv

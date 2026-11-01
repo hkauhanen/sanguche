@@ -258,16 +258,16 @@ vals = [vals; dd]
 =#
 
 
-# also need to add information about new features into codes table
-#
-push!(codes, ["VO-0", "VO", 0, "VO order"])
-push!(codes, ["VO-1", "VO", 1, "OV order"])
-push!(codes, ["NA-0", "NA", 0, "AN order"])
-push!(codes, ["NA-1", "NA", 1, "NA order"])
-
-
 # subsequent code expects a "Number" column in the codes table, as WALS has
 codes[!, :Number] .= codes[!, :Name]
+
+
+# also need to add information about new features into codes table
+#
+push!(codes, ["VO-0", "VO", 0, "VO order", 0])
+push!(codes, ["VO-1", "VO", 1, "OV order", 1])
+push!(codes, ["NA-0", "NA", 0, "AN order", 0])
+push!(codes, ["NA-1", "NA", 1, "NA order", 1])
 
 
 # writeout
