@@ -1,6 +1,7 @@
 out <- NULL
 
-for (dataset in c("wals", "grambank", "grambankNEW")) {
+#for (dataset in c("wals", "grambank", "grambankNEW")) {
+for (dataset in c("wals", "grambank")) {
 	suffix = ""
 
 	if (dataset == "grambankNEW") {

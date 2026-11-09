@@ -17,17 +17,28 @@ else
 end
 
 CRITLEVEL = 0.05
-
+LBFLEVEL = 4.0
 
 sand = deserialize("../../results/$dataset/sand_results.jls")
 
-jawa = CSV.read("../../results/$dataset/bfCorr$(JWflag).csv", DataFrame)
 
-transform!(jawa, "feature pair" => (fp -> Set.(split.(fp, "-"))) => :pair_ID)
+#jawa = CSV.read("../../results/$dataset/bfCorr$(JWflag).csv", DataFrame)
+#
+
+jawa = CSV.read("../../results/gbwals_all_pairs.csv", DataFrame)
+
+subset!(jawa, :dataset => (d -> lowercase.(d) .== dataset))
+
+transform!(jawa, [:feat1, :feat2] => ByRow(((a,b) -> "$a-$b")) => :fpair)
+
+transform!(jawa, :fpair => (fp -> Set.(split.(fp, "-"))) => :pair_ID)
 
 data = innerjoin(sand, jawa, on = :pair_ID)
 
-data.status = ifelse.(data[!, "cumulative posterior probability"] .< CRITLEVEL, "interacting", "non-interacting")
+#data.status = ifelse.(data[!, "cumulative posterior probability"] .< CRITLEVEL, "interacting", "non-interacting")
+data.status = ifelse.(data.lbf .> LBFLEVEL, "interacting", "non-interacting")
+
+println(data[1:2, :])
 
 
 longdata = DataFrame()
