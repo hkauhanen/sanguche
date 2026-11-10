@@ -16,7 +16,7 @@ else
 	JWflag = ""
 end
 
-CRITLEVEL = 0.001 #0.05
+CRITLEVEL = 0.01 #0.05
 LBFLEVEL = 4.0
 
 sand = deserialize("../../results/$dataset/sand_results.jls")
@@ -46,8 +46,8 @@ data.status = ifelse.(data.lbf .> LBFLEVEL, "interacting", "non-interacting")
 longdata = DataFrame()
 
 for r in eachrow(data)
-	for nullhyp in ["familynull"] #["globalnull", "familynull"]
-		for expon in [2.0] #[0.0, 1.0, 2.0]
+	for nullhyp in ["globalnull", "familynull"]
+		for expon in [0.0, 1.0, 2.0]
 			for combination in ["f1", "f2", "AND", "OR", "XOR"]
 
 				for t in ["11", "12", "21", "22"]

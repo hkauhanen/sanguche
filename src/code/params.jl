@@ -4,8 +4,8 @@ include_controls = true
 # neighbourhood sizes 
 #degrees = 1:1:500  # rank based
 #degrees = 1:1:20
-#degrees = [10, 20, 50, 100]#10:10:100
-degrees = [50]#10:10:100
+degrees = [10, 20, 50, 100]#10:10:100
+#degrees = [50]#10:10:100
 
 # features
 features = vcat(first.(fPairs), construct)

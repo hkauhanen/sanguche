@@ -85,8 +85,9 @@ end
 
 	df = subset(dists, :language_ID => (a -> a .∈ [datat.Language_ID]))
 	df = subset(df, :neighbour_ID => (a -> a .∈ [target_neighbours]))
+  df = subset(df, :distance => (d -> d .!= 0.0))
 
-	out = sum(1 ./ (df.distance .^ exponent))
+  out = sum(df.distance .^ -exponent)
 
 	if focal == target
 		out = out / 2
@@ -197,15 +198,15 @@ end
 			permutest[i] = fun(focus, target, datac, dists; exponent = exponent)
 		end
 
-		return (sum(permutest .>= empirical) / permureps,
-			sum(permutest .<= empirical) / permureps,
+		return (sum(permutest .<= empirical) / permureps,
+			sum(permutest .>= empirical) / permureps,
 			(empirical - Statistics.mean(permutest)) / Statistics.std(permutest))
 	end
 
 	fun = JCgravity
 
-	for nullhyp in ["familynull"] #["globalnull", "familynull"]
-		for expon in [2.0] #[0.0, 1.0, 2.0]
+	for nullhyp in ["globalnull", "familynull"]
+		for expon in [0.0, 1.0, 2.0]
 			grav = "GREX$(expon)_$(nullhyp)"
 
 			for focal in types
