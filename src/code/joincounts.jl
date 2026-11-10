@@ -16,7 +16,7 @@ else
 	JWflag = ""
 end
 
-CRITLEVEL = 0.05
+CRITLEVEL = 0.001 #0.05
 LBFLEVEL = 4.0
 
 sand = deserialize("../../results/$dataset/sand_results.jls")
@@ -33,19 +33,21 @@ transform!(jawa, [:feat1, :feat2] => ByRow(((a,b) -> "$a-$b")) => :fpair)
 
 transform!(jawa, :fpair => (fp -> Set.(split.(fp, "-"))) => :pair_ID)
 
-data = innerjoin(sand, jawa, on = :pair_ID)
+data = leftjoin(sand, jawa, on = :pair_ID)
+
+data.lbf = ifelse.(ismissing.(data.lbf), NaN, data.lbf)
 
 #data.status = ifelse.(data[!, "cumulative posterior probability"] .< CRITLEVEL, "interacting", "non-interacting")
 data.status = ifelse.(data.lbf .> LBFLEVEL, "interacting", "non-interacting")
 
-println(data[1:2, :])
+#println(data[1:2, :])
 
 
 longdata = DataFrame()
 
 for r in eachrow(data)
-	for nullhyp in ["globalnull", "familynull"]
-		for expon in [0.0, 1.0, 2.0]
+	for nullhyp in ["familynull"] #["globalnull", "familynull"]
+		for expon in [2.0] #[0.0, 1.0, 2.0]
 			for combination in ["f1", "f2", "AND", "OR", "XOR"]
 
 				for t in ["11", "12", "21", "22"]
@@ -71,6 +73,8 @@ for r in eachrow(data)
 					df.joins_sig_less .= ifelse(r["JC_$(t)_$(combination)_pval_less_GREX$(expon)_$(nullhyp)"] < CRITLEVEL, 1, 0)
 					df.joins_pvalue_more .= r["JC_$(t)_$(combination)_pval_more_GREX$(expon)_$(nullhyp)"]
 					df.joins_sig_more .= ifelse(r["JC_$(t)_$(combination)_pval_more_GREX$(expon)_$(nullhyp)"] < CRITLEVEL, 1, 0)
+
+					df.joins_zscore .= r["JC_$(t)_$(combination)_zscore_GREX$(expon)_$(nullhyp)"]
 
 					#=
 					if df.class == "control" && df.attestation == "contingently underattested"

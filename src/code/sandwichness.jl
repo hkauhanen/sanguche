@@ -198,13 +198,14 @@ end
 		end
 
 		return (sum(permutest .>= empirical) / permureps,
-			sum(permutest .<= empirical) / permureps)
+			sum(permutest .<= empirical) / permureps,
+			(empirical - Statistics.mean(permutest)) / Statistics.std(permutest))
 	end
 
 	fun = JCgravity
 
-	for nullhyp in ["globalnull", "familynull"]
-		for expon in [0.0, 1.0, 2.0]
+	for nullhyp in ["familynull"] #["globalnull", "familynull"]
+		for expon in [2.0] #[0.0, 1.0, 2.0]
 			grav = "GREX$(expon)_$(nullhyp)"
 
 			for focal in types
@@ -233,6 +234,7 @@ end
 					permuresu = permutationtest([focal], leveljoins, datah, distsh, empirical_JC; fun = fun, nullhyp = nullhyp, exponent = expon)
 					out[!, "JC_$(focal)_$(comparison)_pval_less_$grav"] .= permuresu[1]
 					out[!, "JC_$(focal)_$(comparison)_pval_more_$grav"] .= permuresu[2]
+					out[!, "JC_$(focal)_$(comparison)_zscore_$grav"] .= permuresu[3]
 				end
 			end
 		end
