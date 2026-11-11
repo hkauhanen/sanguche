@@ -59,23 +59,37 @@ end
 
 
 
-# join count statistic: neighbours of languages of type in 'focal' of type in 'target'
+# join count statistic: neighbours of languages of type in 'focal' of type 
+# in 'target'
 @everywhere function JCgravity(focal, target, data, dists; exponent = 2.0)
+    # subset of languages which are of a focal type
     datat = subset(data, :type => (t -> t .∈ [focal]))
 
+    # this will be the returned measure
     out = 0.0
 
+    # cycle through languages which are of a focal type
     for lang in unique(datat.Language_ID)
+        # current language's neighbours
         neighbours = subset(dists, :language_ID => (a -> a .== lang)).neighbour_ID
 
+# the data of the neighbours
         datan = subset(data, :Language_ID => (a -> a .∈ [neighbours]))
 
+# neighbours whose types are of a target type
         target_neighbours = subset(datan, :type => (t -> t .∈ [target])).Language_ID
 
+# distances from focal language
         df = subset(dists, :language_ID => (a -> a .== lang))
+
+# distances from focal language to target neigbhours
         df = subset(df, :neighbour_ID => (a -> a .∈ [target_neighbours]))
+
+# in case there are any zero-distances, these need to be removed
+# as they'd have an infinite contribution on the gravity model
         df = subset(df, :distance => (d -> d .!= 0.0))
 
+# contribution to overall join score from this language
         out += sum(df.distance .^ -exponent)
     end
 
@@ -85,10 +99,13 @@ end
     end
     =#
 
+# we return average join score, averaged across languages
     return out / length(unique(datat.Language_ID))
 end
 
 
+# older, "pooling" version of the routine; produces INCORRECT results
+# as the neighbourhoods of several languages can "collapse together"
 @everywhere function JCgravity_INCORRECT(focal, target, data, dists; exponent = 2.0)
     datat = subset(data, :type => (t -> t .∈ [focal]))
 
@@ -114,8 +131,12 @@ end
 
 # computes the various "sandwichness" metrics
 @everywhere function sandwichness(r, results, Ddata, Ddists; limtype = "km", randomize = "none")
-    #resultsh = subset(results, :pair => (p -> p .== r.pair))
+# we take a deep copy of the data since, if randomization is required,
+# we need to be randomizing the original dataset and not a version
+# of the dataset that has already been randomized
     datah = deepcopy(Ddata[r.pair])
+
+# geographical distances for current feature pair
     distsh = Ddists[r.pair]
 
     # add "LargeFamily" (i.e. pool small families together so that family-based
@@ -133,8 +154,10 @@ end
 
     transform!(datah, :Family => (f -> myfamilyfunction.(f)) => :LargeFamily)
 
+# degree, i.e. how many neighbours to consider (if limtype == "rank")
     degree = r.degree
 
+# limit distances dataframe to 'degree' nearest neighbours
     if limtype == "km"
         distsh = subset(distsh, :distance => (i -> i .<= degree))
     elseif limtype == "rank"
@@ -149,6 +172,7 @@ end
 
     # IMPORTANT! "pref" and "dispref" here have the meanings of "overattested"
     # and "underattested", respectively, NOT "preferred" and "dispreferred".
+#=
     pref_types = []
     dispref_types = []
     for type in types
@@ -159,8 +183,7 @@ end
             push!(dispref_types, type)
         end
     end
-
-    fun = JCgravity
+    =#
 
     for expon in [2.0]#[0.0, 1.0, 2.0]
         for focal in types
@@ -193,7 +216,7 @@ end
                     @pipe datah |> groupby(_, :LargeFamily) |> transform!(_, :type => Random.shuffle => :type)
                 end
 
-                JC = fun([focal], leveljoins, datah, distsh; exponent = expon)
+                JC = JCgravity([focal], leveljoins, datah, distsh; exponent = expon)
                 out[!, "JC_$(focal)_$(comparison)_GREX$(expon)_$(randomize)"] .= JC
             end
         end
@@ -221,7 +244,7 @@ sand = @showprogress dt=1 desc="Computing empirical..." @distributed (vcat) for 
     innerjoin(out, geo_results, on=:pair)
 end
 
-NREPS = 200
+NREPS = PERMUREPS
 
 rand_global = Dict{Int,DataFrame}()
 
@@ -268,7 +291,6 @@ serialize("../../longresults/$dataset/sand_results.jls", results)
 
 
 println("\nAll done! Results to be found in longresults/$dataset.")
-
 
 #=
 

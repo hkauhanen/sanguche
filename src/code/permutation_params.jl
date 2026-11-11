@@ -2,4 +2,4 @@
 PERMUREPS = 1000
 
 # maximum number of languages in a language family (used in randomization test)
-SIZELIMIT = 50#10
+SIZELIMIT = 10
