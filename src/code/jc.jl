@@ -185,7 +185,7 @@ end
     end
     =#
 
-    for expon in [2.0]#[0.0, 1.0, 2.0]
+    for expon in [0.0, 2.0]#[0.0, 1.0, 2.0]
         for focal in types
             # feature value level joins
             f1 = focal[1]
