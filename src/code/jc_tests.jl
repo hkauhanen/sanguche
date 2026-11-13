@@ -55,7 +55,7 @@ for i in 1:2
                             type = ["11", "12", "21", "22"],
                             degree = unique(results["empirical"].degree),
                             gravity_exponent = [0.0, 2.0],
-                            combination = ["AND", "OR", "XOR"],
+                            combination = ["AND", "OR", "XOR", "ANTAG"],
                             nullhypothesis = ["global", "family"])
 
     out = @distributed (vcat) for r in eachrow(frame)
