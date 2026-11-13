@@ -192,7 +192,7 @@ end
             f2 = focal[2]
 
             #for comparison in ["f1", "f2", "AND", "OR", "XOR"]
-            for comparison in ["AND", "OR", "XOR"]
+            for comparison in ["AND", "OR", "XOR", "ANTAG"]
                 f1joins = ["$(f1)1", "$(f1)2"]
                 f2joins = ["1$(f2)", "2$(f2)"]
 
@@ -206,6 +206,8 @@ end
                     leveljoins = union(f1joins, f2joins)
                 elseif comparison == "XOR"
                     leveljoins = setdiff(union(f1joins, f2joins), intersect(f1joins, f2joins))
+elseif comparison == "ANTAG"
+leveljoins = setdiff(types, union(f1joins, f2joins))
                 end
 
                 #world-wide randomization
