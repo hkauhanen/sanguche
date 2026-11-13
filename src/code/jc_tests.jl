@@ -38,20 +38,30 @@ transform!(jawa, :fpair => (fp -> Set.(split.(fp, "-"))) => :pair_ID)
 metaout = Dict{String,DataFrame}()
 
 
-for dataset in ["WALS", "Grambank"]
+for i in 1:2
+    if i == 1
+        @everywhere dataset = "WALS"
+    else
+        @everywhere dataset = "Grambank"
+    end
+
     @everywhere results = deserialize("../../longresults/$dataset/sand_results.jls")
     @everywhere grid = deserialize("../../$dataset/dicts/grid.jls")
+
+    @everywhere transform!(grid, :pair => (p -> Set.(split.(p, " & "))) => :pair_ID)
 
     frame = allcombinations(DataFrame, 
                             pair = unique(results["empirical"].pair),
                             type = ["11", "12", "21", "22"],
                             degree = unique(results["empirical"].degree),
-                            gravity_exponent = [2.0],
+                            gravity_exponent = [0.0, 2.0],
                             combination = ["AND", "OR", "XOR"],
                             nullhypothesis = ["global", "family"])
 
     out = @distributed (vcat) for r in eachrow(frame)
-        ghere = subset(grid, :pair => (p -> p .== r.pair))
+        ghere = subset(grid, :pair_ID => (p -> p .== Set.(split.(r.pair, " & "))))
+
+        ghere = ghere[:, Not(:phi, :phi_pvalue, :degree)] |> unique
 
         if ghere[!, "pref$(r.type)"][1] == 1
             attestation = "overattested"
