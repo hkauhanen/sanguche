@@ -20,6 +20,9 @@ using ProgressMeter
 @everywhere using Statistics
 @everywhere using Pipe
 
+@everywhere using TranscodingStreams
+@everywhere using CodecZstd
+
 
 # for a mysterious reason, we need to do the following to pass the 
 # command-line argument to all worker processes; cf.
@@ -45,7 +48,11 @@ for i in 1:2
         @everywhere dataset = "Grambank"
     end
 
-    @everywhere results = deserialize("../../longresults/$dataset/sand_results.jls")
+    @everywhere io = open("../../longresults/$dataset/sand_results.compressed")
+    @everywhere io = TranscodingStream(ZstdDecompressor(), io)
+    @everywhere results = deserialize(io)
+    @everywhere close(io)
+
     @everywhere grid = deserialize("../../$dataset/dicts/grid.jls")
 
     @everywhere transform!(grid, :pair => (p -> Set.(split.(p, " & "))) => :pair_ID)
@@ -55,7 +62,7 @@ for i in 1:2
                             type = ["11", "12", "21", "22"],
                             degree = unique(results["empirical"].degree),
                             gravity_exponent = [0.0, 2.0],
-                            combination = ["AND", "OR", "XOR", "ANTAG"],
+                            combination = ["AND", "OR", "XOR", "ANTAG", "POLAR"],
                             nullhypothesis = ["global", "family"])
 
     out = @distributed (vcat) for r in eachrow(frame)

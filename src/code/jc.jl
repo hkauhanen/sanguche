@@ -8,6 +8,11 @@ using ProgressMeter
 @everywhere Pkg.activate("Sanguche")
 #@everywhere Pkg.instantiate()
 
+
+using TranscodingStreams
+using CodecZstd
+
+
 @everywhere include("permutation_params.jl")
 
 
@@ -291,7 +296,11 @@ results = Dict("empirical" => sand,
                "rand_global" => rand_global,
                "rand_family" => rand_family)
 
-serialize("../../longresults/$dataset/sand_results.jls", results)
+
+io = open("../../longresults/$dataset/sand_results.compressed", "w")
+io = TranscodingStream(ZstdCompressor(), io)
+serialize(io, results)
+close(io)
 
 
 println("\nAll done! Results to be found in longresults/$dataset.")
