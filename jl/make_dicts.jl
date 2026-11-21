@@ -178,7 +178,6 @@ for r in eachrow(results)
   local tmp = data[:, ["Language_ID", "Family", r.f1, r.f2]]
   dropmissing!(tmp)
   transform!(tmp, [r.f1, r.f2] => ((a,b) -> string.(a) .* string.(b)) => :type)
-  #transform!(tmp, [r.f1, r.f2] => ((a,b) -> string.(b) .* string.(a)) => :type)
 
   local tmp2 = subset(dists, :language_ID => (a -> a .∈ [tmp.Language_ID]))
   tmp2 = subset(tmp2, :neighbour_ID => (a -> a .∈ [tmp.Language_ID]))
@@ -198,17 +197,6 @@ for r in eachrow(results)
   Ddata[r.pair] = tmp
   Ddists[r.pair] = tmp2
 end
-
-
-# expand grid ('results') so that each data point has a row for each degree
-#=
-grid = DataFrame()
-for degree in degrees
-  local here = results
-  here.degree .= degree
-  global grid = [grid; here]
-end
-=#
 
 
 
