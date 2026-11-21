@@ -8,18 +8,18 @@ Requirements:
 
 - Julia (both versions 1.5.3 and 1.10.4)
 - R (version 4.5.0)
-- just
+- just (<https://github.com/casey/just>)
 - an internet connection (to download the WALS and Grambank datasets and great-circle distances)
 
 
 ## Roadmap
 
 ```
-just deps
-just preprocess
-just data
-just joincounts
-just report
+just deps         # installs Julia dependencies
+just preprocess   # downloads and preps data
+just data         # preps data more
+just joincounts   # computes join counts
+just report       # typesets reports (R + some packages required)
 ```
 
 
