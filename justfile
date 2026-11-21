@@ -1,6 +1,7 @@
 deps:
   cd jl; julia +1.5.3 deps_JW.jl
   cd jl; julia +1.10.4 deps.jl
+  Rscript -e "install.packages(c('lme4', 'ggplot2', 'ggsci', 'tidyverse', 'rmarkdown'), repos = 'https://cloud.r-project.org')"
 
 preprocess:
   cd jl; julia +1.5.3 preprocess_wals.jl
