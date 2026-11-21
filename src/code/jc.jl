@@ -78,23 +78,23 @@ end
         # current language's neighbours
         neighbours = subset(dists, :language_ID => (a -> a .== lang)).neighbour_ID
 
-# the data of the neighbours
+        # the data of the neighbours
         datan = subset(data, :Language_ID => (a -> a .∈ [neighbours]))
 
-# neighbours whose types are of a target type
+        # neighbours whose types are of a target type
         target_neighbours = subset(datan, :type => (t -> t .∈ [target])).Language_ID
 
-# distances from focal language
+        # distances from focal language
         df = subset(dists, :language_ID => (a -> a .== lang))
 
-# distances from focal language to target neigbhours
+        # distances from focal language to target neigbhours
         df = subset(df, :neighbour_ID => (a -> a .∈ [target_neighbours]))
 
-# in case there are any zero-distances, these need to be removed
-# as they'd have an infinite contribution on the gravity model
+        # in case there are any zero-distances, these need to be removed
+        # as they'd have an infinite contribution on the gravity model
         df = subset(df, :distance => (d -> d .!= 0.0))
 
-# contribution to overall join score from this language
+        # contribution to overall join score from this language
         out += sum(df.distance .^ -exponent)
     end
 
@@ -104,44 +104,19 @@ end
     end
     =#
 
-# we return average join score, averaged across languages
+    # we return average join score, averaged across languages
     return out / length(unique(datat.Language_ID))
-end
-
-
-# older, "pooling" version of the routine; produces INCORRECT results
-# as the neighbourhoods of several languages can "collapse together"
-@everywhere function JCgravity_INCORRECT(focal, target, data, dists; exponent = 2.0)
-    datat = subset(data, :type => (t -> t .∈ [focal]))
-
-    neighbours = subset(dists, :language_ID => (a -> a .∈ [datat.Language_ID])).neighbour_ID
-
-    datan = subset(data, :Language_ID => (a -> a .∈ [neighbours]))
-
-    target_neighbours = subset(datan, :type => (t -> t .∈ [target])).Language_ID
-
-    df = subset(dists, :language_ID => (a -> a .∈ [datat.Language_ID]))
-    df = subset(df, :neighbour_ID => (a -> a .∈ [target_neighbours]))
-    df = subset(df, :distance => (d -> d .!= 0.0))
-
-    out = sum(df.distance .^ -exponent)
-
-    if focal == target
-        out = out / 2
-    end
-
-    return out
 end
 
 
 # computes the various "sandwichness" metrics
 @everywhere function sandwichness(r, results, Ddata, Ddists; limtype = "km", randomize = "none")
-# we take a deep copy of the data since, if randomization is required,
-# we need to be randomizing the original dataset and not a version
-# of the dataset that has already been randomized
+    # we take a deep copy of the data since, if randomization is required,
+    # we need to be randomizing the original dataset and not a version
+    # of the dataset that has already been randomized
     datah = deepcopy(Ddata[r.pair])
 
-# geographical distances for current feature pair
+    # geographical distances for current feature pair
     distsh = Ddists[r.pair]
 
     # add "LargeFamily" (i.e. pool small families together so that family-based
@@ -159,10 +134,10 @@ end
 
     transform!(datah, :Family => (f -> myfamilyfunction.(f)) => :LargeFamily)
 
-# degree, i.e. how many neighbours to consider (if limtype == "rank")
+    # degree, i.e. how many neighbours to consider (if limtype == "rank")
     degree = r.degree
 
-# limit distances dataframe to 'degree' nearest neighbours
+    # limit distances dataframe to 'degree' nearest neighbours
     if limtype == "km"
         distsh = subset(distsh, :distance => (i -> i .<= degree))
     elseif limtype == "rank"
@@ -177,20 +152,20 @@ end
 
     # IMPORTANT! "pref" and "dispref" here have the meanings of "overattested"
     # and "underattested", respectively, NOT "preferred" and "dispreferred".
-#=
+    #=
     pref_types = []
     dispref_types = []
     for type in types
-        if r["pref"*type] == 1
-            push!(pref_types, type)
-        end
-        if r["dispref"*type] == 1
-            push!(dispref_types, type)
-        end
+    if r["pref"*type] == 1
+    push!(pref_types, type)
+    end
+    if r["dispref"*type] == 1
+    push!(dispref_types, type)
+    end
     end
     =#
 
-    for expon in [0.0, 2.0]#[0.0, 1.0, 2.0]
+    for expon in [0.0, 1.0, 2.0]#[0.0, 1.0, 2.0]
         for focal in types
             # feature value level joins
             f1 = focal[1]
@@ -211,10 +186,10 @@ end
                     leveljoins = union(f1joins, f2joins)
                 elseif comparison == "XOR"
                     leveljoins = setdiff(union(f1joins, f2joins), intersect(f1joins, f2joins))
-elseif comparison == "POLAR"
-leveljoins = setdiff(types, union(f1joins, f2joins))
-elseif comparison == "ANTAG"
-leveljoins = setdiff(types, intersect(f1joins, f2joins))
+                elseif comparison == "POLAR"
+                    leveljoins = setdiff(types, union(f1joins, f2joins))
+                elseif comparison == "ANTAG"
+                    leveljoins = setdiff(types, intersect(f1joins, f2joins))
                 end
 
                 #world-wide randomization
@@ -253,7 +228,7 @@ sand = @showprogress dt=1 desc="Computing empirical..." @distributed (vcat) for 
     innerjoin(out, geo_results, on=:pair)
 end
 
-NREPS = PERMUREPS
+NREPS = 1#PERMUREPS
 
 rand_global = Dict{Int,DataFrame}()
 
@@ -290,7 +265,6 @@ println("\nFamily-based randomization.")
     sand.rep .= rep
     rand_family[rep] = sand
 end
-
 
 results = Dict("empirical" => sand,
                "rand_global" => rand_global,

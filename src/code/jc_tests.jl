@@ -61,7 +61,7 @@ for i in 1:2
                             pair = unique(results["empirical"].pair),
                             type = ["11", "12", "21", "22"],
                             degree = unique(results["empirical"].degree),
-                            gravity_exponent = [0.0, 2.0],
+                            gravity_exponent = [0.0, 1.0, 2.0],
                             combination = ["AND", "OR", "XOR", "ANTAG", "POLAR"],
                             nullhypothesis = ["global", "family"])
 

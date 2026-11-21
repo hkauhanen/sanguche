@@ -1,0 +1,474 @@
+---
+title: "Report"
+date: 2026-11-21
+author: "HK"
+numbersections: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+```
+
+# Summary
+
+"Social sciencey" regressions. We compute join counts at the level
+of individual languages under various operationalizations of
+geographical neighbourhood.
+
+We'll need the following packages:
+
+```{r}
+library(lme4)
+library(ggplot2)
+library(ggsci)
+library(tidyverse)
+```
+
+
+# Hyperparameters
+
+Set global values for these (used in everything that follows
+unless otherwise specified):
+
+```{r}
+GREX <- 1.0   # gravity exponent
+CAP <- 50     # include only the CAP nearest neighbours
+```
+
+
+# Join "counts" (better: 'join scores'?)
+
+For a given type and a given language $L$, the join score with respect
+to neighbouring languages carrying a type of the OR kind (i.e.
+neighbour shares at least one feature value with the focal language)
+is defined as
+$$
+J = \sum_{L'} w_{LL'}
+$$
+where $L'$ ranges over the focal's OR neighbours and $w_{LL'}$, the
+_weight_ of the join between $L$ and $L'$, is taken to be either
+$$
+w_{LL'} = d(L,L')^{-s}
+$$
+where $d(L,L')$ is the great-circle distance between $L$ and $L'$ and
+$s$ is a parameter, the _gravity exponent_, or
+$$
+w_{LL'} = r(L')^{-s}
+$$
+where $r(L')$ is the rank of $L'$ among the neighbours of $L$ (i.e. $L'$
+is the $r(L')$th nearest neighbour of $L$).
+
+The first option gives us kilometre-based neighbourhoods, the second,
+rank-based neighbourhoods.
+
+We have good theoretical reasons for believing that the gravity
+exponent $s$ ought to have a value very close to $1$. Setting $s=0$
+recovers plain join counts. Setting $s=2$ would give us the inverse
+square law---something we no longer really believe to be sensible.
+
+
+# The data
+
+The join counts are calculated by a Julia script (`jclang.jl`).
+We now read these results into R.
+
+```{r}
+wals <- read.csv("../longresults/newjoins_wals.csv")
+wals$dataset <- "WALS"
+
+gram <- read.csv("../longresults/newjoins_grambank.csv")
+gram$dataset <- "Grambank"
+
+data <- rbind(wals, gram)
+data$type <- factor(data$type)
+```
+
+This is the structure of the dataframe.
+
+```{r}
+head(data)
+```
+
+Each row corresponds to a type in one language. The meanings of the columns:
+
+- pair: feature pair i.e. typology
+- class: whether the pair is a target (word-order) or control pair
+- status: whether the pair is interacting or non-interacting. This decision is based on Jäger's new stuff. A pair is taken to be interacting if its logarithmic Bayes factor is at least 4. Control pairs are taken to be non-interacting by fiat.
+- type: for instance, if pair is "VS & VO", then the type "12" would refer to VS paired with OV
+- attestation: whether the type is overattested, underattested or neither, as established by the statistical test described in our manuscript
+- pedigree: either "dispreferred" (type is an underattested type in an interacting pair), "control under" (type is an underattested type in a control pair) or "other" (type is something else)
+- Language_ID: language
+- Family: language's family
+- degree: cap on the size of neighbourhood. We only look at languages up to the 'degree'th nearest neighbour. Here, this is either 10, 50, 100 or 500.
+- gravity_exponent: see explanation above
+- gravity_type: either "km" or "rank"
+- min_distance: the minimum distance across all joins for this particular type and this particular language
+- mean_distance: the mean distance across all joins for this particular type and this particular language
+- max_distance: the max distance across all joins for this particular type and this particular language
+- frequency: frequency of the type
+- joincount: join count/score for the type and language
+- dataset: "WALS" or "Grambank"
+
+
+# First results: WALS
+
+First, we'll look at two subsets of this dataframe. One assumes kilometre
+neighbourhoods, the other, rank neighbourhoods.
+
+```{r}
+data_km = subset(data, 
+                 degree == CAP & 
+                   gravity_exponent == GREX & 
+                   gravity_type == "km" & 
+                   pedigree %in% c("dispreferred", "control under"))
+
+data_rank = subset(data, 
+                   degree == CAP & 
+                     gravity_exponent == GREX & 
+                     gravity_type == "rank" & 
+                     pedigree %in% c("dispreferred", "control under"))
+```
+
+A basic regression will have `joincount` as the dependent variable,
+`Language_ID`, `Family` and `type` as random effects,^[I haven't added Macroarea yet, as that information would have to be fetched from another file and merged, and I couldn't be bothered to do this yet. But we can add it later, if desired.] `frequency` as a main
+effect, and possibly `pedigree` as a main effect (depending on whether
+we're looking at the null model---no pedigree---or the alternative
+model---pedigree included).
+
+First, km-based neighbourhoods in WALS:
+
+```{r}
+mod <- lmer(joincount ~ (1 | Language_ID) + 
+            (1 | Family) + 
+            (1 | type) + 
+            frequency + 
+            pedigree, subset(data_km, dataset == "WALS"))
+
+summary(mod)
+```
+
+Null model:
+
+```{r}
+mod_null <- lmer(joincount ~ (1 | Language_ID) + 
+                 (1 | Family) + 
+                 (1 | type) + 
+                 frequency, subset(data_km, dataset == "WALS"))
+
+summary(mod_null)
+```
+
+Comparison of AIC:
+
+```{r}
+AIC(mod)
+```
+
+```{r}
+AIC(mod_null)
+```
+
+This suggests that pedigree is an important predictor. Furthermore,
+in the alternative model, pedigree has a positive coefficient
+with "control under" as the reference level, meaning that dispreferred
+types have higher join counts than control underattested types
+(even when controlled for frequency, language, family and type).
+Nice!
+
+With rank-based neighbourhoods:
+
+```{r}
+mod <- lmer(joincount ~ (1 | Language_ID) + 
+            (1 | Family) + 
+            (1 | type) + 
+            frequency + 
+            pedigree, subset(data_rank, dataset == "WALS"))
+
+summary(mod)
+```
+
+Null model:
+
+```{r}
+mod_null <- lmer(joincount ~ (1 | Language_ID) + 
+                 (1 | Family) + 
+                 (1 | type) + 
+                 frequency, subset(data_rank, dataset == "WALS"))
+
+summary(mod_null)
+```
+
+Comparison of AIC:
+
+```{r}
+AIC(mod)
+```
+
+```{r}
+AIC(mod_null)
+```
+
+Same thing.
+
+
+# First results: Grambank
+
+In Grambank, there is a slight complication: there are languages
+with neighbours at a zero kilometres distance. This crashes the
+km-based gravity model as it invites division by zero. To avoid
+the problem, I've replaced all zero distances with 10 km for now.
+
+## km-based
+
+```{r}
+mod <- lmer(joincount ~ 
+            (1 | type) +
+            (1 | Language_ID) + 
+            (1 | Family) + 
+            frequency + 
+            pedigree, subset(data_km, dataset == "Grambank"))
+
+summary(mod)
+```
+
+Null model:
+
+```{r}
+mod_null <- lmer(joincount ~ 
+                 (1 | type) +
+                 (1 | Language_ID) + 
+                 (1 | Family) + 
+                 frequency, subset(data_km, dataset == "Grambank"))
+
+summary(mod_null)
+```
+
+Comparison of AIC:
+
+```{r}
+AIC(mod)
+```
+
+```{r}
+AIC(mod_null)
+```
+
+## rank-based
+
+```{r}
+mod <- lmer(joincount ~ 
+            (1 | type) +
+            (1 | Language_ID) + 
+            (1 | Family) + 
+            frequency + 
+            pedigree, subset(data_rank, dataset == "Grambank"))
+
+summary(mod)
+```
+
+Null model:
+
+```{r}
+mod_null <- lmer(joincount ~ 
+                 (1 | type) +
+                 (1 | Language_ID) + 
+                 (1 | Family) + 
+                 frequency, subset(data_rank, dataset == "Grambank"))
+
+summary(mod_null)
+```
+
+Comparison of AIC:
+
+```{r}
+AIC(mod)
+```
+
+```{r}
+AIC(mod_null)
+```
+
+
+
+
+# Visualization: WALS
+
+The plot Ricardo wanted to see:
+
+```{r}
+source("dumbbell.R")
+```
+
+Using km-based neighbourhoods:
+
+```{r}
+p <- dumbbell_plot(subset(data_km, dataset == "WALS"))
+p <- p + ggtitle("WALS, km-based")
+print(p)
+```
+
+Using rank-based neighbourhoods:
+
+```{r}
+p <- dumbbell_plot(subset(data_rank, dataset == "WALS"))
+p <- p + ggtitle("WALS, rank-based")
+print(p)
+```
+
+This looks very nice---whenever both pedigrees are present in a frequency
+bin, the dispreferred dot is higher.
+
+
+# Visualization: Grambank
+
+## km-based
+
+```{r}
+p <- dumbbell_plot(subset(data_km, dataset == "Grambank"))
+p <- p + ggtitle("Grambank, km-based")
+print(p)
+```
+
+## rank-based
+
+```{r}
+p <- dumbbell_plot(subset(data_rank, dataset == "Grambank"))
+p <- p + ggtitle("Grambank, rank-based")
+print(p)
+```
+
+Again, very nice.
+
+
+# Lower gravity exponent for km-based model
+
+Try a value of $0.1$ for the gravity exponent:
+
+```{r}
+data_km = subset(data, 
+                 degree == CAP & 
+                   gravity_exponent == 0.1 & 
+                   gravity_type == "km" & 
+                   pedigree %in% c("dispreferred", "control under"))
+```
+
+## WALS
+
+```{r}
+p <- dumbbell_plot(subset(data_km, dataset == "WALS"))
+p <- p + ggtitle("WALS, km-based, low exponent")
+print(p)
+```
+
+## Grambank
+
+```{r}
+p <- dumbbell_plot(subset(data_km, dataset == "Grambank"))
+p <- p + ggtitle("Grambank, km-based, low exponent")
+print(p)
+```
+
+
+# Preferred versus control overattested types
+
+This began as a sanity check---we expected not to see an effect
+between preferred and contol overattested types. But in fact we do:
+
+```{r}
+data_sanity_km = subset(data, 
+                        degree == CAP & 
+                          gravity_exponent == GREX & 
+                          gravity_type == "km" & 
+                          pedigree %in% c("preferred", "control over"))
+
+data_sanity_rank = subset(data, 
+                          degree == CAP & 
+                            gravity_exponent == GREX & 
+                            gravity_type == "rank" & 
+                            pedigree %in% c("preferred", "control over"))
+```
+
+## WALS
+
+```{r}
+p <- dumbbell_plot(subset(data_sanity_rank, dataset == "WALS"))
+p <- p + ggtitle("WALS, rank-based")
+print(p)
+```
+
+Regression:
+
+```{r}
+mod <- lmer(joincount ~ (1 | Language_ID) + 
+            (1 | Family) + 
+            (1 | type) + 
+            frequency + 
+            pedigree, subset(data_sanity_rank, dataset == "WALS"))
+
+summary(mod)
+```
+
+Null model:
+
+```{r}
+mod_null <- lmer(joincount ~ (1 | Language_ID) + 
+                 (1 | Family) + 
+                 (1 | type) + 
+                 frequency, subset(data_sanity_rank, dataset == "WALS"))
+
+summary(mod_null)
+```
+
+Comparison of AIC:
+
+```{r}
+AIC(mod)
+```
+
+```{r}
+AIC(mod_null)
+```
+
+
+## Grambank
+
+```{r}
+p <- dumbbell_plot(subset(data_sanity_rank, dataset == "Grambank"))
+p <- p + ggtitle("Grambank, rank-based")
+print(p)
+```
+
+Regression:
+
+```{r}
+mod <- lmer(joincount ~ (1 | Language_ID) + 
+            (1 | Family) + 
+            (1 | type) + 
+            frequency + 
+            pedigree, subset(data_sanity_rank, dataset == "Grambank"))
+
+summary(mod)
+```
+
+Null model:
+
+```{r}
+mod_null <- lmer(joincount ~ (1 | Language_ID) + 
+                 (1 | Family) + 
+                 (1 | type) + 
+                 frequency, subset(data_sanity_rank, dataset == "Grambank"))
+
+summary(mod_null)
+```
+
+Comparison of AIC:
+
+```{r}
+AIC(mod)
+```
+
+```{r}
+AIC(mod_null)
+```
+
+

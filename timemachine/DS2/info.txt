@@ -1,1 +1,0 @@
-Grambank downsampling: all families in Grambank to 50%

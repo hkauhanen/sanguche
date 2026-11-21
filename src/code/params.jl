@@ -5,7 +5,7 @@ include_controls = true
 #degrees = 1:1:500  # rank based
 #degrees = 1:1:20
 #degrees = [10, 20, 50, 100]#10:10:100
-degrees = [10, 50]#10:10:100
+degrees = [10, 50, 100, 500]#10:10:100
 
 # features
 features = vcat(first.(fPairs), construct)

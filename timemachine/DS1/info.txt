@@ -1,1 +1,0 @@
-Grambank downsampling: only Austronesian, to 75%

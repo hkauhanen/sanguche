@@ -178,6 +178,7 @@ for r in eachrow(results)
   local tmp = data[:, ["Language_ID", "Family", r.f1, r.f2]]
   dropmissing!(tmp)
   transform!(tmp, [r.f1, r.f2] => ((a,b) -> string.(a) .* string.(b)) => :type)
+  #transform!(tmp, [r.f1, r.f2] => ((a,b) -> string.(b) .* string.(a)) => :type)
 
   local tmp2 = subset(dists, :language_ID => (a -> a .∈ [tmp.Language_ID]))
   tmp2 = subset(tmp2, :neighbour_ID => (a -> a .∈ [tmp.Language_ID]))
