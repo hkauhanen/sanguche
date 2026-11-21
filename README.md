@@ -8,11 +8,15 @@ Requirements:
 
 - Julia (both versions 1.5.3 and 1.10.4)
 - R (version 4.5.0)
-- just (<https://github.com/casey/just>)
+- [just](https://github.com/casey/just)
 - an internet connection (to download the WALS and Grambank datasets and great-circle distances)
 
 
-## Roadmap
+## Instructions
+
+To replicate the analysis, run the following commands (in this order).
+Make sure you have Julia versions 1.5.3 and 1.10.4 installed via
+juliaup before proceeding!
 
 ```{bash}
 just deps         # installs Julia dependencies
@@ -21,6 +25,11 @@ just data         # preps data more
 just joincounts   # computes join counts
 just report       # typesets reports (R + some packages required)
 ```
+
+The data and results will appear in directory `tmp/`. (This is gitignored
+as some of the resulting files are very large.)
+
+The report appears as `Rmd/report.pdf`.
 
 
 ## Acknowledgements
