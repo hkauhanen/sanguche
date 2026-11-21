@@ -14,7 +14,7 @@ Requirements:
 
 ## Roadmap
 
-```
+```{bash}
 just deps         # installs Julia dependencies
 just preprocess   # downloads and preps data
 just data         # preps data more
