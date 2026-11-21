@@ -43,7 +43,7 @@ end
 @everywhere grid = grid |> unique
 
 
-@everywhere jawa = CSV.read("../data/gbwals_all_pairs.csv", DataFrame)
+@everywhere jawa = CSV.read("../tmp/gbwals_all_pairs.csv", DataFrame)
 
 @everywhere subset!(jawa, :dataset => (ds -> lowercase.(ds) .== dataset))
 

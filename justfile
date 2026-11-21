@@ -5,6 +5,7 @@ deps:
 preprocess:
   cd jl; julia +1.5.3 preprocess_wals.jl
   cd jl; julia +1.5.3 preprocess_grambank.jl
+  cd jl; julia +1.5.3 preprocess_Jaeger.jl
 
 data:
   cd jl; julia +1.5.3 createData.jl wals
