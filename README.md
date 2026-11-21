@@ -26,8 +26,12 @@ just joincounts   # computes join counts
 just report       # typesets reports (R + some packages required)
 ```
 
-The data and results will appear in directory `tmp/`. (This is gitignored
-as some of the resulting files are very large.)
+The recipe `joincounts` assumes that the computer has 10 available
+(physical) processor cores for parallel processing. If this is not
+the case, adjust the relevant part in the `justfile`.
+
+The data and results will appear in directories `tmp/` and `longresults/`.
+(These are gitignored as some of the resulting files are very large.)
 
 The report appears as `Rmd/report.pdf`.
 
