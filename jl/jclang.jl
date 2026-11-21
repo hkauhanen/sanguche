@@ -161,7 +161,10 @@ end
         end
     end
 
-    return data[:, [:pair, :class, :status, :type, :attestation, :pedigree, :Language_ID, :Family, :degree, :gravity_exponent, :gravity_type, :min_distance, :mean_distance, :max_distance, :frequency, :joincount]]
+    transform!(data, :pair => (p -> Tuple.(split.(p, " & "))) => [:f1, :f2])
+    data.ptype .= data.f1 .* data.f2 .* data.type
+
+    return data[:, [:pair, :class, :status, :type, :ptype, :attestation, :pedigree, :Language_ID, :Family, :degree, :gravity_exponent, :gravity_type, :min_distance, :mean_distance, :max_distance, :frequency, :joincount]]
 end
 
 
